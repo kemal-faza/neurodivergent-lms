@@ -1,0 +1,72 @@
+// Shared domain types for the LevelUp neurodivergent education platform.
+// Both parallel workers (A: panel/materi/adaptive, B: design/gamification/dashboard)
+// must import these types — do NOT redefine them locally.
+
+export type Profile = "disleksia" | "adhd" | "umum";
+
+export type FontFamily = "default" | "lexend" | "opendyslexic";
+
+export type Contrast = "normal" | "high" | "dark";
+
+/** All accessibility settings, persisted in IndexedDB via the accessibility store. */
+export interface AccessibilitySettings {
+  profile: Profile | null;
+  fontFamily: FontFamily;
+  /** Base font size in px for reading surfaces. */
+  fontSize: number;
+  /** Unitless line-height multiplier. */
+  lineHeight: number;
+  /** Extra letter spacing in px. */
+  letterSpacing: number;
+  /** Extra word spacing in px. */
+  wordSpacing: number;
+  contrast: Contrast;
+  /** Bionic reading: bold the first half of each word. */
+  bionic: boolean;
+  /** Text-to-speech enabled (Web Speech API). */
+  ttsEnabled: boolean;
+  /** Reading ruler / line guide overlay follows the cursor. */
+  lineGuide: boolean;
+  /** Focus mode: dim surrounding content, optionally paired with a Pomodoro timer. */
+  focusMode: boolean;
+}
+
+export interface Soal {
+  id: string;
+  /** Question text. */
+  t: string;
+  opsi: string[];
+  /** Zero-based index of the correct option. */
+  benar: number;
+  /** Difficulty 1 (easy) .. 3 (hard). Used by the adaptive engine. */
+  diff: number;
+}
+
+export interface Kuis {
+  id: string;
+  materiId: string;
+  soal: Soal[];
+}
+
+export interface Materi {
+  id: string;
+  judul: string;
+  /** Dummy body text. Person A will render this in ArticleReader. */
+  konten: string;
+  level: number;
+}
+
+export interface ProgressState {
+  userId: string;
+  poin: number;
+  streak: number;
+  /** ISO date string (yyyy-mm-dd) of the last active day, or null. */
+  lastActiveDate: string | null;
+  /** Badge ids the learner has earned. */
+  badge: string[];
+  /** Current adaptive difficulty level 1..3. */
+  adaptiveLevel: number;
+  completedMateri: string[];
+  /** kuisId -> best score (points). */
+  quizScores: Record<string, number>;
+}
