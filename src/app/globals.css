@@ -2,7 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/fonts/OpenDyslexic-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/fonts/OpenDyslexic-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /*
+
   Design tokens for LevelUp Neurodivergent Education Platform.
   Source of truth: Low Wireframe Creation/guidelines/Guidelines.md + theme.css
   Driven by CSS variables and accessibility store runtime overrides via AccessibilityApplier.

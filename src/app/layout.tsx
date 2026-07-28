@@ -18,11 +18,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id" className={lexend.variable}>
-      <body>
+      <body className="min-h-screen bg-bg text-fg font-sans pb-16 antialiased">
         <StoreHydrator>
           <AccessibilityApplier />
           <Navbar />
-          <main className="dim-when-focus mx-auto max-w-5xl px-4 py-8">{children}</main>
+          <main className="dim-when-focus">{children}</main>
           <AccessibilityPanel />
           <LineGuide />
         </StoreHydrator>
