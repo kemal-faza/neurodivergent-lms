@@ -3,72 +3,105 @@
 @tailwind utilities;
 
 /*
-  Design tokens. The accessibility store overrides --reader-* at runtime via
-  AccessibilityApplier. Contrast modes override the semantic surface tokens.
-  Person B refines this design system (spacing scale, radii, motion).
+  Design tokens for LevelUp Neurodivergent Education Platform.
+  Source of truth: Low Wireframe Creation/guidelines/Guidelines.md + theme.css
+  Driven by CSS variables and accessibility store runtime overrides via AccessibilityApplier.
 */
 
 :root {
-  /* Semantic surface tokens (overridden per contrast mode below) */
-  --bg: #fafafa;
-  --fg: #1a1a1a;
+  /* Semantic surface tokens */
+  --bg: #f9fafb;
+  --fg: #1f2937;
   --muted: #6b7280;
-  --accent: #4f46e5;
+  --accent: #111827;
   --accent-fg: #ffffff;
   --card: #ffffff;
   --border: #e5e7eb;
 
+  /* Neurodivergent Special Tokens */
+  --dyslexia-amber: #fffbeb;
+  --dyslexia-amber-border: #fde68a;
+  --adhd-orange: #f97316;
+  --focus-purple: #a855f7;
+  --lineguide-blue: #3b82f6;
+
   /* Reading-surface tokens (overwritten live by AccessibilityApplier) */
-  --reader-font: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  --reader-font: var(--font-lexend), system-ui, -apple-system, sans-serif;
   --reader-font-size: 18px;
   --reader-line-height: 1.7;
   --reader-letter-spacing: 0px;
   --reader-word-spacing: 0px;
-  --reader-max-width: 70ch;
+  --reader-max-width: 75ch;
 }
 
+/* High Contrast Mode (WCAG AAA) */
 [data-contrast="high"] {
-  --bg: #ffffff;
-  --fg: #000000;
-  --muted: #000000;
-  --accent: #0000ee;
+  --bg: #fffbeb;
+  --fg: #030712;
+  --muted: #1f2937;
+  --accent: #0f172a;
   --accent-fg: #ffffff;
   --card: #ffffff;
-  --border: #000000;
+  --border: #374151;
 }
 
+/* Dark Mode */
 [data-contrast="dark"] {
-  --bg: #111111;
-  --fg: #eeeeee;
+  --bg: #111827;
+  --fg: #f9fafb;
   --muted: #9ca3af;
-  --accent: #818cf8;
-  --accent-fg: #111111;
-  --card: #1f1f1f;
-  --border: #333333;
+  --accent: #38bdf8;
+  --accent-fg: #0f172a;
+  --card: #1f2937;
+  --border: #374151;
 }
 
 body {
   background: var(--bg);
   color: var(--fg);
+  font-family: var(--reader-font);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Reading surface — uses the live accessibility tokens. */
+/* Reading surface — applies live accessibility tokens */
 .reader {
   font-family: var(--reader-font);
   font-size: var(--reader-font-size);
   line-height: var(--reader-line-height);
   letter-spacing: var(--reader-letter-spacing);
   word-spacing: var(--reader-word-spacing);
-  max-width: var(--reader-max-width);
 }
 
-/* Bionic reading: first half of each word is wrapped in <b> by lib/bionic.ts */
-.reader b {
-  font-weight: 700;
+/* Bionic reading styling */
+.bionic-bold,
+.reader b,
+[data-bionic="on"] .bionic-target {
+  font-weight: 800;
+  color: inherit;
+  background-color: rgba(254, 240, 138, 0.5);
+  border-radius: 2px;
+  padding: 0 1px;
 }
 
-/* Focus mode (P2): dim non-essential surfaces. Person B polishes this. */
-[data-focus="on"] .dim-when-focus {
+[data-contrast="dark"] .bionic-bold,
+[data-contrast="dark"] .reader b {
+  background-color: rgba(234, 179, 8, 0.25);
+  color: #fef08a;
+}
+
+/* Focus mode: dim surrounding non-focused paragraphs for ADHD focus */
+[data-focus="on"] .focus-dimmed {
   opacity: 0.35;
-  transition: opacity 0.2s ease;
+  filter: blur(0.5px);
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s ease-out forwards;
 }
