@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ChevronRight, BookOpen, Zap, Globe } from "lucide-react";
+import { ChevronRight, Check } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
@@ -24,14 +24,13 @@ interface ProfileCardProps {
 
 export function ProfileCard({
   profile,
-  accentClass,
-  iconClass,
-  borderClass,
-  iconBgClass,
   Icon,
 }: ProfileCardProps) {
   const router = useRouter();
   const applyProfile = useAccessibilityStore((s) => s.applyProfile);
+  const currentProfile = useAccessibilityStore((s) => s.profile);
+
+  const isActive = currentProfile === profile.id;
 
   const handleSelect = () => {
     applyProfile(profile.id);
@@ -42,33 +41,39 @@ export function ProfileCard({
     <Card
       onClick={handleSelect}
       className={cn(
-        "cursor-pointer p-5 flex flex-col gap-4 group hover-lift overflow-hidden relative",
-        accentClass,
-        borderClass
+        "cursor-pointer p-6 flex flex-col gap-5 group hover-lift overflow-hidden relative border transition-all shadow-xs bg-card",
+        isActive
+          ? "border-fg/30 ring-1 ring-fg/10 shadow-md"
+          : "border-border hover:border-fg/20"
       )}
     >
-      {/* Icon visual — solid, themed */}
-      <div
-        className={cn(
-          "w-12 h-12 rounded-xl flex items-center justify-center shadow-sm",
-          iconBgClass
+      <div className="flex items-start justify-between">
+        {/* Icon visual — neutral, consistent */}
+        <div
+          className="w-12 h-12 rounded-xl flex items-center justify-center shadow-2xs transition-transform group-hover:scale-105 bg-bg border border-border/60"
+          aria-hidden
+        >
+          <Icon size={24} className="text-fg/70" />
+        </div>
+
+        {isActive && (
+          <span className="inline-flex items-center gap-1 text-[11px] font-sans font-semibold text-fg bg-fg/5 px-2.5 py-0.5 rounded-full border border-border">
+            <Check size={12} /> Profil Aktif
+          </span>
         )}
-        aria-hidden
-      >
-        <Icon size={22} className={iconClass} />
       </div>
 
-      <div className="space-y-2">
-        <span className="text-sm font-bold font-sans text-fg block">
+      <div className="space-y-2.5 flex-1">
+        <h3 className="text-base font-bold font-lexend text-fg">
           {profile.label}
-        </span>
+        </h3>
         <p className="text-xs font-sans text-muted leading-relaxed">
           {profile.desc}
         </p>
 
-        <div className="flex flex-wrap gap-1 mt-2">
+        <div className="flex flex-wrap gap-1.5 pt-1">
           {profile.tags.map((tag) => (
-            <Badge key={tag} variant="soft">
+            <Badge key={tag} variant="soft" className="bg-bg/80 border border-border/60">
               {tag}
             </Badge>
           ))}
@@ -81,10 +86,10 @@ export function ProfileCard({
           e.stopPropagation();
           handleSelect();
         }}
-        className="w-full mt-auto py-2 text-xs font-sans font-medium border border-border text-fg rounded-lg hover:bg-card transition-colors flex items-center justify-center gap-1.5 group-hover:border-fg"
+        className="w-full mt-auto py-3 px-4 text-xs font-sans font-semibold border border-border text-fg rounded-xl bg-card hover:bg-fg hover:text-bg transition-all flex items-center justify-center gap-1.5 shadow-2xs group-hover:border-fg/40 min-h-[44px]"
       >
         Pilih Profil {profile.label}
-        <ChevronRight size={12} aria-hidden />
+        <ChevronRight size={14} aria-hidden />
       </button>
     </Card>
   );

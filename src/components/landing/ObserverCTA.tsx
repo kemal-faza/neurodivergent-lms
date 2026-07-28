@@ -1,42 +1,41 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Eye, ArrowRight, ShieldCheck } from "lucide-react";
+import { Eye, ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 
 export function ObserverCTA() {
   const router = useRouter();
 
   return (
-    <Card className="p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 hover-lift bg-gradient-to-br from-sky-50 to-amber-50">
+    <Card className="p-6 sm:p-7 flex flex-col sm:flex-row items-start sm:items-center gap-5 hover-lift border border-border bg-card shadow-xs rounded-2xl">
       <div
-        className="w-12 h-12 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center shadow-sm flex-shrink-0"
+        className="w-12 h-12 rounded-xl bg-bg text-fg/70 border border-border/60 flex items-center justify-center shadow-2xs flex-shrink-0"
         aria-hidden
       >
         <Eye size={22} />
       </div>
 
       <div className="space-y-1.5 flex-1">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-bold font-sans text-fg">
+        <div className="flex items-center gap-2.5">
+          <h3 className="text-base font-bold font-lexend text-fg">
             Mode Observer
-          </span>
-          <span className="inline-flex items-center gap-1 text-[10px] font-sans text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">
-            <ShieldCheck size={10} aria-hidden />
-            Tanpa login
+          </h3>
+          <span className="inline-flex items-center gap-1 text-[11px] font-sans font-medium text-fg/70 bg-fg/5 border border-border px-2.5 py-0.5 rounded-full">
+            Akses Langsung
           </span>
         </div>
-        <p className="text-xs font-sans text-muted leading-relaxed">
-          Pantau progress anak / siswa lewat dashboard, tanpa perlu akun.
+        <p className="text-xs font-sans text-muted leading-relaxed max-w-xl">
+          Pantau perkembangan belajar siswa atau anak langsung melalui dashboard pemantauan tanpa perlu pendaftaran akun.
         </p>
       </div>
 
       <button
         type="button"
         onClick={() => router.push("/dashboard")}
-        className="px-4 py-2.5 text-xs font-sans font-medium bg-accent text-accent-fg rounded-lg hover:opacity-90 flex items-center justify-center gap-1.5 transition-opacity flex-shrink-0"
+        className="w-full sm:w-auto px-5 py-3 text-xs font-sans font-semibold bg-fg text-bg rounded-xl hover:opacity-90 flex items-center justify-center gap-2 transition-all flex-shrink-0 shadow-xs active:scale-95 min-h-[44px]"
       >
-        Masuk sebagai Observer
+        Buka Dashboard Observer
         <ArrowRight size={14} aria-hidden />
       </button>
     </Card>

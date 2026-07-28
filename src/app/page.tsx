@@ -23,35 +23,35 @@ const profiles: Array<{
   {
     id: "disleksia",
     label: "Disleksia",
-    desc: "Font OpenDyslexic, spacing lebar, line guide ruler, TTS otomatis",
+    desc: "Dilengkapi font OpenDyslexic, jarak antar baris lebih luas, pembaca garis, dan Text-to-Speech.",
     tags: ["OpenDyslexic", "Line Guide", "TTS", "High Contrast"],
     Icon: BookOpen,
-    accentClass: "profile-accent-dyslexia",
-    borderClass: "border-profile-dyslexia-border",
-    iconBgClass: "bg-amber-100",
-    iconClass: "text-amber-700",
+    accentClass: "",
+    borderClass: "",
+    iconBgClass: "",
+    iconClass: "",
   },
   {
     id: "adhd",
     label: "ADHD",
-    desc: "Focus mode paragraf, bionic reading, reward streak, timer Pomodoro",
+    desc: "Dilengkapi mode fokus per paragraf, Bionic Reading, pelacak streak, dan timer Pomodoro interaktif.",
     tags: ["Focus Mode", "Bionic", "Streak", "Pomodoro"],
     Icon: Zap,
-    accentClass: "profile-accent-adhd",
-    borderClass: "border-profile-adhd-border",
-    iconBgClass: "bg-orange-100",
-    iconClass: "text-orange-600",
+    accentClass: "",
+    borderClass: "",
+    iconBgClass: "",
+    iconClass: "",
   },
   {
     id: "umum",
     label: "Umum",
-    desc: "Pengaturan default yang nyaman, fleksibel dikustomisasi kapan saja",
+    desc: "Tampilan belajar standar yang nyaman dan fleksibel disesuaikan dengan kebutuhanmu kapan saja.",
     tags: ["Kustomisasi", "Standar", "Fleksibel"],
     Icon: Settings2,
-    accentClass: "profile-accent-umum",
-    borderClass: "border-profile-umum-border",
-    iconBgClass: "bg-emerald-100",
-    iconClass: "text-emerald-700",
+    accentClass: "",
+    borderClass: "",
+    iconBgClass: "",
+    iconClass: "",
   },
 ];
 
@@ -59,46 +59,41 @@ const features: Array<{
   icon: LucideIcon;
   label: string;
   desc: string;
-  tone: "amber" | "sky" | "violet" | "emerald";
 }> = [
   {
     icon: Settings2,
     label: "Accessibility Panel",
-    desc: "Font, spacing, contrast, TTS, bionic — semua dalam satu panel melayang",
-    tone: "amber",
+    desc: "Atur ukuran font, kontras, pembaca teks, dan bionic reading dari satu panel floating.",
   },
   {
     icon: Zap,
     label: "Adaptive Quiz Engine",
-    desc: "Kesulitan soal berubah otomatis berdasarkan performa jawaban",
-    tone: "sky",
+    desc: "Tingkat kesulitan kuis menyesuaikan secara otomatis berdasarkan performa jawabanmu.",
   },
   {
     icon: BarChart2,
     label: "Progress Tracking",
-    desc: "Riwayat belajar persisten tersimpan otomatis di IndexedDB",
-    tone: "violet",
+    desc: "Catatan dan riwayat belajar tersimpan secara otomatis di penyimpanan lokal perangkatmu.",
   },
   {
     icon: Gamepad2,
-    label: "Gamification",
-    desc: "Streak harian, badge koleksi, dan leaderboard lokal",
-    tone: "emerald",
+    label: "Gamification System",
+    desc: "Bangun konsistensi belajar lewat streak harian, koleksi badge, dan papan skor.",
   },
 ];
 
 const flowSteps = [
   "Pilih Profil",
   "Panel Auto-Config",
-  "Baca Materi + TTS",
+  "Baca Materi & TTS",
   "Kerjakan Kuis",
-  "Badge + Poin",
+  "Dapatkan Badge",
 ];
 
 export default function LandingPage() {
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6 font-sans">
-      {/* Hero — full-width, out of container for visual impact */}
+    <div className="max-w-5xl mx-auto px-4 py-8 font-sans">
+      {/* Hero */}
       <div className="-mx-4 mb-16">
         <Hero />
       </div>
@@ -106,17 +101,16 @@ export default function LandingPage() {
       <div className="space-y-16">
         {/* Profile Selector Section */}
         <section>
-          <div className="mb-5 text-center sm:text-left">
+          <div className="mb-6 text-center sm:text-left">
             <h2 className="text-xl sm:text-2xl font-bold font-lexend text-fg">
               Pilih Profil Belajarmu
             </h2>
             <p className="text-sm text-muted mt-1.5 max-w-xl">
-              Panel aksesibilitas akan otomatis menyesuaikan diri berdasarkan
-              profil yang kamu pilih.
+              Panel aksesibilitas akan otomatis mengonfigurasi tampilan materi berdasarkan profil yang kamu pilih.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {profiles.map((p) => (
               <ProfileCard
                 key={p.id}
@@ -133,24 +127,22 @@ export default function LandingPage() {
 
         {/* Feature Highlights Section */}
         <section>
-          <div className="mb-5 text-center sm:text-left">
+          <div className="mb-6 text-center sm:text-left">
             <h2 className="text-xl sm:text-2xl font-bold font-lexend text-fg">
               Kenapa LevelUp Berbeda?
             </h2>
             <p className="text-sm text-muted mt-1.5 max-w-xl">
-              Empat pilar yang membuat platform ini ramah untuk setiap profil
-              neurodivergen.
+              Empat pilar utama yang dirancang untuk memberikan pengalaman belajar inklusif dan ramah neurodivergen.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
             {features.map((f) => (
               <FeatureCard
                 key={f.label}
                 icon={f.icon}
                 label={f.label}
                 desc={f.desc}
-                tone={f.tone}
               />
             ))}
           </div>
@@ -158,15 +150,15 @@ export default function LandingPage() {
 
         {/* User Flow Preview Section */}
         <section>
-          <div className="mb-5 text-center sm:text-left">
+          <div className="mb-6 text-center sm:text-left">
             <h2 className="text-xl sm:text-2xl font-bold font-lexend text-fg">
-              Cara Kerjanya
+              Cara Kerja Platform
             </h2>
             <p className="text-sm text-muted mt-1.5">
-              Dari pilih profil sampai dapat badge — lima langkah simpel.
+              Alur sederhana dari menentukan profil hingga mengumpulkan badge belajar.
             </p>
           </div>
-          <div className="flex flex-wrap items-stretch gap-2 sm:gap-3">
+          <div className="flex flex-col sm:grid sm:grid-cols-3 lg:grid-cols-5 gap-3 items-center">
             {flowSteps.map((step, i) => (
               <FlowStep
                 key={step}

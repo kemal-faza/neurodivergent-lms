@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ChevronRight, Check } from "lucide-react";
+import { ArrowRight, ArrowDown, Check } from "lucide-react";
 
 interface FlowStepProps {
   step: number;
@@ -11,26 +11,33 @@ interface FlowStepProps {
 
 export function FlowStep({ step, label, isLast = false }: FlowStepProps) {
   return (
-    <>
-      <div className="flex-1 min-w-[120px] border border-border bg-card rounded-lg p-3 flex items-center gap-3 shadow-sm hover-lift">
+    <div className="flex flex-col sm:flex-row items-center gap-2 flex-1 w-full sm:min-w-[150px]">
+      <div className="w-full sm:flex-1 border border-border/80 bg-card rounded-xl p-3.5 flex items-center gap-3 shadow-2xs hover-lift group">
         <span
-          className="w-7 h-7 flex-shrink-0 rounded-full bg-accent text-accent-fg text-xs font-bold font-sans flex items-center justify-center"
+          className="w-7 h-7 flex-shrink-0 rounded-lg bg-fg text-bg text-xs font-bold font-sans flex items-center justify-center shadow-2xs"
           aria-hidden
         >
           {step}
         </span>
-        <span className="text-xs font-sans text-fg font-medium leading-tight">
+        <span className="text-xs font-sans text-fg font-semibold leading-tight">
           {label}
         </span>
-        <Check size={12} className="text-emerald-600 ml-auto flex-shrink-0" aria-hidden />
+        <Check size={14} className="text-muted ml-auto flex-shrink-0" aria-hidden />
       </div>
       {!isLast && (
-        <ChevronRight
-          size={16}
-          className="text-muted flex-shrink-0"
-          aria-hidden
-        />
+        <>
+          <ArrowRight
+            size={16}
+            className="text-muted/60 flex-shrink-0 hidden lg:block"
+            aria-hidden
+          />
+          <ArrowDown
+            size={16}
+            className="text-muted/60 flex-shrink-0 lg:hidden my-1 sm:my-0"
+            aria-hidden
+          />
+        </>
       )}
-    </>
+    </div>
   );
 }

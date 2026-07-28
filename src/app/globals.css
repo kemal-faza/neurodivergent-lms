@@ -115,15 +115,15 @@ body {
 
 /* Hero gradient tokens (calm pastel, theme-aware) */
 :root {
-  --hero-from: #fffbeb;   /* dyslexia-amber soft */
-  --hero-via: #ffffff;
-  --hero-to: #f0f9ff;     /* sky-50 */
+  --hero-from: #faf8f5;   /* warm off-white */
+  --hero-via: #f9fafb;
+  --hero-to: #f3f4f6;     /* neutral-100 */
 }
 
 [data-contrast="high"] {
   --hero-from: #fef3c7;
   --hero-via: #ffffff;
-  --hero-to: #e0f2fe;
+  --hero-to: #f5f5f5;
 }
 
 [data-contrast="dark"] {
