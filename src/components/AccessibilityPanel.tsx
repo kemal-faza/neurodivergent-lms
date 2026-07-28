@@ -1,159 +1,229 @@
 "use client";
 
 import { useState } from "react";
+import { Sliders, X, Check, RotateCcw } from "lucide-react";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { CONTRAST_OPTIONS, FONT_OPTIONS, PROFILE_LABELS } from "@/lib/constants";
 import type { Contrast, FontFamily, Profile } from "@/lib/types";
-import { cn } from "@/lib/cn";
+import { ToggleSwitch } from "./ui/WireframePrimitives";
 
 const PROFILES: Profile[] = ["disleksia", "adhd", "umum"];
 
-/**
- * Floating accessibility control panel (PRD P0). Mostly functional in the
- * foundation: it reads/writes the accessibility store, and AccessibilityApplier
- * reflects the changes live. Person A extends TTS wiring; Person B refines the
- * design system / Line Guide integration.
- */
 export function AccessibilityPanel() {
   const [open, setOpen] = useState(false);
   const s = useAccessibilityStore();
 
+  const activeCount = [s.bionic, s.lineGuide, s.focusMode, s.ttsEnabled].filter(Boolean).length;
+
   return (
-    <div className="fixed bottom-4 right-4 z-50">
-      <button
-        type="button"
-        aria-expanded={open}
-        aria-label="Buka panel aksesibilitas"
-        onClick={() => setOpen((v) => !v)}
-        className="rounded-full bg-accent px-4 py-3 font-medium text-accent-fg shadow-lg"
-      >
-        {open ? "Tutup" : "Aksesibilitas"}
-      </button>
-
+    <div className="fixed bottom-5 right-5 z-50 font-mono">
+      {/* Floating Card Panel */}
       {open && (
-        <div
-          role="dialog"
-          aria-label="Panel aksesibilitas"
-          className="mt-2 max-h-[80vh] w-80 overflow-y-auto rounded-xl border border-border bg-card p-4 text-fg shadow-xl"
-        >
-          <h2 className="mb-3 font-reader text-base font-bold">Aksesibilitas</h2>
+        <div className="mb-3 w-80 max-h-[80vh] overflow-y-auto bg-card border-2 border-border rounded-xl shadow-2xl p-4 space-y-4 text-fg animate-fade-in">
+          {/* Header */}
+          <div className="flex items-center justify-between border-b-2 border-dashed border-border pb-2">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded bg-accent text-accent-fg flex items-center justify-center text-xs font-bold">
+                ♿
+              </div>
+              <div>
+                <h3 className="text-xs font-bold text-fg font-sans">Panel Aksesibilitas</h3>
+                <p className="text-[9px] text-muted">Floating · Berlaku di Semua Halaman</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="p-1 text-muted hover:text-fg hover:bg-muted/10 rounded"
+              title="Tutup Panel"
+            >
+              <X size={16} />
+            </button>
+          </div>
 
-          <Section title="Profil cepat">
-            <div className="flex gap-2">
+          {/* Quick Profile Presets */}
+          <div>
+            <SectionHeader label="preset profil cepat" />
+            <div className="grid grid-cols-3 gap-1.5">
               {PROFILES.map((p) => (
                 <button
                   key={p}
                   type="button"
                   onClick={() => s.applyProfile(p)}
-                  className={cn(
-                    "rounded-md px-2 py-1 text-sm",
-                    s.profile === p ? "bg-accent text-accent-fg" : "bg-bg text-fg",
-                  )}
+                  className={`text-[10px] py-1.5 px-2 border rounded text-center transition-all ${
+                    s.profile === p
+                      ? "border-fg bg-fg text-bg font-bold"
+                      : "border-border bg-card text-muted hover:bg-muted/10"
+                  }`}
                 >
-                  {PROFILE_LABELS[p]}
+                  {p === "disleksia" ? "📖 Disleksia" : p === "adhd" ? "⚡ ADHD" : "🌐 Umum"}
                 </button>
               ))}
             </div>
-          </Section>
+          </div>
 
-          <Section title="Font">
-            <select
-              value={s.fontFamily}
-              onChange={(e) => s.setSetting("fontFamily", e.target.value as FontFamily)}
-              className="w-full rounded-md border border-border bg-bg p-1 text-sm"
-            >
-              {FONT_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
+          {/* Font Selector */}
+          <div>
+            <SectionHeader label="jenis font" />
+            <div className="space-y-1">
+              {FONT_OPTIONS.map((f) => (
+                <button
+                  key={f.value}
+                  type="button"
+                  onClick={() => s.setSetting("fontFamily", f.value)}
+                  className={`w-full text-left text-[11px] px-2.5 py-1.5 border rounded transition-colors flex items-center justify-between ${
+                    s.fontFamily === f.value
+                      ? "border-fg bg-fg text-bg font-bold"
+                      : "border-border bg-card text-muted hover:bg-muted/10"
+                  }`}
+                >
+                  <span>{f.label}</span>
+                  {s.fontFamily === f.value && <Check size={12} />}
+                </button>
               ))}
-            </select>
-          </Section>
+            </div>
+          </div>
 
-          <Range
-            label="Ukuran font"
-            value={s.fontSize}
-            min={14}
-            max={32}
-            step={1}
-            suffix="px"
-            onChange={(v) => s.setSetting("fontSize", v)}
-          />
-          <Range
-            label="Line height"
-            value={s.lineHeight}
-            min={1.2}
-            max={2.6}
-            step={0.1}
-            onChange={(v) => s.setSetting("lineHeight", v)}
-          />
-          <Range
-            label="Letter spacing"
-            value={s.letterSpacing}
-            min={0}
-            max={4}
-            step={0.5}
-            suffix="px"
-            onChange={(v) => s.setSetting("letterSpacing", v)}
-          />
-          <Range
-            label="Word spacing"
-            value={s.wordSpacing}
-            min={0}
-            max={10}
-            step={1}
-            suffix="px"
-            onChange={(v) => s.setSetting("wordSpacing", v)}
-          />
+          {/* Font Size & Spacing Controls */}
+          <div className="space-y-2">
+            <SectionHeader label="spasi baris & teks" />
 
-          <Section title="Kontras">
-            <select
-              value={s.contrast}
-              onChange={(e) => s.setSetting("contrast", e.target.value as Contrast)}
-              className="w-full rounded-md border border-border bg-bg p-1 text-sm"
-            >
-              {CONTRAST_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
+            <RangeControl
+              label="Ukuran font"
+              value={s.fontSize}
+              min={14}
+              max={30}
+              step={1}
+              unit="px"
+              onChange={(v) => s.setSetting("fontSize", v)}
+            />
+            <RangeControl
+              label="Line height"
+              value={s.lineHeight}
+              min={1.2}
+              max={2.4}
+              step={0.1}
+              onChange={(v) => s.setSetting("lineHeight", v)}
+            />
+            <RangeControl
+              label="Letter spacing"
+              value={s.letterSpacing}
+              min={0}
+              max={4}
+              step={0.5}
+              unit="px"
+              onChange={(v) => s.setSetting("letterSpacing", v)}
+            />
+            <RangeControl
+              label="Word spacing"
+              value={s.wordSpacing}
+              min={0}
+              max={10}
+              step={1}
+              unit="px"
+              onChange={(v) => s.setSetting("wordSpacing", v)}
+            />
+          </div>
+
+          {/* Contrast Selector */}
+          <div>
+            <SectionHeader label="kontras warna" />
+            <div className="grid grid-cols-3 gap-1">
+              {CONTRAST_OPTIONS.map((c) => (
+                <button
+                  key={c.value}
+                  type="button"
+                  onClick={() => s.setSetting("contrast", c.value)}
+                  className={`text-[10px] py-1 border rounded transition-colors ${
+                    s.contrast === c.value
+                      ? "border-fg bg-fg text-bg font-bold"
+                      : "border-border bg-card text-muted hover:bg-muted/10"
+                  }`}
+                >
+                  {c.label}
+                </button>
               ))}
-            </select>
-          </Section>
+            </div>
+          </div>
 
-          <Toggle label="Bionic reading" checked={s.bionic} onChange={(v) => s.setSetting("bionic", v)} />
-          <Toggle label="Text-to-speech" checked={s.ttsEnabled} onChange={(v) => s.setSetting("ttsEnabled", v)} />
-          <Toggle label="Line guide" checked={s.lineGuide} onChange={(v) => s.setSetting("lineGuide", v)} />
-          <Toggle label="Focus mode" checked={s.focusMode} onChange={(v) => s.setSetting("focusMode", v)} />
+          {/* Accessibility Toggles */}
+          <div>
+            <SectionHeader label="fitur aksesibilitas" />
+            <div className="space-y-1.5">
+              <ToggleSwitch
+                label="🔊 TTS (Text-to-Speech)"
+                active={s.ttsEnabled}
+                onToggle={() => s.setSetting("ttsEnabled", !s.ttsEnabled)}
+              />
+              <ToggleSwitch
+                label="⚡ Bionic Reading"
+                active={s.bionic}
+                onToggle={() => s.setSetting("bionic", !s.bionic)}
+              />
+              <ToggleSwitch
+                label="📏 Line Guide Ruler"
+                active={s.lineGuide}
+                onToggle={() => s.setSetting("lineGuide", !s.lineGuide)}
+              />
+              <ToggleSwitch
+                label="🎯 Focus Mode"
+                active={s.focusMode}
+                onToggle={() => s.setSetting("focusMode", !s.focusMode)}
+              />
+            </div>
+          </div>
 
-          <button
-            type="button"
-            onClick={() => s.reset()}
-            className="mt-3 w-full rounded-md border border-border bg-bg py-2 text-sm"
-          >
-            Reset ke default
-          </button>
+          {/* Reset Footer */}
+          <div className="pt-2 border-t border-dashed border-border flex justify-between items-center text-[10px]">
+            <span className="text-muted">
+              {activeCount > 0 ? `${activeCount} fitur aktif` : "Standard"}
+            </span>
+            <button
+              type="button"
+              onClick={() => s.reset()}
+              className="text-muted hover:text-fg flex items-center gap-1 underline"
+            >
+              <RotateCcw size={10} /> Reset Default
+            </button>
+          </div>
         </div>
       )}
+
+      {/* Trigger Button */}
+      <button
+        type="button"
+        onClick={() => setOpen((p) => !p)}
+        className="flex items-center gap-2 px-4 py-2.5 bg-accent hover:opacity-90 text-accent-fg rounded-full shadow-xl border-2 border-border transition-transform active:scale-95"
+        title="Buka Floating Panel Aksesibilitas"
+      >
+        <Sliders size={16} className="text-amber-400" />
+        <span className="text-xs font-bold font-sans">Aksesibilitas</span>
+        {activeCount > 0 && (
+          <span className="w-5 h-5 bg-amber-400 text-gray-900 rounded-full text-[10px] font-bold flex items-center justify-center">
+            {activeCount}
+          </span>
+        )}
+      </button>
     </div>
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function SectionHeader({ label }: { label: string }) {
   return (
-    <div className="mb-3">
-      <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted">{title}</p>
-      {children}
+    <div className="flex items-center gap-1 mb-1.5">
+      <span className="w-1.5 h-1.5 bg-muted rounded-sm" />
+      <span className="text-[10px] font-mono uppercase tracking-widest text-muted">{label}</span>
     </div>
   );
 }
 
-function Range({
+function RangeControl({
   label,
   value,
   min,
   max,
   step,
-  suffix,
+  unit = "",
   onChange,
 }: {
   label: string;
@@ -161,16 +231,16 @@ function Range({
   min: number;
   max: number;
   step: number;
-  suffix?: string;
-  onChange: (v: number) => void;
+  unit?: string;
+  onChange: (val: number) => void;
 }) {
   return (
-    <div className="mb-3">
-      <div className="flex justify-between text-xs font-semibold uppercase tracking-wide text-muted">
+    <div className="text-[10px]">
+      <div className="flex justify-between text-muted mb-0.5 font-mono">
         <span>{label}</span>
         <span>
           {value}
-          {suffix}
+          {unit}
         </span>
       </div>
       <input
@@ -180,31 +250,8 @@ function Range({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full"
-        aria-label={label}
+        className="w-full h-1 bg-muted/20 rounded cursor-pointer accent-fg"
       />
     </div>
-  );
-}
-
-function Toggle({
-  label,
-  checked,
-  onChange,
-}: {
-  label: string;
-  checked: boolean;
-  onChange: (v: boolean) => void;
-}) {
-  return (
-    <label className="mb-2 flex items-center justify-between text-sm">
-      <span>{label}</span>
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-        aria-label={label}
-      />
-    </label>
   );
 }

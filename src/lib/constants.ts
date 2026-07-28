@@ -76,10 +76,9 @@ export const PROFILE_LABELS: Record<Profile, string> = {
   umum: "Umum",
 };
 
-/** CSS font-family stacks per option. OpenDyslexic needs the font file added later
- *  (drop it in /public/fonts and add an @font-face in globals.css). */
+/** CSS font-family stacks per option. OpenDyslexic font files are hosted in /public/fonts with @font-face in globals.css. */
 export const FONT_STACKS: Record<FontFamily, string> = {
   default: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
   lexend: "var(--font-lexend), system-ui, sans-serif",
-  opendyslexic: "OpenDyslexic, var(--font-lexend), sans-serif",
+  opendyslexic: "'OpenDyslexic', var(--font-lexend), sans-serif",
 };
