@@ -21,7 +21,10 @@ export default function MateriPage() {
   const bumpStreak = useProgressStore((s) => s.bumpStreak);
 
   const font = useAccessibilityStore((s) => s.fontFamily);
-  const spacing = useAccessibilityStore((s) => s.lineHeight);
+  const fontSize = useAccessibilityStore((s) => s.fontSize);
+  const lineHeight = useAccessibilityStore((s) => s.lineHeight);
+  const letterSpacing = useAccessibilityStore((s) => s.letterSpacing);
+  const wordSpacing = useAccessibilityStore((s) => s.wordSpacing);
   const contrast = useAccessibilityStore((s) => s.contrast);
   const ttsEnabled = useAccessibilityStore((s) => s.ttsEnabled);
   const bionic = useAccessibilityStore((s) => s.bionic);
@@ -141,7 +144,16 @@ export default function MateriPage() {
           Font: <strong>{font}</strong>
         </span>
         <span className="text-[10px] px-2 py-0.5 bg-muted/10 border border-border rounded text-fg font-mono">
-          Spacing: <strong>{spacing}x</strong>
+          Uk. Font: <strong>{fontSize}px</strong>
+        </span>
+        <span className="text-[10px] px-2 py-0.5 bg-muted/10 border border-border rounded text-fg font-mono">
+          Line Height: <strong>{lineHeight}x</strong>
+        </span>
+        <span className="text-[10px] px-2 py-0.5 bg-muted/10 border border-border rounded text-fg font-mono">
+          Letter Spacing: <strong>{letterSpacing}px</strong>
+        </span>
+        <span className="text-[10px] px-2 py-0.5 bg-muted/10 border border-border rounded text-fg font-mono">
+          Word Spacing: <strong>{wordSpacing}px</strong>
         </span>
         <span className="text-[10px] px-2 py-0.5 bg-muted/10 border border-border rounded text-fg font-mono">
           Kontras: <strong>{contrast}</strong>
@@ -267,11 +279,11 @@ export default function MateriPage() {
 
                 {bionic ? (
                   <p
-                    className="text-sm sm:text-base font-reader leading-relaxed"
+                    className="font-reader"
                     dangerouslySetInnerHTML={{ __html: toBionic(para.text) }}
                   />
                 ) : (
-                  <p className="text-sm sm:text-base font-reader leading-relaxed">
+                  <p className="font-reader">
                     {para.text}
                   </p>
                 )}
