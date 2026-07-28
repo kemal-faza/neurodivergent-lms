@@ -113,6 +113,41 @@ body {
   transition: opacity 0.3s ease, filter 0.3s ease;
 }
 
+/* Hero gradient tokens (calm pastel, theme-aware) */
+:root {
+  --hero-from: #fffbeb;   /* dyslexia-amber soft */
+  --hero-via: #ffffff;
+  --hero-to: #f0f9ff;     /* sky-50 */
+}
+
+[data-contrast="high"] {
+  --hero-from: #fef3c7;
+  --hero-via: #ffffff;
+  --hero-to: #e0f2fe;
+}
+
+[data-contrast="dark"] {
+  --hero-from: #1e293b;
+  --hero-via: #111827;
+  --hero-to: #0f172a;
+}
+
+/* Hero surface */
+.hero-surface {
+  background: linear-gradient(135deg, var(--hero-from), var(--hero-via), var(--hero-to));
+}
+
+/* Profile card accent backgrounds (light, so text remains readable) */
+.profile-accent-dyslexia {
+  background: var(--profile-dyslexia);
+}
+.profile-accent-adhd {
+  background: var(--profile-adhd);
+}
+.profile-accent-umum {
+  background: var(--profile-umum);
+}
+
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
@@ -121,4 +156,16 @@ body {
 
 .animate-fade-in {
   animation: fadeIn 0.25s ease-out forwards;
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-card-lift,
+  .animate-fade-in {
+    animation: none !important;
+  }
+  .hero-surface {
+    transition: none;
+  }
 }
