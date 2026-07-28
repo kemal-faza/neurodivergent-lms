@@ -267,11 +267,11 @@ export default function MateriPage() {
 
                 {bionic ? (
                   <p
-                    className="text-sm sm:text-base font-reader leading-relaxed"
+                    className="font-reader"
                     dangerouslySetInnerHTML={{ __html: toBionic(para.text) }}
                   />
                 ) : (
-                  <p className="text-sm sm:text-base font-reader leading-relaxed">
+                  <p className="font-reader">
                     {para.text}
                   </p>
                 )}
