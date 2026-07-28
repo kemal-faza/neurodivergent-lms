@@ -158,6 +158,14 @@ body {
   animation: fadeIn 0.25s ease-out forwards;
 }
 
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.08);
+}
+
 /* Respect reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up,
@@ -165,7 +173,11 @@ body {
   .animate-fade-in {
     animation: none !important;
   }
-  .hero-surface {
-    transition: none;
+  .hero-surface,
+  .hover-lift {
+    transition: none !important;
+  }
+  .hover-lift:hover {
+    transform: none !important;
   }
 }

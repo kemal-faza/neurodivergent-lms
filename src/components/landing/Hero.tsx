@@ -1,32 +1,39 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ChevronRight, BarChart2 } from "lucide-react";
+import { ChevronRight, BarChart2, Sparkles, Gamepad2, Lock, Accessibility } from "lucide-react";
 
 export function Hero() {
   const router = useRouter();
 
   return (
     <section className="hero-surface relative overflow-hidden mb-12 animate-fade-up">
-      {/* Subtle decorative dots */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" aria-hidden>
-        <div className="absolute top-4 right-8 w-32 h-32 border-2 border-fg rounded-full" />
-        <div className="absolute bottom-6 left-12 w-20 h-20 border-2 border-fg rounded-full" />
-      </div>
+      {/* Decorative blurred orbs */}
+      <div
+        aria-hidden
+        className="absolute -top-12 -right-16 w-64 h-64 rounded-full bg-amber-200/40 blur-3xl pointer-events-none"
+      />
+      <div
+        aria-hidden
+        className="absolute -bottom-16 -left-12 w-56 h-56 rounded-full bg-sky-200/40 blur-3xl pointer-events-none"
+      />
 
-      <div className="relative px-6 py-12 sm:py-16 flex flex-col items-center justify-center text-center gap-5 max-w-3xl mx-auto">
+      <div className="relative px-6 py-16 sm:py-20 flex flex-col items-center justify-center text-center gap-5 max-w-3xl mx-auto">
         {/* Accessibility badge */}
-        <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-medium bg-accent/5 text-accent border border-accent/10 rounded-full px-3 py-1">
-          ♿ Accessibility-by-design
+        <span className="inline-flex items-center gap-1.5 text-[11px] font-sans font-medium bg-accent/5 text-accent border border-accent/15 rounded-full px-3 py-1">
+          <Accessibility size={12} aria-hidden />
+          Accessibility-by-design
         </span>
 
-        <h1 className="text-3xl sm:text-4xl font-bold font-lexend text-fg leading-tight tracking-tight">
+        <h1 className="text-3xl sm:text-5xl font-bold font-lexend text-fg leading-tight tracking-tight">
           Belajar Tanpa Batas,
-          <br />
-          Sesuai Cara Otakmu
+          <br className="hidden sm:block" />
+          <span className="bg-gradient-to-r from-amber-500 to-sky-600 bg-clip-text text-transparent">
+            Sesuai Cara Otakmu
+          </span>
         </h1>
 
-        <p className="text-sm sm:text-base font-sans text-muted max-w-lg leading-relaxed">
+        <p className="text-sm sm:text-base font-sans text-muted max-w-xl leading-relaxed">
           Platform LMS inklusif berfitur adaptif yang dirancang khusus untuk
           pengidap ADHD &amp; Disleksia. Bukan sekadar toggle font — tapi
           pengalaman belajar yang benar-benar ramah.
@@ -40,26 +47,35 @@ export function Hero() {
             className="px-5 py-2.5 text-sm font-sans font-semibold bg-accent text-accent-fg rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1.5 shadow-sm"
           >
             Mulai Belajar
-            <ChevronRight size={16} />
+            <ChevronRight size={16} aria-hidden />
           </button>
           <button
             type="button"
             onClick={() => router.push("/dashboard")}
-            className="px-5 py-2.5 text-sm font-sans text-fg border-2 border-border bg-card rounded-lg hover:bg-muted/10 transition-colors flex items-center gap-1.5"
+            className="px-5 py-2.5 text-sm font-sans text-fg border border-border bg-card/80 backdrop-blur rounded-lg hover:bg-card transition-colors flex items-center gap-1.5"
           >
-            <BarChart2 size={14} />
+            <BarChart2 size={14} aria-hidden />
             Lihat Dashboard
           </button>
         </div>
 
-        {/* Trust badges */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mt-3 text-[10px] font-mono text-muted">
-          <span className="flex items-center gap-1">🎯 Adaptive Learning</span>
-          <span className="w-1 h-1 bg-muted rounded-full" />
-          <span className="flex items-center gap-1">🎮 Gamified Progress</span>
-          <span className="w-1 h-1 bg-muted rounded-full" />
-          <span className="flex items-center gap-1">🔒 Persisten &amp; Lokal</span>
-        </div>
+        {/* Trust badges — lucide icons */}
+        <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mt-4 text-[11px] font-sans text-muted">
+          <li className="flex items-center gap-1.5">
+            <Sparkles size={12} className="text-amber-500" aria-hidden />
+            Adaptive Learning
+          </li>
+          <li aria-hidden className="w-1 h-1 bg-muted/50 rounded-full" />
+          <li className="flex items-center gap-1.5">
+            <Gamepad2 size={12} className="text-sky-600" aria-hidden />
+            Gamified Progress
+          </li>
+          <li aria-hidden className="w-1 h-1 bg-muted/50 rounded-full" />
+          <li className="flex items-center gap-1.5">
+            <Lock size={12} className="text-emerald-600" aria-hidden />
+            Persisten &amp; Lokal
+          </li>
+        </ul>
       </div>
     </section>
   );
