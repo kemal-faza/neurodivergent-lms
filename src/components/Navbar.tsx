@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Brain, Bell, Sliders, Flame, Star, Menu, X } from "lucide-react";
+import { Brain, Bell, Flame, Star, Menu, X } from "lucide-react";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { useProgressStore } from "@/stores/progressStore";
 import { PROFILE_LABELS } from "@/lib/constants";
@@ -15,16 +15,9 @@ export function Navbar() {
   const [mounted, setMounted] = useState(false);
 
   const profile = useAccessibilityStore((s) => s.profile);
-  const bionic = useAccessibilityStore((s) => s.bionic);
-  const lineGuide = useAccessibilityStore((s) => s.lineGuide);
-  const focusMode = useAccessibilityStore((s) => s.focusMode);
-  const ttsEnabled = useAccessibilityStore((s) => s.ttsEnabled);
 
   const poin = useProgressStore((s) => s.poin);
   const streak = useProgressStore((s) => s.streak);
-
-  // Count active accessibility features
-  const activeCount = [bionic, lineGuide, focusMode, ttsEnabled].filter(Boolean).length;
 
   const navLinks = [
     { href: "/", label: "Beranda" },
@@ -106,17 +99,6 @@ export function Navbar() {
               <span className="flex items-center gap-1 font-medium">
                 <Star size={13} className="text-fg/60" /> {poin} pts
               </span>
-            </div>
-
-            {/* Accessibility Indicator Button */}
-            <div className="flex items-center gap-1.5 text-xs font-sans border border-border px-2.5 py-1 rounded-lg bg-card shadow-2xs">
-              <Sliders size={13} className="text-muted" />
-              <span className="hidden sm:inline font-sans text-xs font-medium">Aksesibilitas</span>
-              {activeCount > 0 && (
-                <span className="w-4 h-4 bg-fg text-bg rounded-full text-[9px] font-bold flex items-center justify-center">
-                  {activeCount}
-                </span>
-              )}
             </div>
 
             {/* Avatar & Notification */}

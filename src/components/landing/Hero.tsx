@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ChevronRight,
@@ -20,6 +21,68 @@ export function Hero() {
   const focusMode = useAccessibilityStore((s) => s.focusMode);
   const setSetting = useAccessibilityStore((s) => s.setSetting);
   const applyProfile = useAccessibilityStore((s) => s.applyProfile);
+
+  const [activeDemoIndex, setActiveDemoIndex] = useState(0);
+
+  const demoSegments = [
+    {
+      id: 0,
+      label: "Pemrosesan",
+      plain: "Sistem saraf manusia memproses informasi dengan cara yang unik.",
+      bionic: (
+        <>
+          <span className="bionic-bold">Sis</span>tem{" "}
+          <span className="bionic-bold">sa</span>raf{" "}
+          <span className="bionic-bold">man</span>usia{" "}
+          <span className="bionic-bold">mem</span>proses{" "}
+          <span className="bionic-bold">inf</span>ormasi{" "}
+          <span className="bionic-bold">den</span>gan{" "}
+          <span className="bionic-bold">ca</span>ra{" "}
+          <span className="bionic-bold">ya</span>ng{" "}
+          <span className="bionic-bold">un</span>ik.
+        </>
+      ),
+    },
+    {
+      id: 1,
+      label: "Adaptasi",
+      plain: "LevelUp menyesuaikan tampilan materi secara langsung agar kamu dapat membaca lebih cepat.",
+      bionic: (
+        <>
+          <span className="bionic-bold">Le</span>velUp{" "}
+          <span className="bionic-bold">men</span>yesuaikan{" "}
+          <span className="bionic-bold">tam</span>pilan{" "}
+          <span className="bionic-bold">mat</span>eri{" "}
+          <span className="bionic-bold">sec</span>ara{" "}
+          <span className="bionic-bold">lan</span>gsung{" "}
+          <span className="bionic-bold">ag</span>ar{" "}
+          <span className="bionic-bold">ka</span>mu{" "}
+          <span className="bionic-bold">da</span>pat{" "}
+          <span className="bionic-bold">mem</span>baca{" "}
+          <span className="bionic-bold">leb</span>ih{" "}
+          <span className="bionic-bold">ce</span>pat.
+        </>
+      ),
+    },
+    {
+      id: 2,
+      label: "Fokus",
+      plain: "Tetap fokus dengan pengaturan yang sesuai cara otakmu bekerja.",
+      bionic: (
+        <>
+          <span className="bionic-bold">Te</span>tap{" "}
+          <span className="bionic-bold">fo</span>kus{" "}
+          <span className="bionic-bold">den</span>gan{" "}
+          <span className="bionic-bold">pen</span>gaturan{" "}
+          <span className="bionic-bold">ya</span>ng{" "}
+          <span className="bionic-bold">ses</span>uai{" "}
+          <span className="bionic-bold">ca</span>ra{" "}
+          <span className="bionic-bold">ot</span>akmu{" "}
+          <span className="bionic-bold">ber</span>kerja.
+        </>
+      ),
+    },
+  ];
 
   return (
     <section className="hero-surface relative overflow-hidden mb-12 animate-fade-up rounded-none sm:rounded-2xl border-y sm:border border-border/60 shadow-xs">
@@ -151,37 +214,44 @@ export function Hero() {
               fontFamily === "opendyslexic" ? "font-dyslexic" : "font-sans"
             }`}
           >
-            <p className="text-xs sm:text-sm text-fg leading-relaxed">
-              {bionic ? (
-                <>
-                  <span className="bionic-bold">Sis</span>tem{" "}
-                  <span className="bionic-bold">sa</span>raf{" "}
-                  <span className="bionic-bold">man</span>usia{" "}
-                  <span className="bionic-bold">mem</span>proses{" "}
-                  <span className="bionic-bold">inf</span>ormasi{" "}
-                  <span className="bionic-bold">den</span>gan{" "}
-                  <span className="bionic-bold">ca</span>ra{" "}
-                  <span className="bionic-bold">ya</span>ng{" "}
-                  <span className="bionic-bold">un</span>ik. LevelUp{" "}
-                  <span className="bionic-bold">men</span>yesuaikan{" "}
-                  <span className="bionic-bold">tam</span>pilan{" "}
-                  <span className="bionic-bold">mat</span>eri{" "}
-                  <span className="bionic-bold">sec</span>ara{" "}
-                  <span className="bionic-bold">lan</span>gsung{" "}
-                  <span className="bionic-bold">ag</span>ar{" "}
-                  <span className="bionic-bold">ka</span>mu{" "}
-                  <span className="bionic-bold">da</span>pat{" "}
-                  <span className="bionic-bold">mem</span>baca{" "}
-                  <span className="bionic-bold">leb</span>ih{" "}
-                  <span className="bionic-bold">ce</span>pat{" "}
-                  <span className="bionic-bold">da</span>n{" "}
-                  <span className="bionic-bold">tet</span>ap{" "}
-                  <span className="bionic-bold">fo</span>kus.
-                </>
-              ) : (
-                "Sistem saraf manusia memproses informasi dengan cara yang unik. LevelUp menyesuaikan tampilan materi secara langsung agar kamu dapat membaca lebih cepat dan tetap fokus."
-              )}
-            </p>
+            {/* Focus Mode nav — segment selectors */}
+            {focusMode && (
+              <div className="flex items-center gap-1.5 mb-3 pb-3 border-b border-border/60">
+                <span className="text-[10px] font-mono font-bold text-muted uppercase tracking-wider mr-1">
+                  Fokus:
+                </span>
+                {demoSegments.map((seg) => (
+                  <button
+                    key={seg.id}
+                    type="button"
+                    onClick={() => setActiveDemoIndex(seg.id)}
+                    className={`px-2 py-0.5 rounded text-[10px] font-bold border transition-colors ${
+                      activeDemoIndex === seg.id
+                        ? "bg-purple-700 text-white border-purple-700"
+                        : "bg-card text-purple-700 border-purple-300 hover:bg-purple-100"
+                    }`}
+                  >
+                    {seg.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Segments — dim non-focused when focusMode is on */}
+            {demoSegments.map((seg) => {
+              const isFocused = !focusMode || activeDemoIndex === seg.id;
+              return (
+                <p
+                  key={seg.id}
+                  onClick={() => focusMode && setActiveDemoIndex(seg.id)}
+                  className={`text-xs sm:text-sm text-fg leading-relaxed mb-2 last:mb-0 transition-all ${
+                    !isFocused ? "focus-dimmed" : ""
+                  } ${focusMode ? "cursor-pointer" : ""}`}
+                >
+                  {bionic ? seg.bionic : seg.plain}
+                </p>
+              );
+            })}
           </div>
         </div>
 

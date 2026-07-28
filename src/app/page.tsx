@@ -150,6 +150,17 @@ export default function LandingPage() {
 
         {/* User Flow Preview Section */}
         <section>
+          <style>{`
+            /* End-of-row arrow: hide right arrow, show down arrow on every 3rd item in 3-col grid */
+            @media (min-width: 640px) and (max-width: 1023px) {
+              [data-flow-grid] > *:nth-child(3n):not(:last-child) .arrow-right {
+                display: none !important;
+              }
+              [data-flow-grid] > *:nth-child(3n):not(:last-child) .arrow-down {
+                display: block !important;
+              }
+            }
+          `}</style>
           <div className="mb-6 text-center sm:text-left">
             <h2 className="text-xl sm:text-2xl font-bold font-lexend text-fg">
               Cara Kerja Platform
@@ -158,7 +169,10 @@ export default function LandingPage() {
               Alur sederhana dari menentukan profil hingga mengumpulkan badge belajar.
             </p>
           </div>
-          <div className="flex flex-col sm:grid sm:grid-cols-3 lg:grid-cols-5 gap-3 items-center">
+          <div
+            data-flow-grid
+            className="flex flex-col sm:grid sm:grid-cols-3 lg:grid-cols-5 gap-3 items-center"
+          >
             {flowSteps.map((step, i) => (
               <FlowStep
                 key={step}

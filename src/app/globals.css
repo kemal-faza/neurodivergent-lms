@@ -89,6 +89,11 @@ body {
   word-spacing: var(--reader-word-spacing);
 }
 
+/* Font OpenDyslexic utility class — used in demo surfaces */
+.font-dyslexic {
+  font-family: 'OpenDyslexic', var(--font-lexend), sans-serif;
+}
+
 /* Bionic reading styling */
 .bionic-bold,
 .reader b,
