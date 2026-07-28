@@ -16,7 +16,7 @@ export function AccessibilityPanel() {
   const activeCount = [s.bionic, s.lineGuide, s.focusMode, s.ttsEnabled].filter(Boolean).length;
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 font-mono">
+    <div className="fixed bottom-5 right-5 z-50 font-mono flex flex-col items-end">
       {/* Floating Card Panel */}
       {open && (
         <div className="mb-3 w-80 max-h-[80vh] overflow-y-auto bg-card border-2 border-border rounded-xl shadow-2xl p-4 space-y-4 text-fg animate-fade-in">
