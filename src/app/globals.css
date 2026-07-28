@@ -49,6 +49,14 @@
   --reader-letter-spacing: 0px;
   --reader-word-spacing: 0px;
   --reader-max-width: 75ch;
+
+  /* Line Guide Ruler */
+  --ruler-highlight: rgba(59, 130, 246, 0.06);
+  --ruler-edge: rgba(59, 130, 246, 0.2);
+  --ruler-glow: 0 0 12px rgba(59, 130, 246, 0.06);
+  /* Dimming gradients — get stronger near the ruler */
+  --ruler-dim-near: rgba(0, 0, 0, 0.04);
+  --ruler-dim-far: rgba(0, 0, 0, 0.15);
 }
 
 /* High Contrast Mode (WCAG AAA) */
@@ -60,6 +68,13 @@
   --accent-fg: #ffffff;
   --card: #ffffff;
   --border: #374151;
+
+  /* Line Guide Ruler */
+  --ruler-highlight: rgba(59, 130, 246, 0.12);
+  --ruler-edge: rgba(59, 130, 246, 0.4);
+  --ruler-glow: 0 0 16px rgba(59, 130, 246, 0.12);
+  --ruler-dim-near: rgba(0, 0, 0, 0.06);
+  --ruler-dim-far: rgba(0, 0, 0, 0.25);
 }
 
 /* Dark Mode */
@@ -71,6 +86,14 @@
   --accent-fg: #0f172a;
   --card: #1f2937;
   --border: #374151;
+
+  /* Line Guide Ruler */
+  --ruler-highlight: rgba(96, 165, 250, 0.08);
+  --ruler-edge: rgba(96, 165, 250, 0.25);
+  --ruler-glow: 0 0 12px rgba(96, 165, 250, 0.08);
+  /* In dark mode, dimming needs to be stronger to be visible */
+  --ruler-dim-near: rgba(0, 0, 0, 0.08);
+  --ruler-dim-far: rgba(0, 0, 0, 0.35);
 }
 
 body {
