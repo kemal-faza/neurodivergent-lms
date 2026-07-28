@@ -20,12 +20,12 @@ export default function MateriPage() {
   const completeMateri = useProgressStore((s) => s.completeMateri);
   const bumpStreak = useProgressStore((s) => s.bumpStreak);
 
-const font = useAccessibilityStore((s) => s.fontFamily);
-const fontSize = useAccessibilityStore((s) => s.fontSize);
-const lineHeight = useAccessibilityStore((s) => s.lineHeight);
-const letterSpacing = useAccessibilityStore((s) => s.letterSpacing);
-const wordSpacing = useAccessibilityStore((s) => s.wordSpacing);
-const contrast = useAccessibilityStore((s) => s.contrast);
+  const font = useAccessibilityStore((s) => s.fontFamily);
+  const fontSize = useAccessibilityStore((s) => s.fontSize);
+  const lineHeight = useAccessibilityStore((s) => s.lineHeight);
+  const letterSpacing = useAccessibilityStore((s) => s.letterSpacing);
+  const wordSpacing = useAccessibilityStore((s) => s.wordSpacing);
+  const contrast = useAccessibilityStore((s) => s.contrast);
   const ttsEnabled = useAccessibilityStore((s) => s.ttsEnabled);
   const bionic = useAccessibilityStore((s) => s.bionic);
   const lineGuide = useAccessibilityStore((s) => s.lineGuide);
