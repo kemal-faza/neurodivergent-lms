@@ -43,10 +43,14 @@ export function Navbar() {
         {/* Nav Links */}
         <nav className="flex items-center gap-4 ml-4">
           {navLinks.map((link) => {
-            const isActive =
-              link.href === "/"
-                ? pathname === "/"
-                : pathname?.startsWith(link.href.split("/")[1] ? `/${link.href.split("/")[1]}` : "/");
+            const isActive = (() => {
+              if (link.href === "/") return pathname === "/";
+              const segments = link.href.split("/").filter(Boolean);
+              const prefix = segments.length >= 2
+                ? `/${segments[0]}/${segments[1]}`
+                : `/${segments[0]}`;
+              return pathname?.startsWith(prefix) ?? false;
+            })();
 
             return (
               <Link
