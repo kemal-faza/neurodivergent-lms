@@ -28,12 +28,12 @@ export function FlowStep({ step, label, isLast = false }: FlowStepProps) {
         <>
           <ArrowRight
             size={16}
-            className="text-muted/60 flex-shrink-0 hidden lg:block"
+            className="arrow-right text-muted/60 flex-shrink-0 hidden sm:block"
             aria-hidden
           />
           <ArrowDown
             size={16}
-            className="text-muted/60 flex-shrink-0 lg:hidden my-1 sm:my-0"
+            className="arrow-down text-muted/60 flex-shrink-0 sm:hidden my-1"
             aria-hidden
           />
         </>
