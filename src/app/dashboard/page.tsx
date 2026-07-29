@@ -80,11 +80,11 @@ export default function DashboardPage() {
           <div className="flex gap-2 items-center">
             <button
               type="button"
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs border-2 border-dashed border-border text-muted rounded-lg hover:bg-muted/10 font-mono"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs border border-border/60 text-muted rounded-lg hover:bg-muted/10 font-mono"
             >
               <Download size={12} /> Export PDF
             </button>
-            <span className="text-[9px] border border-dashed border-border text-muted px-1.5 py-0.5 rounded">P3 feature</span>
+            <span className="text-[9px] border border-border/60 text-muted px-1.5 py-0.5 rounded">P3 feature</span>
           </div>
         </div>
       </div>
@@ -99,10 +99,10 @@ export default function DashboardPage() {
             { label: "Badge Diraih", value: `${badges.filter((b) => b.earned).length}/${badges.length}`, icon: <Award size={20} className="text-amber-500" />, sub: `${badges.filter((b) => !b.earned).length} badge tersisa` },
             { label: "Level Adaptif", value: levelText, icon: <TrendingUp size={20} className="text-amber-500" />, sub: "Auto-adjusted" },
           ].map((stat) => (
-            <div key={stat.label} className="border-2 border-border bg-card rounded-xl p-4 shadow-sm">
+            <div key={stat.label} className="border border-border/80 bg-card rounded-xl p-4 shadow-xs">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[11px] font-mono text-muted">{stat.label}</span>
-                <div className="w-8 h-8 border border-dashed border-border rounded-lg flex items-center justify-center bg-muted/10">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center border border-border/60 bg-bg shadow-2xs">
                   {stat.icon}
                 </div>
               </div>
@@ -120,7 +120,7 @@ export default function DashboardPage() {
           {/* Weekly Points Bar Chart */}
           <div>
             <SectionLabel>progress chart — grafik aktivitas mingguan</SectionLabel>
-            <div className="border-2 border-border bg-card rounded-xl p-5 shadow-sm space-y-3">
+            <div className="border border-border/80 bg-card rounded-xl p-5 shadow-xs space-y-3">
               <div className="flex items-end gap-3 h-32 pt-4">
                 {chartData.map((d) => (
                   <div key={d.day} className="flex flex-col items-center gap-1.5 flex-1 h-full justify-end">
@@ -132,7 +132,7 @@ export default function DashboardPage() {
                   </div>
                 ))}
               </div>
-              <div className="border-t border-dashed border-border pt-2 flex justify-between text-[10px] text-muted font-mono">
+              <div className="border-t border-border/60 pt-2 flex justify-between text-[10px] text-muted font-mono">
                 <span>Poin per hari (minggu ini)</span>
                 <span>Total: {totalWeekPoints} pts</span>
               </div>
@@ -142,10 +142,10 @@ export default function DashboardPage() {
           {/* Materi Progress List */}
           <div>
             <SectionLabel>progres materi — status baca & kuis</SectionLabel>
-            <div className="border-2 border-border bg-card rounded-xl divide-y divide-dashed divide-border shadow-sm">
+            <div className="border border-border/80 bg-card rounded-xl divide-y divide-border shadow-xs">
               {materiList.map((m) => (
                 <div key={`${m.subjekId}-${m.id}`} className="flex items-center gap-4 px-4 py-3.5">
-                  <div className="w-9 h-9 border border-dashed border-border rounded-lg flex items-center justify-center bg-muted/10">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center border border-border/60 bg-bg shadow-2xs">
                     <BookOpen size={15} className="text-muted" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -165,7 +165,7 @@ export default function DashboardPage() {
                     <button
                       type="button"
                       onClick={() => router.push(`/belajar/${m.subjekId}/${m.id}`)}
-                      className="text-[10px] font-mono border border-dashed border-border px-2 py-0.5 rounded text-muted hover:bg-muted/10 flex items-center gap-0.5"
+                      className="text-[10px] font-mono border border-border/60 px-2 py-0.5 rounded text-muted hover:bg-muted/10 flex items-center gap-0.5"
                     >
                       Mulai <ChevronRight size={10} />
                     </button>
@@ -179,12 +179,12 @@ export default function DashboardPage() {
         {/* Leaderboard Column (1 col) */}
         <div>
           <SectionLabel>leaderboard lokal — simulasi multi-user</SectionLabel>
-          <div className="border-2 border-border bg-card rounded-xl overflow-hidden shadow-sm">
-            <div className="border-b-2 border-dashed border-border px-4 py-2.5 flex justify-between items-center">
+          <div className="border border-border/80 bg-card rounded-xl overflow-hidden shadow-xs">
+            <div className="border-b border-border/60 px-4 py-2.5 flex justify-between items-center">
               <span className="text-xs font-mono font-bold text-fg">Top Pelajar</span>
-              <span className="text-[9px] text-muted border border-dashed border-border px-1.5 py-0.5 rounded">simulasi lokal</span>
+              <span className="text-[9px] text-muted border border-border/60 px-1.5 py-0.5 rounded">simulasi lokal</span>
             </div>
-            <div className="divide-y divide-dashed divide-border">
+            <div className="divide-y divide-border">
               {leaderboard.map((u) => (
                 <div
                   key={u.rank}
@@ -210,7 +210,7 @@ export default function DashboardPage() {
                 </div>
               ))}
             </div>
-            <div className="border-t-2 border-dashed border-border px-4 py-2 text-[9px] text-muted font-mono">
+            <div className="border-t border-border/60 px-4 py-2 text-[9px] text-muted font-mono">
               Data dummy · Simulasi kompetisi positif
             </div>
           </div>
@@ -224,10 +224,10 @@ export default function DashboardPage() {
           {badges.map((b) => (
             <div
               key={b.id}
-              className={`border-2 rounded-xl p-3.5 text-center transition-opacity flex flex-col justify-between ${
+              className={`border rounded-xl p-3.5 text-center transition-opacity flex flex-col justify-between ${
                 b.earned
-                  ? "border-border bg-card shadow-sm"
-                  : "border-dashed border-border bg-muted/5 opacity-50"
+                  ? "border-border/80 bg-card shadow-xs"
+                  : "border-border/60 bg-muted/5 opacity-50"
               }`}
             >
               <div className="text-3xl mb-1">{b.earned ? "🏅" : "🔒"}</div>
@@ -250,7 +250,7 @@ export default function DashboardPage() {
       </section>
 
       {/* Footer Notes */}
-      <div className="border-t-2 border-dashed border-border pt-4 flex flex-wrap gap-2 text-[9px] font-mono text-muted">
+      <div className="border-t border-border/60 pt-4 flex flex-wrap gap-2 text-[9px] font-mono text-muted">
         <span>💾 IndexedDB persist (idb-keyval)</span>
         <span>·</span>
         <span>📊 SVG Bar Chart</span>
