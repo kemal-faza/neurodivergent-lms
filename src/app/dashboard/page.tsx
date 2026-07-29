@@ -1,12 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Flame, Star, Award, TrendingUp, Download, BookOpen, ChevronRight } from "lucide-react";
+import { Flame, Star, Award, TrendingUp, Download, BookOpen, ChevronRight, Hand, Lock } from "lucide-react";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { useProgressStore } from "@/stores/progressStore";
 import { PROFILE_LABELS } from "@/lib/constants";
 import { getAllSubjek, getMateriBySubjek } from "@/lib/dummy-data";
-import { SectionLabel, WBox } from "@/components/ui/WireframePrimitives";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -22,11 +21,11 @@ export default function DashboardPage() {
   const quizScores = useProgressStore((s) => s.quizScores);
 
   const leaderboard = [
-    { name: "Eka (ADHD)", pts: 350, streak: 12 },
-    { name: "Dewi (Disleksia)", pts: 280, streak: 8 },
-    { name: "Budi (Umum)", pts: 210, streak: 5 },
+    { name: "Eka", pts: 350, streak: 12 },
+    { name: "Dewi", pts: 280, streak: 8 },
+    { name: "Budi", pts: 210, streak: 5 },
     { name: "Kamu", pts: poin, streak: streak, isMe: true },
-    { name: "Ani (ADHD)", pts: 90, streak: 2 },
+    { name: "Ani", pts: 90, streak: 2 },
   ]
     .sort((a, b) => b.pts - a.pts)
     .map((u, i) => ({ ...u, rank: i + 1 }));
@@ -65,39 +64,28 @@ export default function DashboardPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 font-mono space-y-8">
       {/* Page Header */}
-      <div>
-        <SectionLabel>dashboard — progress tracking + gamification</SectionLabel>
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold font-sans text-fg">
-              Halo, Pelajar LevelUp! 👋 Tetap Semangat Belajar!
-            </h1>
-            <p className="text-xs text-muted font-mono mt-1">
-              Profil aktif: <strong>{profile ? PROFILE_LABELS[profile] : "Belum Dipilih"}</strong> · Record streak: <strong>{maxStreak} hari</strong>
-            </p>
-          </div>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <h1 className="text-xl sm:text-2xl font-bold font-sans text-fg">
+          <Hand size={24} className="inline mr-1.5 text-fg" />
+          Halo, Pelajar LevelUp! Tetap Semangat Belajar!
+        </h1>
 
-          <div className="flex gap-2 items-center">
-            <button
-              type="button"
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs border border-border/60 text-muted rounded-lg hover:bg-muted/10 font-mono"
-            >
-              <Download size={12} /> Export PDF
-            </button>
-            <span className="text-[9px] border border-border/60 text-muted px-1.5 py-0.5 rounded">P3 feature</span>
-          </div>
-        </div>
+        <button
+          type="button"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs border border-border/60 text-muted rounded-lg hover:bg-muted/10 font-mono"
+        >
+          <Download size={12} /> Export PDF
+        </button>
       </div>
 
       {/* Main Stats Row */}
       <section>
-        <SectionLabel>statistik utama — dari progress store</SectionLabel>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: "Total Poin", value: `${poin} pts`, icon: <Star size={20} className="text-amber-500" />, sub: "+20 hari ini" },
-            { label: "Streak Saat Ini", value: `${streak} 🔥`, icon: <Flame size={20} className="text-amber-500" />, sub: `Record: ${maxStreak} hari` },
-            { label: "Badge Diraih", value: `${badges.filter((b) => b.earned).length}/${badges.length}`, icon: <Award size={20} className="text-amber-500" />, sub: `${badges.filter((b) => !b.earned).length} badge tersisa` },
-            { label: "Level Adaptif", value: levelText, icon: <TrendingUp size={20} className="text-amber-500" />, sub: "Auto-adjusted" },
+            { label: "Total Poin", value: `${poin} pts`, icon: <Star size={20} className="text-amber-500" /> },
+            { label: "Streak Saat Ini", value: `${streak}`, icon: <Flame size={20} className="text-amber-500" /> },
+            { label: "Badge Diraih", value: `${badges.filter((b) => b.earned).length}/${badges.length}`, icon: <Award size={20} className="text-amber-500" /> },
+            { label: "Level Adaptif", value: levelText, icon: <TrendingUp size={20} className="text-amber-500" /> },
           ].map((stat) => (
             <div key={stat.label} className="border border-border/80 bg-card rounded-xl p-4 shadow-xs">
               <div className="flex items-center justify-between mb-2">
@@ -107,7 +95,6 @@ export default function DashboardPage() {
                 </div>
               </div>
               <div className="text-xl sm:text-2xl font-sans font-bold text-fg">{stat.value}</div>
-              <p className="text-[10px] font-mono text-muted mt-1">{stat.sub}</p>
             </div>
           ))}
         </div>
@@ -119,7 +106,6 @@ export default function DashboardPage() {
         <div className="md:col-span-2 space-y-6">
           {/* Weekly Points Bar Chart */}
           <div>
-            <SectionLabel>progress chart — grafik aktivitas mingguan</SectionLabel>
             <div className="border border-border/80 bg-card rounded-xl p-5 shadow-xs space-y-3">
               <div className="flex items-end gap-3 h-32 pt-4">
                 {chartData.map((d) => (
@@ -141,7 +127,6 @@ export default function DashboardPage() {
 
           {/* Materi Progress List */}
           <div>
-            <SectionLabel>progres materi — status baca & kuis</SectionLabel>
             <div className="border border-border/80 bg-card rounded-xl divide-y divide-border shadow-xs">
               {materiList.map((m) => (
                 <div key={`${m.subjekId}-${m.id}`} className="flex items-center gap-4 px-4 py-3.5">
@@ -178,7 +163,6 @@ export default function DashboardPage() {
 
         {/* Leaderboard Column (1 col) */}
         <div>
-          <SectionLabel>leaderboard lokal — simulasi multi-user</SectionLabel>
           <div className="border border-border/80 bg-card rounded-xl overflow-hidden shadow-xs">
             <div className="border-b border-border/60 px-4 py-2.5 flex justify-between items-center">
               <span className="text-xs font-mono font-bold text-fg">Top Pelajar</span>
@@ -200,7 +184,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className={`text-xs font-sans truncate ${u.isMe ? "text-fg font-bold" : "text-fg"}`}>
-                      {u.name} {u.isMe && "← kamu"}
+                      {u.name}
                     </p>
                     <p className="text-[9px] font-mono text-muted">
                       <Flame size={8} className="inline text-amber-500" /> {u.streak} streak
@@ -210,55 +194,32 @@ export default function DashboardPage() {
                 </div>
               ))}
             </div>
-            <div className="border-t border-border/60 px-4 py-2 text-[9px] text-muted font-mono">
-              Data dummy · Simulasi kompetisi positif
-            </div>
           </div>
         </div>
       </div>
 
       {/* Badge Collection Section */}
       <section>
-        <SectionLabel>badge koleksi — gamifikasi</SectionLabel>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
           {badges.map((b) => (
             <div
               key={b.id}
-              className={`border rounded-xl p-3.5 text-center transition-opacity flex flex-col justify-between ${
+              className={`border rounded-xl p-3 text-center transition-opacity flex flex-col items-center gap-2 ${
                 b.earned
                   ? "border-border/80 bg-card shadow-xs"
                   : "border-border/60 bg-muted/5 opacity-50"
               }`}
             >
-              <div className="text-3xl mb-1">{b.earned ? "🏅" : "🔒"}</div>
+              {b.earned ? <Award size={28} className="text-fg" /> : <Lock size={28} className="text-muted" />}
               <div>
                 <p className="text-xs font-sans font-bold text-fg leading-tight">{b.label}</p>
-                <p className="text-[9px] font-mono text-muted mt-1 leading-tight">{b.desc}</p>
+                <p className="text-[9px] font-mono text-muted mt-0.5 leading-snug">{b.desc}</p>
               </div>
-              {b.earned ? (
-                <span className="text-[8px] font-mono border border-emerald-500 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded mt-2 inline-block font-bold">
-                  earned ✓
-                </span>
-              ) : (
-                <span className="text-[8px] font-mono border border-border text-muted px-1.5 py-0.5 rounded mt-2 inline-block">
-                  locked
-                </span>
-              )}
             </div>
           ))}
         </div>
       </section>
 
-      {/* Footer Notes */}
-      <div className="border-t border-border/60 pt-4 flex flex-wrap gap-2 text-[9px] font-mono text-muted">
-        <span>💾 IndexedDB persist (idb-keyval)</span>
-        <span>·</span>
-        <span>📊 SVG Bar Chart</span>
-        <span>·</span>
-        <span>🏆 Leaderboard = simulasi lokal</span>
-        <span>·</span>
-        <span>🔄 State Zustand shared</span>
-      </div>
     </div>
   );
 }
