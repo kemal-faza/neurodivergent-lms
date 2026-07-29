@@ -45,7 +45,7 @@ export default function LandingPage() {
 
   const handleSelectProfile = (pId: Profile) => {
     applyProfile(pId);
-    router.push("/belajar/materi/m1");
+    router.push("/belajar");
   };
 
   return (
@@ -65,7 +65,7 @@ export default function LandingPage() {
             </p>
           </div>
           <div className="flex gap-3 mt-2">
-            <WBtn primary onClick={() => router.push("/belajar/materi/m1")}>
+            <WBtn primary onClick={() => router.push("/belajar")}>
               Mulai Belajar <ChevronRight size={14} />
             </WBtn>
             <WBtn onClick={() => router.push("/dashboard")}>

@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import {
-  ChevronRight, Play, Pause, Square, Sliders, Volume2, Focus, Sparkles, BookOpen
+  ChevronRight, Play, Pause, Square, Sliders, Volume2, Focus, Sparkles, BookOpen, ArrowLeft
 } from "lucide-react";
-import { getMateri } from "@/lib/dummy-data";
+import { getMateriById } from "@/lib/dummy-data";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { useProgressStore } from "@/stores/progressStore";
 import { SectionLabel, WBox } from "@/components/ui/WireframePrimitives";
@@ -13,9 +14,9 @@ import { toBionic } from "@/lib/bionic";
 import { speak, stopSpeaking, isTTSAvailable } from "@/lib/tts";
 
 export default function MateriPage() {
-  const params = useParams<{ id: string }>();
+  const params = useParams<{ subjek: string; material: string }>();
   const router = useRouter();
-  const materi = getMateri(params.id || "m1");
+  const materi = getMateriById(params.material);
 
   const completeMateri = useProgressStore((s) => s.completeMateri);
   const bumpStreak = useProgressStore((s) => s.bumpStreak);
@@ -51,39 +52,17 @@ export default function MateriPage() {
 
   if (!materi) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8 font-mono">
-        <p className="text-muted">Materi tidak ditemukan.</p>
-        <button onClick={() => router.push("/")} className="mt-4 px-4 py-2 text-xs border rounded">
-          ← Kembali ke Beranda
+      <div className="max-w-4xl mx-auto px-4 py-16 text-center font-sans">
+        <p className="text-muted text-lg mb-4">Materi tidak ditemukan.</p>
+        <button onClick={() => router.push("/belajar")} className="px-5 py-2.5 text-sm font-sans font-semibold border-2 border-border text-fg rounded-xl hover:bg-muted/10 transition-colors min-h-[44px]">
+          ← Kembali ke Daftar Mata Pelajaran
         </button>
       </div>
     );
   }
 
   const activeCount = [bionic, lineGuide, focusMode, ttsEnabled].filter(Boolean).length;
-
-  const paragraphs = [
-    {
-      id: 0,
-      title: "Paragraf 1 — Pengertian & Fungsi Utama",
-      text: materi.konten,
-    },
-    {
-      id: 1,
-      title: "Paragraf 2 — Kloroplas & Klorofil",
-      text: "Proses ini terjadi di dalam kloroplas sel tumbuhan. Pigmen klorofil menyerap cahaya merah dan biru dari matahari, lalu memantulkan warna hijau sehingga daun tampak berwarna hijau segar.",
-    },
-    {
-      id: 2,
-      title: "Paragraf 3 — Tahapan Reaksi Terang & Gelap",
-      text: "Fotosintesis terbagi menjadi dua tahap: Reaksi Terang yang memecah molekul air menggunakan energi cahaya, dan Reaksi Gelap (Siklus Calvin) yang membentuk gula dari karbon dioksida.",
-    },
-    {
-      id: 3,
-      title: "Paragraf 4 — Peran Penting Bagi Ekosistem",
-      text: "Tanpa fotosintesis, ketersediaan oksigen di atmosfer akan habis dan rantai makanan pada ekosistem darat maupun perairan tidak dapat bertahan hidup.",
-    },
-  ];
+  const paragraphs = materi.paragraphs;
 
   const handleToggleTts = () => {
     if (isPlayingTts) {
@@ -109,6 +88,12 @@ export default function MateriPage() {
       {/* Screen Header */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b-2 border-dashed border-border pb-4">
         <div>
+          <Link
+            href={`/belajar/${params.subjek}`}
+            className="inline-flex items-center gap-1 text-[10px] font-mono text-muted hover:text-fg mb-1.5 transition-colors"
+          >
+            <ArrowLeft size={12} /> Kembali ke Daftar Materi
+          </Link>
           <SectionLabel>halaman materi / reader</SectionLabel>
           <h1 className="text-xl sm:text-2xl font-bold font-sans text-fg flex items-center gap-2">
             <BookOpen className="text-muted" size={22} />
@@ -295,7 +280,7 @@ export default function MateriPage() {
         {/* Diagram Box */}
         <div className="mt-8">
           <WBox
-            label="[ Diagram Infografis: Proses Biokimia Fotosintesis ]"
+            label={`[ Diagram Infografis: ${materi.judul} ]`}
             className="!h-36 rounded-xl"
           />
         </div>
@@ -309,18 +294,24 @@ export default function MateriPage() {
         <div className="flex gap-3">
           <button
             type="button"
-            onClick={() => router.push("/")}
+            onClick={() => router.push(`/belajar/${params.subjek}`)}
             className="px-4 py-2 text-xs border-2 border-border text-fg rounded-lg hover:bg-muted/10 font-mono"
           >
-            ← Kembali ke Beranda
+            ← Kembali ke Daftar Materi
           </button>
-          <button
-            type="button"
-            onClick={() => router.push("/belajar/kuis/q1")}
-            className="px-5 py-2 text-xs border-2 border-accent bg-accent text-accent-fg rounded-lg hover:opacity-90 font-mono font-bold flex items-center gap-1.5 shadow"
-          >
-            Kerjakan Kuis Adaptif <ChevronRight size={14} />
-          </button>
+          {materi.kuisId ? (
+            <button
+              type="button"
+              onClick={() => router.push(`/belajar/kuis/${materi.kuisId}`)}
+              className="px-5 py-2 text-xs border-2 border-accent bg-accent text-accent-fg rounded-lg hover:opacity-90 font-mono font-bold flex items-center gap-1.5 shadow"
+            >
+              Kerjakan Kuis Adaptif <ChevronRight size={14} />
+            </button>
+          ) : (
+            <span className="px-5 py-2 text-xs border-2 border-border text-muted rounded-lg font-mono">
+              Kuis Belum Tersedia
+            </span>
+          )}
         </div>
       </div>
     </div>
