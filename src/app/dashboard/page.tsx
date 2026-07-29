@@ -5,6 +5,7 @@ import { Flame, Star, Award, TrendingUp, Download, BookOpen, ChevronRight } from
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { useProgressStore } from "@/stores/progressStore";
 import { PROFILE_LABELS } from "@/lib/constants";
+import { getAllSubjek, getMateriBySubjek } from "@/lib/dummy-data";
 import { SectionLabel, WBox } from "@/components/ui/WireframePrimitives";
 
 export default function DashboardPage() {
@@ -21,12 +22,14 @@ export default function DashboardPage() {
   const quizScores = useProgressStore((s) => s.quizScores);
 
   const leaderboard = [
-    { rank: 1, name: "Eka (ADHD)", pts: 350, streak: 12 },
-    { rank: 2, name: "Dewi (Disleksia)", pts: 280, streak: 8 },
-    { rank: 3, name: "Budi (Umum)", pts: 210, streak: 5 },
-    { rank: 4, name: "Kamu", pts: poin > 0 ? poin : 120, streak: streak > 0 ? streak : 5, isMe: true },
-    { rank: 5, name: "Ani (ADHD)", pts: 90, streak: 2 },
-  ];
+    { name: "Eka (ADHD)", pts: 350, streak: 12 },
+    { name: "Dewi (Disleksia)", pts: 280, streak: 8 },
+    { name: "Budi (Umum)", pts: 210, streak: 5 },
+    { name: "Kamu", pts: poin, streak: streak, isMe: true },
+    { name: "Ani (ADHD)", pts: 90, streak: 2 },
+  ]
+    .sort((a, b) => b.pts - a.pts)
+    .map((u, i) => ({ ...u, rank: i + 1 }));
 
   const badges = [
     { id: "starter", label: "Starter", desc: "Selesaikan materi pertama", earned: completedMateri.length > 0 || badgeEarned.includes("starter") },
@@ -37,10 +40,15 @@ export default function DashboardPage() {
     { id: "master", label: "Quiz Master", desc: "5 kuis berturut jawaban benar", earned: badgeEarned.includes("master") },
   ];
 
-  const materiList = [
-    { id: "m1", label: "Fotosintesis & Ekosistem", progress: completedMateri.includes("m1") ? 100 : 60, quizScore: quizScores["q1"] ?? 85 },
-    { id: "m2", label: "Sistem Tata Surya", progress: completedMateri.includes("m2") ? 100 : 0, quizScore: quizScores["q2"] ?? null },
-  ];
+  const materiList = getAllSubjek().flatMap((subjek) =>
+    getMateriBySubjek(subjek.id).map((m) => ({
+      id: m.id,
+      subjekId: m.subjekId,
+      label: m.judul,
+      progress: completedMateri.includes(m.id) ? 100 : 0,
+      quizScore: m.kuisId ? (quizScores[m.kuisId] ?? null) : null,
+    })),
+  );
 
   const levelText = adaptiveLevel === 1 ? "Mudah" : adaptiveLevel === 2 ? "Sedang" : "Sulit";
 
@@ -136,7 +144,7 @@ export default function DashboardPage() {
             <SectionLabel>progres materi — status baca & kuis</SectionLabel>
             <div className="border-2 border-border bg-card rounded-xl divide-y divide-dashed divide-border shadow-sm">
               {materiList.map((m) => (
-                <div key={m.id} className="flex items-center gap-4 px-4 py-3.5">
+                <div key={`${m.subjekId}-${m.id}`} className="flex items-center gap-4 px-4 py-3.5">
                   <div className="w-9 h-9 border border-dashed border-border rounded-lg flex items-center justify-center bg-muted/10">
                     <BookOpen size={15} className="text-muted" />
                   </div>
@@ -156,7 +164,7 @@ export default function DashboardPage() {
                   ) : (
                     <button
                       type="button"
-                      onClick={() => router.push(`/belajar/materi/${m.id}`)}
+                      onClick={() => router.push(`/belajar/${m.subjekId}/${m.id}`)}
                       className="text-[10px] font-mono border border-dashed border-border px-2 py-0.5 rounded text-muted hover:bg-muted/10 flex items-center gap-0.5"
                     >
                       Mulai <ChevronRight size={10} />
