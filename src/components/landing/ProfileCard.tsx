@@ -34,7 +34,7 @@ export function ProfileCard({
 
   const handleSelect = () => {
     applyProfile(profile.id);
-    router.push("/belajar/materi/m1");
+    router.push("/belajar");
   };
 
   return (

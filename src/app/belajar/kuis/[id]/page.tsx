@@ -184,7 +184,7 @@ export default function KuisPage() {
           <div className="flex justify-between pt-3">
             <button
               type="button"
-              onClick={() => router.push("/belajar/materi/m1")}
+              onClick={() => router.push("/belajar")}
               className="px-4 py-2 text-xs border-2 border-border text-muted rounded-lg hover:bg-muted/10 font-mono"
             >
               ← Kembali ke Materi

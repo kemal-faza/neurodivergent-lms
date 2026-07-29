@@ -116,7 +116,7 @@ export function Hero() {
             type="button"
             onClick={() => {
               applyProfile("disleksia");
-              router.push("/belajar/materi/m1");
+              router.push("/belajar");
             }}
             className="w-full sm:w-auto px-6 py-3.5 text-sm font-sans font-semibold bg-fg text-bg rounded-xl hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-95 cursor-pointer min-h-[44px]"
           >
