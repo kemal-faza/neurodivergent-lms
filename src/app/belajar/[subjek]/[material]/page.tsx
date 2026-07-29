@@ -99,8 +99,8 @@ export default function MateriPage() {
         <div className="mb-6 p-4 bg-orange-50 dark:bg-orange-950/20 border-2 border-orange-300 rounded-xl flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div>
-              <span className="text-xs font-bold font-sans text-orange-900 dark:text-orange-200 block">Text-To-Speech (Web Speech API)</span>
-              <span className="text-[11px] text-orange-700 dark:text-orange-300">Membacakan materi artikel secara otomatis</span>
+              <span className="text-xs font-bold font-sans text-fg dark:text-orange-200 block">Text-To-Speech (Web Speech API)</span>
+              <span className="text-[11px] text-muted dark:text-orange-300">Membacakan materi artikel secara otomatis</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -115,7 +115,7 @@ export default function MateriPage() {
             <button
               type="button"
               onClick={handleStopTts}
-              className="p-1.5 bg-card border border-orange-300 text-orange-700 rounded-lg hover:bg-orange-100"
+              className="p-1.5 bg-card border border-orange-300 text-muted rounded-lg hover:bg-orange-100"
               title="Stop TTS"
             >
               <Square size={12} />
