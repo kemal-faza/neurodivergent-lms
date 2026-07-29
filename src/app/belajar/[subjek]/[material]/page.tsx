@@ -172,14 +172,6 @@ export default function MateriPage() {
             );
           })}
         </div>
-
-        {/* Diagram Box */}
-        <div className="mt-8">
-          <WBox
-            label={`[ Diagram Infografis: ${materi.judul} ]`}
-            className="!h-36 rounded-xl"
-          />
-        </div>
       </div>
 
       {/* Footer Navigation Actions */}
