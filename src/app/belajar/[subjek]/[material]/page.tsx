@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-  ChevronRight, Play, Pause, Square, Sliders, Volume2, Focus, Sparkles, BookOpen, ArrowLeft
+  ChevronRight, Play, Pause, Square, BookOpen, ArrowLeft
 } from "lucide-react";
 import { getMateriById } from "@/lib/dummy-data";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
@@ -21,15 +21,8 @@ export default function MateriPage() {
   const completeMateri = useProgressStore((s) => s.completeMateri);
   const bumpStreak = useProgressStore((s) => s.bumpStreak);
 
-  const font = useAccessibilityStore((s) => s.fontFamily);
-  const fontSize = useAccessibilityStore((s) => s.fontSize);
-  const lineHeight = useAccessibilityStore((s) => s.lineHeight);
-  const letterSpacing = useAccessibilityStore((s) => s.letterSpacing);
-  const wordSpacing = useAccessibilityStore((s) => s.wordSpacing);
-  const contrast = useAccessibilityStore((s) => s.contrast);
   const ttsEnabled = useAccessibilityStore((s) => s.ttsEnabled);
   const bionic = useAccessibilityStore((s) => s.bionic);
-  const lineGuide = useAccessibilityStore((s) => s.lineGuide);
   const focusMode = useAccessibilityStore((s) => s.focusMode);
 
   const [activeParaIndex, setActiveParaIndex] = useState<number>(0);
@@ -61,7 +54,6 @@ export default function MateriPage() {
     );
   }
 
-  const activeCount = [bionic, lineGuide, focusMode, ttsEnabled].filter(Boolean).length;
   const paragraphs = materi.paragraphs;
 
   const handleToggleTts = () => {
@@ -86,7 +78,7 @@ export default function MateriPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 font-mono relative">
       {/* Screen Header */}
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b-2 border-dashed border-border pb-4">
+      <div className="mb-6 pb-4">
         <div>
           <Link
             href={`/belajar/${params.subjek}`}
@@ -99,78 +91,13 @@ export default function MateriPage() {
             <BookOpen className="text-muted" size={22} />
             Materi: {materi.judul}
           </h1>
-          <p className="text-[11px] text-muted mt-0.5 font-mono">
-            Gunakan Floating Accessibility Panel di pojok kanan bawah untuk menyesuaikan mode baca.
-          </p>
         </div>
-
-        <button
-          type="button"
-          onClick={() => {
-            const btn = document.querySelector('[aria-label="Buka panel aksesibilitas"]') as HTMLButtonElement;
-            btn?.click();
-          }}
-          className="flex items-center gap-2 px-3.5 py-2 text-xs bg-fg text-bg rounded-xl shadow hover:opacity-90 transition-opacity"
-        >
-          <Sliders size={14} className="text-amber-400" />
-          <span className="font-sans font-bold">Atur Aksesibilitas</span>
-          {activeCount > 0 && (
-            <span className="bg-amber-400 text-gray-900 px-1.5 py-0.2 rounded-full text-[10px] font-bold">
-              {activeCount}
-            </span>
-          )}
-        </button>
-      </div>
-
-      {/* Active Features Indicator Bar */}
-      <div className="flex flex-wrap items-center gap-2 mb-6 bg-card p-3 rounded-xl border border-dashed border-border text-xs">
-        <span className="text-[10px] uppercase tracking-wider text-muted font-bold">Mode Aktif:</span>
-        <span className="text-[10px] px-2 py-0.5 bg-muted/10 border border-border rounded text-fg font-mono">
-          Font: <strong>{font}</strong>
-        </span>
-        <span className="text-[10px] px-2 py-0.5 bg-muted/10 border border-border rounded text-fg font-mono">
-          Uk. Font: <strong>{fontSize}px</strong>
-        </span>
-        <span className="text-[10px] px-2 py-0.5 bg-muted/10 border border-border rounded text-fg font-mono">
-          Line Height: <strong>{lineHeight}x</strong>
-        </span>
-        <span className="text-[10px] px-2 py-0.5 bg-muted/10 border border-border rounded text-fg font-mono">
-          Letter Spacing: <strong>{letterSpacing}px</strong>
-        </span>
-        <span className="text-[10px] px-2 py-0.5 bg-muted/10 border border-border rounded text-fg font-mono">
-          Word Spacing: <strong>{wordSpacing}px</strong>
-        </span>
-        <span className="text-[10px] px-2 py-0.5 bg-muted/10 border border-border rounded text-fg font-mono">
-          Kontras: <strong>{contrast}</strong>
-        </span>
-
-        {ttsEnabled && (
-          <span className="text-[10px] px-2 py-0.5 bg-orange-100 dark:bg-orange-950/40 border border-orange-300 text-orange-700 dark:text-orange-300 rounded font-bold flex items-center gap-1">
-            <Volume2 size={10} /> TTS Active
-          </span>
-        )}
-        {bionic && (
-          <span className="text-[10px] px-2 py-0.5 bg-amber-100 dark:bg-amber-950/40 border border-amber-300 text-amber-800 dark:text-amber-300 rounded font-bold flex items-center gap-1">
-            <Sparkles size={10} /> Bionic Reading
-          </span>
-        )}
-        {lineGuide && (
-          <span className="text-[10px] px-2 py-0.5 bg-blue-100 dark:bg-blue-950/40 border border-blue-300 text-blue-700 dark:text-blue-300 rounded font-bold flex items-center gap-1">
-            📏 Line Guide Ruler
-          </span>
-        )}
-        {focusMode && (
-          <span className="text-[10px] px-2 py-0.5 bg-purple-100 dark:bg-purple-950/40 border border-purple-300 text-purple-700 dark:text-purple-300 rounded font-bold flex items-center gap-1">
-            <Focus size={10} /> Focus Mode
-          </span>
-        )}
       </div>
 
       {/* TTS Interactive Control Bar */}
       {ttsEnabled && (
         <div className="mb-6 p-4 bg-orange-50 dark:bg-orange-950/20 border-2 border-orange-300 rounded-xl flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <Volume2 size={20} className="text-orange-600 animate-pulse" />
             <div>
               <span className="text-xs font-bold font-sans text-orange-900 dark:text-orange-200 block">Text-To-Speech (Web Speech API)</span>
               <span className="text-[11px] text-orange-700 dark:text-orange-300">Membacakan materi artikel secara otomatis</span>
@@ -200,37 +127,6 @@ export default function MateriPage() {
 
       {/* Article Reader Surface Container */}
       <div className="reader relative border-2 border-border bg-card rounded-xl p-6 sm:p-8 space-y-6 shadow-sm">
-        {/* Focus Mode Banner */}
-        {focusMode && (
-          <div className="p-3 bg-purple-50 dark:bg-purple-950/30 border border-purple-300 rounded-lg text-purple-800 dark:text-purple-200 text-xs flex flex-wrap items-center justify-between gap-2">
-            <span>🎯 <strong>Focus Mode Aktif:</strong> Klik paragraf untuk fokus. Paragraf lain diredupkan untuk konsentrasi ADHD.</span>
-            <div className="flex gap-1">
-              {paragraphs.map((p, idx) => (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => setActiveParaIndex(idx)}
-                  className={`px-2.5 py-0.5 rounded text-[10px] font-bold border transition-colors ${
-                    activeParaIndex === idx
-                      ? "bg-purple-700 text-white border-purple-700"
-                      : "bg-card text-purple-700 border-purple-300 hover:bg-purple-100"
-                  }`}
-                >
-                  P{idx + 1}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Bionic Reading Banner */}
-        {bionic && (
-          <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-300 rounded-lg text-amber-900 dark:text-amber-200 text-xs flex items-center gap-2">
-            <Sparkles size={14} className="text-amber-600 flex-shrink-0" />
-            <span>⚡ <strong>Bionic Reading Mode:</strong> Bagian awal kata ditebalkan otomatis untuk memandu visual pembaca Disleksia & ADHD.</span>
-          </div>
-        )}
-
         {/* Article Title */}
         <h2 className="text-xl sm:text-2xl font-bold font-sans text-fg border-b border-border pb-3">
           {materi.judul} — Penjelasan Lengkap
@@ -244,8 +140,8 @@ export default function MateriPage() {
             return (
               <div
                 key={para.id}
-                onClick={() => setActiveParaIndex(idx)}
-                className={`p-4 rounded-xl border-2 transition-all cursor-pointer ${
+                onClick={() => focusMode && setActiveParaIndex(idx)}
+                className={`p-4 rounded-xl border-2 transition-all ${
                   isFocused
                     ? "bg-card border-border text-fg shadow-sm"
                     : "focus-dimmed bg-muted/5 border-border/50 text-muted"
@@ -287,7 +183,7 @@ export default function MateriPage() {
       </div>
 
       {/* Footer Navigation Actions */}
-      <div className="mt-8 border-t-2 border-dashed border-border pt-6 flex flex-wrap items-center justify-between gap-4">
+      <div className="mt-8 pt-6 flex flex-wrap items-center justify-between gap-4">
         <div className="text-xs text-muted font-mono">
           Progress Membaca: <strong className="text-emerald-600 dark:text-emerald-400">100% Selesai ✓</strong>
         </div>
