@@ -48,12 +48,27 @@ export interface Kuis {
   soal: Soal[];
 }
 
+export interface Paragraph {
+  id: number;
+  title: string;
+  text: string;
+}
+
 export interface Materi {
   id: string;
   judul: string;
-  /** Dummy body text. Person A will render this in ArticleReader. */
-  konten: string;
+  deskripsi: string;
+  subjekId: string;
   level: number;
+  kuisId?: string;
+  paragraphs: Paragraph[];
+}
+
+export interface Subjek {
+  id: string;
+  nama: string;
+  icon: string;
+  materiIds: string[];
 }
 
 export interface ProgressState {
