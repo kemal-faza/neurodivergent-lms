@@ -69,4 +69,8 @@ export interface ProgressState {
   completedMateri: string[];
   /** kuisId -> best score (points). */
   quizScores: Record<string, number>;
+  /** Highest streak the user has ever achieved. */
+  maxStreak: number;
+  /** Points per day keyed by ISO date (yyyy-mm-dd). */
+  dailyPoints: Record<string, number>;
 }
