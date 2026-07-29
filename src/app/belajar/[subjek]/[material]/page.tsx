@@ -176,31 +176,26 @@ export default function MateriPage() {
 
       {/* Footer Navigation Actions */}
       <div className="mt-8 pt-6 flex flex-wrap items-center justify-between gap-4">
-        <div className="text-xs text-muted font-mono">
-          Progress Membaca: <strong className="text-emerald-600 dark:text-emerald-400">100% Selesai ✓</strong>
-        </div>
-        <div className="flex gap-3">
+        <button
+          type="button"
+          onClick={() => router.push(`/belajar/${params.subjek}`)}
+          className="px-4 py-2 text-xs border-2 border-border text-fg rounded-lg hover:bg-muted/10 font-mono hover:-translate-x-0.5 transition-all"
+        >
+          ← Kembali ke Daftar Materi
+        </button>
+        {materi.kuisId ? (
           <button
             type="button"
-            onClick={() => router.push(`/belajar/${params.subjek}`)}
-            className="px-4 py-2 text-xs border-2 border-border text-fg rounded-lg hover:bg-muted/10 font-mono"
+            onClick={() => router.push(`/belajar/kuis/${materi.kuisId}`)}
+            className="px-5 py-2 text-xs border-2 border-accent bg-accent text-accent-fg rounded-lg hover:opacity-90 font-mono font-bold flex items-center gap-1.5 shadow"
           >
-            ← Kembali ke Daftar Materi
+            Kerjakan Kuis Adaptif <ChevronRight size={14} />
           </button>
-          {materi.kuisId ? (
-            <button
-              type="button"
-              onClick={() => router.push(`/belajar/kuis/${materi.kuisId}`)}
-              className="px-5 py-2 text-xs border-2 border-accent bg-accent text-accent-fg rounded-lg hover:opacity-90 font-mono font-bold flex items-center gap-1.5 shadow"
-            >
-              Kerjakan Kuis Adaptif <ChevronRight size={14} />
-            </button>
-          ) : (
-            <span className="px-5 py-2 text-xs border-2 border-border text-muted rounded-lg font-mono">
-              Kuis Belum Tersedia
-            </span>
-          )}
-        </div>
+        ) : (
+          <span className="px-5 py-2 text-xs border-2 border-red-300 text-red-400 rounded-lg font-mono cursor-not-allowed">
+            Kuis Belum Tersedia
+          </span>
+        )}
       </div>
     </div>
   );
