@@ -28,16 +28,25 @@ export const useProgressStore = create<ProgressStore>()(
     (set) => ({
       ...INITIAL_PROGRESS,
       hasHydrated: false,
-      addPoin: (n) => set((s) => ({ poin: s.poin + n })),
+      addPoin: (n) =>
+        set((s) => {
+          const today = todayISO();
+          return {
+            poin: s.poin + n,
+            dailyPoints: { ...s.dailyPoints, [today]: (s.dailyPoints[today] ?? 0) + n },
+          };
+        }),
       recordQuiz: (kuisId, correct, total) =>
         set((s) => {
           const ratio = scoreToRatio(correct, total);
           const points = quizPoints(correct, total);
           const best = Math.max(s.quizScores[kuisId] ?? 0, points);
+          const today = todayISO();
           return {
             poin: s.poin + points,
             quizScores: { ...s.quizScores, [kuisId]: best },
             adaptiveLevel: nextAdaptiveLevel(s.adaptiveLevel, ratio),
+            dailyPoints: { ...s.dailyPoints, [today]: (s.dailyPoints[today] ?? 0) + points },
           };
         }),
       addBadge: (id) =>
@@ -48,8 +57,13 @@ export const useProgressStore = create<ProgressStore>()(
         ),
       bumpStreak: () =>
         set((s) => {
-          if (s.lastActiveDate === todayISO()) return s;
-          return { streak: s.streak + 1, lastActiveDate: todayISO() };
+          const today = todayISO();
+          if (s.lastActiveDate === today) return s;
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+          const yestISO = yesterday.toISOString().slice(0, 10);
+          const newStreak = s.lastActiveDate === yestISO ? s.streak + 1 : 1;
+          return { streak: newStreak, lastActiveDate: today, maxStreak: Math.max(s.maxStreak, newStreak) };
         }),
       reset: () => set({ ...INITIAL_PROGRESS, hasHydrated: true }),
       setHasHydrated: (v) => set({ hasHydrated: v }),
@@ -67,6 +81,8 @@ export const useProgressStore = create<ProgressStore>()(
         adaptiveLevel: state.adaptiveLevel,
         completedMateri: state.completedMateri,
         quizScores: state.quizScores,
+        maxStreak: state.maxStreak,
+        dailyPoints: state.dailyPoints,
       }),
       onRehydrateStorage: () => (state) => state?.setHasHydrated(true),
     },

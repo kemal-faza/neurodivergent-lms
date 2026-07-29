@@ -13,6 +13,8 @@ export default function DashboardPage() {
 
   const poin = useProgressStore((s) => s.poin);
   const streak = useProgressStore((s) => s.streak);
+  const maxStreak = useProgressStore((s) => s.maxStreak);
+  const dailyPoints = useProgressStore((s) => s.dailyPoints);
   const adaptiveLevel = useProgressStore((s) => s.adaptiveLevel);
   const badgeEarned = useProgressStore((s) => s.badge);
   const completedMateri = useProgressStore((s) => s.completedMateri);
@@ -42,17 +44,15 @@ export default function DashboardPage() {
 
   const levelText = adaptiveLevel === 1 ? "Mudah" : adaptiveLevel === 2 ? "Sedang" : "Sulit";
 
-  // Daily activity bar chart data
-  const chartData = [
-    { day: "Sen", val: 40 },
-    { day: "Sel", val: 65 },
-    { day: "Rab", val: 50 },
-    { day: "Kam", val: 80 },
-    { day: "Jum", val: 55 },
-    { day: "Sab", val: 90 },
-    { day: "Min", val: 30 },
-  ];
-  const maxVal = Math.max(...chartData.map((d) => d.val));
+  const dayLabels = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+  const chartData = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6 - i));
+    const key = d.toISOString().slice(0, 10);
+    return { day: dayLabels[d.getDay()], val: dailyPoints[key] ?? 0 };
+  });
+  const maxVal = Math.max(...chartData.map((d) => d.val), 1);
+  const totalWeekPoints = chartData.reduce((sum, d) => sum + d.val, 0);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 font-mono space-y-8">
@@ -65,7 +65,7 @@ export default function DashboardPage() {
               Halo, Pelajar LevelUp! 👋 Tetap Semangat Belajar!
             </h1>
             <p className="text-xs text-muted font-mono mt-1">
-              Profil aktif: <strong>{profile ? PROFILE_LABELS[profile] : "Belum Dipilih"}</strong> · Record streak: <strong>{Math.max(streak, 8)} hari</strong>
+              Profil aktif: <strong>{profile ? PROFILE_LABELS[profile] : "Belum Dipilih"}</strong> · Record streak: <strong>{maxStreak} hari</strong>
             </p>
           </div>
 
@@ -87,7 +87,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { label: "Total Poin", value: `${poin} pts`, icon: <Star size={20} className="text-amber-500" />, sub: "+20 hari ini" },
-            { label: "Streak Saat Ini", value: `${streak} 🔥`, icon: <Flame size={20} className="text-amber-500" />, sub: `Record: ${Math.max(streak, 8)} hari` },
+            { label: "Streak Saat Ini", value: `${streak} 🔥`, icon: <Flame size={20} className="text-amber-500" />, sub: `Record: ${maxStreak} hari` },
             { label: "Badge Diraih", value: `${badges.filter((b) => b.earned).length}/${badges.length}`, icon: <Award size={20} className="text-amber-500" />, sub: `${badges.filter((b) => !b.earned).length} badge tersisa` },
             { label: "Level Adaptif", value: levelText, icon: <TrendingUp size={20} className="text-amber-500" />, sub: "Auto-adjusted" },
           ].map((stat) => (
@@ -126,7 +126,7 @@ export default function DashboardPage() {
               </div>
               <div className="border-t border-dashed border-border pt-2 flex justify-between text-[10px] text-muted font-mono">
                 <span>Poin per hari (minggu ini)</span>
-                <span>Total: 410 pts</span>
+                <span>Total: {totalWeekPoints} pts</span>
               </div>
             </div>
           </div>
