@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { Sliders, X, Check, RotateCcw } from "lucide-react";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
-import { CONTRAST_OPTIONS, FONT_OPTIONS, PROFILE_LABELS } from "@/lib/constants";
-import type { Contrast, FontFamily, Profile } from "@/lib/types";
+import { CONTRAST_OPTIONS, FONT_OPTIONS } from "@/lib/constants";
+import type { Profile } from "@/lib/types";
 import { ToggleSwitch } from "./ui/WireframePrimitives";
 
 const PROFILES: Profile[] = ["disleksia", "adhd", "umum"];
@@ -16,10 +16,10 @@ export function AccessibilityPanel() {
   const activeCount = [s.bionic, s.lineGuide, s.focusMode, s.ttsEnabled].filter(Boolean).length;
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 font-mono flex flex-col items-end">
+    <div className="fixed bottom-4 right-3 sm:bottom-5 sm:right-5 z-50 font-mono flex flex-col items-end">
       {/* Floating Card Panel */}
       {open && (
-        <div className="mb-3 w-80 max-h-[80vh] overflow-y-auto bg-card border-2 border-border rounded-xl shadow-2xl p-4 space-y-4 text-fg animate-fade-in">
+        <div className="mb-3 w-[calc(100vw-2rem)] sm:w-80 max-h-[80vh] overflow-y-auto bg-card border-2 border-border rounded-xl shadow-2xl p-4 space-y-4 text-fg animate-fade-in">
           {/* Header */}
           <div className="flex items-center justify-between border-b-2 border-dashed border-border pb-2">
             <div className="flex items-center gap-2">
@@ -34,7 +34,7 @@ export function AccessibilityPanel() {
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="p-1 text-muted hover:text-fg hover:bg-muted/10 rounded"
+              className="p-1 text-muted hover:text-fg hover:bg-muted/10 rounded min-h-[32px] min-w-[32px] flex items-center justify-center"
               title="Tutup Panel"
             >
               <X size={16} />
@@ -50,7 +50,7 @@ export function AccessibilityPanel() {
                   key={p}
                   type="button"
                   onClick={() => s.applyProfile(p)}
-                  className={`text-[10px] py-1.5 px-2 border rounded text-center transition-all ${
+                  className={`text-[10px] py-2.5 px-2 border rounded text-center transition-all min-h-[40px] flex items-center justify-center ${
                     s.profile === p
                       ? "border-fg bg-fg text-bg font-bold"
                       : "border-border bg-card text-muted hover:bg-muted/10"
@@ -71,7 +71,7 @@ export function AccessibilityPanel() {
                   key={f.value}
                   type="button"
                   onClick={() => s.setSetting("fontFamily", f.value)}
-                  className={`w-full text-left text-[11px] px-2.5 py-1.5 border rounded transition-colors flex items-center justify-between ${
+                  className={`w-full text-left text-[11px] px-2.5 py-2.5 border rounded transition-colors flex items-center justify-between min-h-[40px] ${
                     s.fontFamily === f.value
                       ? "border-fg bg-fg text-bg font-bold"
                       : "border-border bg-card text-muted hover:bg-muted/10"
@@ -134,7 +134,7 @@ export function AccessibilityPanel() {
                   key={c.value}
                   type="button"
                   onClick={() => s.setSetting("contrast", c.value)}
-                  className={`text-[10px] py-1 border rounded transition-colors ${
+                  className={`text-[10px] py-2 border rounded transition-colors min-h-[36px] flex items-center justify-center ${
                     s.contrast === c.value
                       ? "border-fg bg-fg text-bg font-bold"
                       : "border-border bg-card text-muted hover:bg-muted/10"
@@ -181,7 +181,7 @@ export function AccessibilityPanel() {
             <button
               type="button"
               onClick={() => s.reset()}
-              className="text-muted hover:text-fg flex items-center gap-1 underline"
+              className="text-muted hover:text-fg flex items-center gap-1 underline min-h-[32px]"
             >
               <RotateCcw size={10} /> Reset Default
             </button>
@@ -193,7 +193,7 @@ export function AccessibilityPanel() {
       <button
         type="button"
         onClick={() => setOpen((p) => !p)}
-        className="flex items-center gap-2 px-4 py-2.5 bg-accent hover:opacity-90 text-accent-fg rounded-full shadow-xl border-2 border-border transition-transform active:scale-95"
+        className="flex items-center gap-2 px-4 py-3 min-h-[44px] bg-accent hover:opacity-90 text-accent-fg rounded-full shadow-xl border-2 border-border transition-transform active:scale-95 cursor-pointer"
         title="Buka Floating Panel Aksesibilitas"
       >
         <Sliders size={16} className="text-amber-400" />
@@ -250,7 +250,7 @@ function RangeControl({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full h-1 bg-muted/20 rounded cursor-pointer accent-fg"
+        className="w-full h-2 bg-muted/20 rounded cursor-pointer accent-fg"
       />
     </div>
   );

@@ -1,25 +1,23 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Brain, Bell, Sliders, Flame, Star } from "lucide-react";
+import { Brain, Bell, Flame, Star, Menu, X } from "lucide-react";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { useProgressStore } from "@/stores/progressStore";
 import { PROFILE_LABELS } from "@/lib/constants";
 
 export function Navbar() {
   const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
   const profile = useAccessibilityStore((s) => s.profile);
-  const bionic = useAccessibilityStore((s) => s.bionic);
-  const lineGuide = useAccessibilityStore((s) => s.lineGuide);
-  const focusMode = useAccessibilityStore((s) => s.focusMode);
-  const ttsEnabled = useAccessibilityStore((s) => s.ttsEnabled);
 
   const poin = useProgressStore((s) => s.poin);
   const streak = useProgressStore((s) => s.streak);
-
-  // Count active accessibility features
-  const activeCount = [bionic, lineGuide, focusMode, ttsEnabled].filter(Boolean).length;
 
   const navLinks = [
     { href: "/", label: "Beranda" },
@@ -28,84 +26,164 @@ export function Navbar() {
     { href: "/dashboard", label: "Dashboard" },
   ];
 
+  // Needed for createPortal — only available after hydration
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Lock body scroll when drawer is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
+  const isLinkActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    const segments = href.split("/").filter(Boolean);
+    const prefix = segments.length >= 2
+      ? `/${segments[0]}/${segments[1]}`
+      : `/${segments[0]}`;
+    return pathname?.startsWith(prefix) ?? false;
+  };
+
   return (
-    <header className="sticky top-0 z-40 bg-card border-b-2 border-border px-4 lg:px-8 py-3 shadow-sm">
-      <div className="mx-auto max-w-6xl flex items-center gap-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 border-2 border-border rounded flex items-center justify-center bg-muted/10 group-hover:border-fg transition-colors">
-            <Brain size={16} className="text-fg" />
-          </div>
-          <span className="text-base font-bold font-sans tracking-tight text-fg">LevelUp</span>
-          <span className="text-[9px] font-mono text-muted border border-dashed border-border px-1 rounded">logo</span>
-        </Link>
+    <>
+      <header className="sticky top-0 z-40 bg-card/95 backdrop-blur-md border-b border-border/80 px-4 lg:px-8 py-2.5 shadow-xs">
+        <div className="mx-auto max-w-6xl flex items-center gap-4">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-fg text-bg flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform">
+              <Brain size={18} />
+            </div>
+            <span className="text-base font-bold font-lexend tracking-tight text-fg">LevelUp</span>
+          </Link>
 
-        {/* Nav Links */}
-        <nav className="flex items-center gap-4 ml-4">
-          {navLinks.map((link) => {
-            const isActive = (() => {
-              if (link.href === "/") return pathname === "/";
-              const segments = link.href.split("/").filter(Boolean);
-              const prefix = segments.length >= 2
-                ? `/${segments[0]}/${segments[1]}`
-                : `/${segments[0]}`;
-              return pathname?.startsWith(prefix) ?? false;
-            })();
-
-            return (
+          {/* Desktop Nav Links — hidden below lg */}
+          <nav className="hidden lg:flex items-center gap-1.5 ml-4">
+            {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-xs font-mono pb-0.5 border-b-2 transition-colors ${
-                  isActive
-                    ? "border-fg text-fg font-semibold"
-                    : "border-transparent text-muted hover:text-fg"
+                className={`text-xs font-sans font-medium px-3 py-2 min-h-[36px] rounded-md transition-colors flex items-center ${
+                  isLinkActive(link.href)
+                    ? "bg-accent/10 text-fg font-semibold"
+                    : "text-muted hover:text-fg hover:bg-muted/10"
                 }`}
               >
                 {link.label}
               </Link>
-            );
-          })}
-        </nav>
+            ))}
+          </nav>
 
-        {/* Right Actions */}
-        <div className="ml-auto flex items-center gap-3">
-          {/* Active Profile Pill */}
-          {profile && (
-            <span className="hidden sm:inline-flex text-[10px] font-mono border border-border px-2 py-0.5 rounded bg-muted/10 font-medium">
-              Profil: {PROFILE_LABELS[profile]}
-            </span>
-          )}
-
-          {/* Gamification Stats */}
-          <div className="hidden md:flex border border-dashed border-border px-2.5 py-1 items-center gap-2.5 text-[11px] font-mono text-fg rounded">
-            <span className="flex items-center gap-1">
-              <Flame size={12} className="text-amber-500" /> {streak} streak
-            </span>
-            <span className="text-muted">|</span>
-            <span className="flex items-center gap-1">
-              <Star size={12} className="text-amber-500" /> {poin} pts
-            </span>
-          </div>
-
-          {/* Accessibility Indicator Button */}
-          <div className="flex items-center gap-1 text-[11px] font-mono border border-border px-2 py-1 rounded bg-muted/10">
-            <Sliders size={12} className="text-amber-500" />
-            <span className="hidden sm:inline font-sans text-[11px]">Aksesibilitas</span>
-            {activeCount > 0 && (
-              <span className="w-4 h-4 bg-amber-400 text-gray-900 rounded-full text-[9px] font-bold flex items-center justify-center">
-                {activeCount}
+          {/* Right Actions */}
+          <div className="ml-auto flex items-center gap-2.5">
+            {/* Active Profile Pill — hidden below lg */}
+            {profile && (
+              <span className="hidden lg:inline-flex text-[11px] font-sans border border-border px-2.5 py-0.5 rounded-full bg-bg text-fg/70 font-medium">
+                Profil: {PROFILE_LABELS[profile]}
               </span>
             )}
-          </div>
 
-          {/* Avatar & Notification */}
-          <div className="w-7 h-7 border border-dashed border-border rounded-full bg-muted/10 flex items-center justify-center text-[10px]">
-            👤
+            {/* Gamification Stats — hidden below lg */}
+            <div className="hidden lg:flex border border-border px-3 py-1 items-center gap-2 text-xs font-sans text-fg rounded-full bg-card shadow-2xs">
+              <span className="flex items-center gap-1 font-medium">
+                <Flame size={13} className="text-fg/60" /> {streak} streak
+              </span>
+              <span className="text-border">|</span>
+              <span className="flex items-center gap-1 font-medium">
+                <Star size={13} className="text-fg/60" /> {poin} pts
+              </span>
+            </div>
+
+            {/* Avatar & Notification */}
+            <div className="w-9 h-9 border border-border rounded-full bg-muted/20 flex items-center justify-center text-xs shadow-2xs">
+              👤
+            </div>
+            <button
+              type="button"
+              className="p-2 rounded-lg hover:bg-muted/10 transition-colors flex items-center justify-center text-muted hover:text-fg"
+              aria-label="Notifikasi"
+            >
+              <Bell size={16} />
+            </button>
+
+            {/* Hamburger Button — shown below lg */}
+            <button
+              type="button"
+              onClick={() => setMobileOpen((o) => !o)}
+              className="lg:hidden p-2 text-fg rounded-lg hover:bg-muted/10 flex items-center justify-center"
+              aria-label="Menu navigasi"
+            >
+              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
           </div>
-          <Bell size={14} className="text-muted cursor-pointer hover:text-fg" />
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Mobile/Tablet Drawer — rendered via portal to escape header stacking context */}
+      {mobileOpen && mounted && createPortal(
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-fg/30 backdrop-blur-sm z-[60] lg:hidden"
+            onClick={() => setMobileOpen(false)}
+          />
+          {/* Drawer */}
+          <nav className="fixed top-0 right-0 h-full w-72 bg-card border-l border-border z-[70] p-6 space-y-2 shadow-2xl animate-fade-in lg:hidden flex flex-col">
+            <div className="flex justify-between items-center mb-4 pb-3 border-b border-border">
+              <span className="text-sm font-bold font-lexend text-fg">Menu Navigasi</span>
+              <button
+                type="button"
+                onClick={() => setMobileOpen(false)}
+                className="p-1.5 rounded-lg text-muted hover:text-fg hover:bg-muted/10"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="space-y-1 flex-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`block px-4 py-3 text-sm font-sans rounded-xl min-h-[44px] transition-colors ${
+                    isLinkActive(link.href)
+                      ? "bg-accent/10 text-fg font-semibold"
+                      : "text-muted hover:bg-muted/10 hover:text-fg"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+
+            {/* Drawer Footer Info */}
+            <div className="border-t border-border pt-4 space-y-3 font-sans">
+              {profile && (
+                <div className="text-xs text-muted">
+                  Profil: <strong className="text-fg">{PROFILE_LABELS[profile]}</strong>
+                </div>
+              )}
+              <div className="flex items-center gap-4 text-xs text-muted">
+                <span className="flex items-center gap-1 font-medium text-fg">
+                  <Flame size={14} className="text-fg/60" /> {streak} streak
+                </span>
+                <span className="flex items-center gap-1 font-medium text-fg">
+                  <Star size={14} className="text-fg/60" /> {poin} pts
+                </span>
+              </div>
+            </div>
+          </nav>
+        </>,
+        document.body
+      )}
+    </>
   );
 }

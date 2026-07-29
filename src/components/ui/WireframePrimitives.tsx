@@ -34,7 +34,7 @@ export function WBtn({
     <button
       type="button"
       onClick={onClick}
-      className={`${full ? "w-full" : ""} px-4 py-2 text-xs font-mono border-2 rounded transition-colors flex items-center justify-center gap-1.5 ${
+      className={`${full ? "w-full" : ""} px-4 py-2.5 text-xs font-mono min-h-[40px] border-2 rounded transition-colors flex items-center justify-center gap-1.5 ${
         primary
           ? "bg-accent text-accent-fg border-accent hover:opacity-90 shadow-sm font-semibold"
           : "bg-card text-fg border-border hover:bg-muted/10"
@@ -58,7 +58,7 @@ export function ToggleSwitch({
     <button
       type="button"
       onClick={onToggle}
-      className={`flex items-center justify-between w-full text-[11px] font-mono px-3 py-2 border rounded transition-colors ${
+      className={`flex items-center justify-between w-full text-[11px] font-mono px-3 py-2.5 min-h-[40px] border rounded transition-colors cursor-pointer ${
         active
           ? "border-fg bg-fg text-bg"
           : "border-border bg-card text-fg hover:bg-muted/10"

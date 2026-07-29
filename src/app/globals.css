@@ -49,6 +49,14 @@
   --reader-letter-spacing: 0px;
   --reader-word-spacing: 0px;
   --reader-max-width: 75ch;
+
+  /* Line Guide Ruler */
+  --ruler-highlight: rgba(59, 130, 246, 0.06);
+  --ruler-edge: rgba(59, 130, 246, 0.2);
+  --ruler-glow: 0 0 12px rgba(59, 130, 246, 0.06);
+  /* Dimming gradients — get stronger near the ruler */
+  --ruler-dim-near: rgba(0, 0, 0, 0.04);
+  --ruler-dim-far: rgba(0, 0, 0, 0.15);
 }
 
 /* High Contrast Mode (WCAG AAA) */
@@ -60,6 +68,13 @@
   --accent-fg: #ffffff;
   --card: #ffffff;
   --border: #374151;
+
+  /* Line Guide Ruler */
+  --ruler-highlight: rgba(59, 130, 246, 0.12);
+  --ruler-edge: rgba(59, 130, 246, 0.4);
+  --ruler-glow: 0 0 16px rgba(59, 130, 246, 0.12);
+  --ruler-dim-near: rgba(0, 0, 0, 0.06);
+  --ruler-dim-far: rgba(0, 0, 0, 0.25);
 }
 
 /* Dark Mode */
@@ -71,6 +86,14 @@
   --accent-fg: #0f172a;
   --card: #1f2937;
   --border: #374151;
+
+  /* Line Guide Ruler */
+  --ruler-highlight: rgba(96, 165, 250, 0.08);
+  --ruler-edge: rgba(96, 165, 250, 0.25);
+  --ruler-glow: 0 0 12px rgba(96, 165, 250, 0.08);
+  /* In dark mode, dimming needs to be stronger to be visible */
+  --ruler-dim-near: rgba(0, 0, 0, 0.08);
+  --ruler-dim-far: rgba(0, 0, 0, 0.35);
 }
 
 body {
@@ -87,6 +110,11 @@ body {
   line-height: var(--reader-line-height);
   letter-spacing: var(--reader-letter-spacing);
   word-spacing: var(--reader-word-spacing);
+}
+
+/* Font OpenDyslexic utility class — used in demo surfaces */
+.font-dyslexic {
+  font-family: 'OpenDyslexic', var(--font-lexend), sans-serif;
 }
 
 /* Bionic reading styling */
@@ -113,6 +141,41 @@ body {
   transition: opacity 0.3s ease, filter 0.3s ease;
 }
 
+/* Hero gradient tokens (calm pastel, theme-aware) */
+:root {
+  --hero-from: #faf8f5;   /* warm off-white */
+  --hero-via: #f9fafb;
+  --hero-to: #f3f4f6;     /* neutral-100 */
+}
+
+[data-contrast="high"] {
+  --hero-from: #fef3c7;
+  --hero-via: #ffffff;
+  --hero-to: #f5f5f5;
+}
+
+[data-contrast="dark"] {
+  --hero-from: #1e293b;
+  --hero-via: #111827;
+  --hero-to: #0f172a;
+}
+
+/* Hero surface */
+.hero-surface {
+  background: linear-gradient(135deg, var(--hero-from), var(--hero-via), var(--hero-to));
+}
+
+/* Profile card accent backgrounds (light, so text remains readable) */
+.profile-accent-dyslexia {
+  background: var(--profile-dyslexia);
+}
+.profile-accent-adhd {
+  background: var(--profile-adhd);
+}
+.profile-accent-umum {
+  background: var(--profile-umum);
+}
+
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
@@ -121,4 +184,28 @@ body {
 
 .animate-fade-in {
   animation: fadeIn 0.25s ease-out forwards;
+}
+
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.08);
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-card-lift,
+  .animate-fade-in {
+    animation: none !important;
+  }
+  .hero-surface,
+  .hover-lift {
+    transition: none !important;
+  }
+  .hover-lift:hover {
+    transform: none !important;
+  }
 }
