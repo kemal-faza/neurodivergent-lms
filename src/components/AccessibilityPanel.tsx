@@ -160,8 +160,8 @@ export function AccessibilityPanel() {
                     <p className="text-xs font-semibold text-fg">{label}</p>
                     <p className="text-[10px] text-muted leading-tight">{desc}</p>
                   </div>
-                  <div className={`w-9 h-5 rounded-full transition-colors flex items-center px-0.5 flex-shrink-0 ${
-                    s[key] ? "bg-fg" : "bg-muted/30"
+                  <div className={`w-9 h-5 rounded-full transition-colors flex items-center px-0.5 flex-shrink-0 border border-border ${
+                    s[key]                       ? "bg-fg" : "bg-border"
                   }`}>
                     <div className={`w-3.5 h-3.5 rounded-full bg-bg transition-transform ${
                       s[key] ? "translate-x-4" : "translate-x-0"
@@ -197,7 +197,7 @@ export function AccessibilityPanel() {
         className="flex items-center gap-2 px-4 py-3 min-h-[44px] bg-fg text-bg rounded-full shadow-xl border-2 border-border hover:opacity-90 transition-all active:scale-95 font-sans"
         title="Buka Floating Panel Aksesibilitas"
       >
-        <Sliders size={16} />
+        <Accessibility size={18} />
         <span className="text-xs font-semibold">Aksesibilitas</span>
         {activeCount > 0 && (
           <span className="w-5 h-5 bg-amber-400 text-gray-900 rounded-full text-[10px] font-bold flex items-center justify-center">
