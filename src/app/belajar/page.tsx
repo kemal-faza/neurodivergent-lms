@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { SectionLabel } from "@/components/ui/WireframePrimitives";
 import { getAllSubjek } from "@/lib/dummy-data";
 
 export default function BelajarPage() {
@@ -11,7 +10,6 @@ export default function BelajarPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 font-sans">
       <div className="mb-8">
-        <SectionLabel>daftar mata pelajaran</SectionLabel>
         <h1 className="text-2xl sm:text-3xl font-bold font-lexend text-fg">
           Pilih Mata Pelajaran
         </h1>
