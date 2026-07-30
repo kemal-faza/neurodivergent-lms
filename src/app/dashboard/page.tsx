@@ -1,7 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Flame, Star, Award, TrendingUp, Download, BookOpen, ChevronRight, Hand, Lock } from "lucide-react";
+import { useRef } from "react";
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
+import { Flame, Star, Award, TrendingUp, Download, BookOpen, ChevronRight, Hand, Lock, Brain, Medal } from "lucide-react";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { useProgressStore } from "@/stores/progressStore";
 import { PROFILE_LABELS } from "@/lib/constants";
@@ -9,6 +12,7 @@ import { getAllSubjek, getMateriBySubjek } from "@/lib/dummy-data";
 
 export default function DashboardPage() {
   const router = useRouter();
+  const pdfRef = useRef<HTMLDivElement>(null);
   const profile = useAccessibilityStore((s) => s.profile);
 
   const poin = useProgressStore((s) => s.poin);
@@ -19,6 +23,20 @@ export default function DashboardPage() {
   const badgeEarned = useProgressStore((s) => s.badge);
   const completedMateri = useProgressStore((s) => s.completedMateri);
   const quizScores = useProgressStore((s) => s.quizScores);
+
+  const pdfDate = new Date().toISOString().slice(0, 10);
+  const exportPdf = async () => {
+    const el = pdfRef.current;
+    if (!el) return;
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: "#ffffff", logging: true });
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pdfW = 210;
+    const pdfH = (canvas.height * pdfW) / canvas.width;
+    pdf.addImage(imgData, "PNG", 0, 0, pdfW, pdfH);
+    pdf.save(`levelup-progress-${pdfDate}.pdf`);
+  };
 
   const leaderboard = [
     { name: "Eka", pts: 350, streak: 12 },
@@ -62,7 +80,7 @@ export default function DashboardPage() {
   const totalWeekPoints = chartData.reduce((sum, d) => sum + d.val, 0);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 font-mono space-y-8">
+    <><div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 font-mono space-y-8">
       {/* Page Header */}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <h1 className="text-xl sm:text-2xl font-bold font-sans text-fg">
@@ -72,7 +90,8 @@ export default function DashboardPage() {
 
         <button
           type="button"
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs border border-border/60 text-muted rounded-lg hover:bg-muted/10 font-mono"
+          onClick={exportPdf}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs border border-border/60 text-muted rounded-lg hover:bg-fg hover:text-bg transition-all font-mono cursor-pointer"
         >
           <Download size={12} /> Export PDF
         </button>
@@ -221,5 +240,94 @@ export default function DashboardPage() {
       </section>
 
     </div>
+
+      {/* PDF template — hidden off-screen */}
+      <div ref={pdfRef} className="fixed -left-[9999px] top-0 w-[794px] bg-white p-10" style={{ fontFamily: "Inter, system-ui, sans-serif", border: 0, outline: "none", boxSizing: "border-box" }}>
+        <div className="flex justify-between items-start mb-8">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-gray-900 flex items-center justify-center">
+              <Brain size={24} className="text-white" />
+            </div>
+            <div>
+              <p className="text-lg font-bold text-gray-900 leading-tight">LevelUp</p>
+              <p className="text-[10px] text-gray-400 leading-tight">Platform Belajar Adaptif</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="text-2xl font-bold text-gray-900">Laporan Progress Belajar</p>
+            <p className="text-sm text-gray-400 mt-0.5">Tanggal: {pdfDate}</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-4 gap-3 mb-8">
+          {[
+            { label: "Total Poin", value: `${poin} pts`, icon: <Star size={16} className="text-amber-500" />, highlight: false },
+            { label: "Streak Saat Ini", value: `${streak}`, icon: <Flame size={16} className="text-amber-500" />, highlight: false },
+            { label: "Badge Diraih", value: `${badges.filter(b => b.earned).length}/${badges.length}`, icon: <Award size={16} className="text-amber-500" />, highlight: true },
+            { label: "Level Adaptif", value: levelText, icon: <TrendingUp size={16} className="text-amber-500" />, highlight: false },
+          ].map((s) => (
+            <div key={s.label} className={`border rounded-xl p-3 ${s.highlight ? "border-amber-300 bg-amber-50" : "border-gray-200 bg-white"}`}>
+              <div className="flex items-center gap-1.5 mb-2">
+                <div className={`w-6 h-6 rounded-lg flex items-center justify-center ${s.highlight ? "bg-amber-100" : "bg-gray-100"}`}>{s.icon}</div>
+                <span className="text-[9px] text-gray-500 font-medium">{s.label}</span>
+              </div>
+              <p className="text-lg font-bold text-gray-900">{s.value}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mb-8">
+          <div className="mb-3">
+            <span style={{ lineHeight: '1', margin: 0 }} className="text-sm font-bold text-gray-900">Badge yang Sudah Diraih</span>
+          </div>
+          <div className="grid grid-cols-6 gap-2">
+            {badges.map((b) => (
+              <div key={b.id} className={`rounded-lg border p-2.5 text-center ${b.earned ? "bg-amber-50 border-amber-300" : "bg-gray-50 border-gray-200"}`}>
+                <div className="w-[22px] h-[22px] mx-auto mb-1 flex items-center justify-center">{b.earned ? <Award size={22} className="text-amber-500" /> : <Lock size={22} className="text-gray-300" />}</div>
+                <p className={`text-[10px] font-bold leading-tight ${b.earned ? "text-gray-900" : "text-gray-400"}`}>{b.label}</p>
+                <p className={`text-[7px] leading-tight mt-0.5 ${b.earned ? "text-gray-500" : "text-gray-300"}`}>{b.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <div className="mb-3">
+            <span style={{ lineHeight: '1', margin: 0 }} className="text-sm font-bold text-gray-900">Progress Materi</span>
+          </div>
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b border-gray-200">
+                <th className="text-left text-[9px] text-gray-500 font-semibold pb-2 pl-1">Materi</th>
+                <th className="text-left text-[9px] text-gray-500 font-semibold pb-2">Progress</th>
+                <th className="text-right text-[9px] text-gray-500 font-semibold pb-2 pr-1">%</th>
+                <th className="text-right text-[9px] text-gray-500 font-semibold pb-2 pr-1">Skor Kuis</th>
+              </tr>
+            </thead>
+            <tbody>
+              {materiList.map((m, i) => (
+                <tr key={m.id} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                  <td className="py-2.5 pl-1">
+                    <span className="text-[11px] text-gray-800 font-medium">{m.label}</span>
+                  </td>
+                  <td className="py-2.5 pr-3">
+                    <div className="h-2 bg-gray-200 rounded-full overflow-hidden w-24">
+                      <div className="h-full bg-gray-900 rounded-full transition-all" style={{ width: `${m.progress}%` }} />
+                    </div>
+                  </td>
+                  <td className="py-2.5 text-right pr-1 text-[11px] text-gray-700 font-medium">{m.progress}%</td>
+                  <td className="py-2.5 text-right pr-1 text-[11px] text-gray-700">{m.quizScore !== null ? `${m.quizScore}%` : "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="border-t border-gray-200 pt-3 flex justify-between text-[8px] text-gray-400">
+          <span>Generated by LevelUp — Platform Belajar Adaptif</span>
+          <span>Halaman 1 dari 1</span>
+        </div>
+      </div>
+    </>
   );
 }
