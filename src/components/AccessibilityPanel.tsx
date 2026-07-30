@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Sliders, X, Check, RotateCcw,
   Accessibility, BookOpen, Zap, Settings2,
@@ -30,12 +30,24 @@ const TOOLS: {
 
 export function AccessibilityPanel() {
   const [open, setOpen] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
   const s = useAccessibilityStore();
+
+  useEffect(() => {
+    if (!open) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
 
   const activeCount = [s.bionic, s.lineGuide, s.focusMode, s.ttsEnabled].filter(Boolean).length;
 
   return (
-    <div className="fixed bottom-4 right-3 sm:bottom-5 sm:right-5 z-50 font-sans flex flex-col items-end">
+    <div ref={panelRef} className="fixed bottom-4 right-3 sm:bottom-5 sm:right-5 z-50 font-sans flex flex-col items-end">
       {/* Floating Card Panel */}
       {open && (
         <div className="mb-3 w-[calc(100vw-2rem)] sm:w-80 max-h-[80vh] overflow-y-auto bg-card border-2 border-border rounded-xl shadow-2xl p-4 text-fg animate-fade-in">
