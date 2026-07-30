@@ -8,10 +8,7 @@ import {
 } from "lucide-react";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { CONTRAST_OPTIONS, FONT_OPTIONS } from "@/lib/constants";
-import type { Profile } from "@/lib/types";
-import type { AccessibilitySettings } from "@/lib/types";
-
-const PROFILES: Profile[] = ["disleksia", "adhd", "umum"];
+import type { Profile, AccessibilitySettings } from "@/lib/types";
 
 const PROFILE_ITEMS: { id: Profile; label: string; icon: typeof BookOpen }[] = [
   { id: "disleksia", label: "Disleksia", icon: BookOpen },
@@ -41,7 +38,7 @@ export function AccessibilityPanel() {
     <div className="fixed bottom-4 right-3 sm:bottom-5 sm:right-5 z-50 font-sans flex flex-col items-end">
       {/* Floating Card Panel */}
       {open && (
-        <div className="mb-3 w-[calc(100vw-2rem)] sm:w-80 max-h-[80vh] overflow-y-auto bg-card border-2 border-border rounded-xl shadow-2xl p-4 space-y-4 text-fg animate-fade-in">
+        <div className="mb-3 w-[calc(100vw-2rem)] sm:w-80 max-h-[80vh] overflow-y-auto bg-card border-2 border-border rounded-xl shadow-2xl p-4 text-fg animate-fade-in">
           {/* Header */}
           <div className="flex items-center justify-between pb-2">
             <div className="flex items-center gap-2.5">
