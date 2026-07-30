@@ -2,12 +2,14 @@
 
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, ChevronRight, CheckCircle } from "lucide-react";
 import { getSubjekById, getMateriBySubjek } from "@/lib/dummy-data";
+import { useProgressStore } from "@/stores/progressStore";
 
 export default function SubjekPage() {
   const params = useParams<{ subjek: string }>();
   const router = useRouter();
+  const completedMateri = useProgressStore((s) => s.completedMateri);
   const subjek = getSubjekById(params.subjek);
 
   if (!subjek) {
@@ -61,6 +63,9 @@ export default function SubjekPage() {
                 <span className="text-[10px] font-sans font-semibold px-2 py-0.5 rounded-full bg-muted/10 border border-border text-muted">
                   Level {materi.level}
                 </span>
+                {completedMateri.includes(materi.id) && (
+                  <CheckCircle size={14} className="text-emerald-500 flex-shrink-0" />
+                )}
               </div>
               <p className="text-xs text-muted font-sans leading-relaxed">
                 {materi.deskripsi}
@@ -70,7 +75,7 @@ export default function SubjekPage() {
               href={`/belajar/${params.subjek}/${materi.id}`}
               className="flex-shrink-0 px-5 py-2.5 text-xs font-sans font-semibold border-2 border-fg bg-fg text-bg rounded-xl hover:opacity-90 transition-all flex items-center justify-center gap-1.5 shadow-sm group-hover:shadow-md min-h-[44px]"
             >
-              Mulai Belajar <ChevronRight size={14} />
+              {completedMateri.includes(materi.id) ? "Baca Lagi" : "Mulai Belajar"} <ChevronRight size={14} />
             </Link>
           </div>
         ))}
