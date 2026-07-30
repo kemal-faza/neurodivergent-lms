@@ -4,19 +4,19 @@ export const SUBJEK_MAP: Record<string, Subjek> = {
   ipa: {
     id: "ipa",
     nama: "Ilmu Pengetahuan Alam",
-    icon: "🧬",
+    icon: "dna",
     materiIds: ["fotosintesis", "tata-surya", "siklus-air"],
   },
   matematika: {
     id: "matematika",
     nama: "Matematika",
-    icon: "🔢",
+    icon: "sigma",
     materiIds: ["pecahan", "bangun-datar", "persamaan-linear"],
   },
   "bahasa-indonesia": {
     id: "bahasa-indonesia",
     nama: "Bahasa Indonesia",
-    icon: "📖",
+    icon: "book-open",
     materiIds: ["teks-deskripsi", "ide-pokok", "kalimat-efektif"],
   },
 };
