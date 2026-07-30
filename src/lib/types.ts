@@ -71,6 +71,12 @@ export interface Subjek {
   materiIds: string[];
 }
 
+export interface QuizAttempt {
+  correct: number;
+  total: number;
+  date: string;
+}
+
 export interface ProgressState {
   userId: string;
   poin: number;
@@ -84,6 +90,8 @@ export interface ProgressState {
   completedMateri: string[];
   /** kuisId -> best score (points). */
   quizScores: Record<string, number>;
+  /** materiId -> history of quiz attempts. */
+  quizAttempts: Record<string, QuizAttempt[]>;
   /** Highest streak the user has ever achieved. */
   maxStreak: number;
   /** Points per day keyed by ISO date (yyyy-mm-dd). */
