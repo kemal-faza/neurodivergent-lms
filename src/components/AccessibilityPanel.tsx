@@ -30,14 +30,31 @@ const TOOLS: {
 
 export function AccessibilityPanel() {
   const [open, setOpen] = useState(false);
+  const [animatingOut, setAnimatingOut] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const s = useAccessibilityStore();
+
+  const closeWithAnimation = () => {
+    setAnimatingOut(true);
+    setTimeout(() => {
+      setOpen(false);
+      setAnimatingOut(false);
+    }, 200);
+  };
+
+  const togglePanel = () => {
+    if (open) {
+      closeWithAnimation();
+    } else {
+      setOpen(true);
+    }
+  };
 
   useEffect(() => {
     if (!open) return;
     const handleClickOutside = (e: MouseEvent) => {
       if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
-        setOpen(false);
+        closeWithAnimation();
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -49,8 +66,10 @@ export function AccessibilityPanel() {
   return (
     <div ref={panelRef} className="fixed bottom-4 right-3 sm:bottom-5 sm:right-5 z-50 font-sans flex flex-col items-end">
       {/* Floating Card Panel */}
-      {open && (
-        <div className="mb-3 w-[calc(100vw-2rem)] sm:w-80 max-h-[80vh] overflow-y-auto bg-card border-2 border-border rounded-xl shadow-2xl p-4 text-fg animate-fade-in">
+      {(open || animatingOut) && (
+        <div className={`mb-3 w-[calc(100vw-2rem)] sm:w-80 max-h-[80vh] overflow-y-auto bg-card border-2 border-border rounded-xl shadow-2xl p-4 text-fg ${
+          animatingOut ? "animate-fade-out" : "animate-fade-in"
+        }`}>
           {/* Header */}
           <div className="flex items-center justify-between pb-2">
             <div className="flex items-center gap-2.5">
@@ -62,7 +81,7 @@ export function AccessibilityPanel() {
             </div>
             <button
               type="button"
-              onClick={() => setOpen(false)}
+              onClick={closeWithAnimation}
               className="p-1.5 text-muted hover:text-fg rounded-lg hover:bg-muted/10 min-h-[36px] min-w-[36px] flex items-center justify-center"
               title="Tutup Panel"
             >
@@ -202,7 +221,7 @@ export function AccessibilityPanel() {
       {/* Trigger Button */}
       <button
         type="button"
-        onClick={() => setOpen((p) => !p)}
+        onClick={togglePanel}
         className="flex items-center gap-2 px-4 py-3 min-h-[44px] bg-fg text-bg rounded-full shadow-xl border-2 border-border hover:opacity-90 transition-all active:scale-95 font-sans"
         title="Buka Floating Panel Aksesibilitas"
       >
