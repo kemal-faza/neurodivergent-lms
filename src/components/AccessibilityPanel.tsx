@@ -172,7 +172,7 @@ export function AccessibilityPanel() {
           </div>
 
           {/* Footer */}
-          <div className="pt-1 flex items-center justify-between border-t-2 border-border">
+          <div className="pt-1 flex items-center justify-between border-t-2 border-border mt-4">
             <span className="text-[11px] font-sans text-muted">
               {activeCount > 0 ? `${activeCount} alat bantu aktif` : "Pengaturan standar"}
             </span>
