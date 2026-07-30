@@ -88,7 +88,6 @@ export default function MateriPage() {
           </Link>
 
           <h1 className="text-xl sm:text-2xl font-bold font-lexend text-fg flex items-center gap-2">
-            <BookOpen className="text-muted" size={22} />
             {materi.judul}
           </h1>
         </div>

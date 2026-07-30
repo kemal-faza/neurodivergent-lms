@@ -18,7 +18,7 @@ export default function SubjekPage() {
           onClick={() => router.push("/belajar")}
           className="px-5 py-2.5 text-sm font-sans font-semibold border-2 border-border text-fg rounded-xl hover:bg-muted/10 transition-colors min-h-[44px]"
         >
-          ← Kembali ke Daftar Mata Pelajaran
+          <ArrowLeft size={16} className="inline" /> Kembali ke Daftar Mata Pelajaran
         </button>
       </div>
     );
@@ -37,8 +37,8 @@ export default function SubjekPage() {
 
       <div className="mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold font-lexend text-fg flex items-center gap-3">
-          <span className="w-12 h-12 rounded-xl bg-muted/10 border border-border/60 flex items-center justify-center text-2xl">
-            {subjek.icon}
+          <span className="w-12 h-12 rounded-xl bg-muted/10 border border-border/60 flex items-center justify-center">
+            <subjek.icon size={28} />
           </span>
           {subjek.nama}
         </h1>
