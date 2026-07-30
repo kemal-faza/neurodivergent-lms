@@ -239,8 +239,8 @@ function RangeControl({
   onChange: (val: number) => void;
 }) {
   return (
-    <div className="text-[10px]">
-      <div className="flex justify-between text-muted mb-0.5 font-mono">
+    <div className="text-[11px] font-sans">
+      <div className="flex justify-between text-muted mb-0.5">
         <span>{label}</span>
         <span>
           {value}
