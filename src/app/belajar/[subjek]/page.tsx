@@ -26,7 +26,7 @@ export default function SubjekPage() {
     );
   }
 
-  const materiList = getMateriBySubjek(params.subjek);
+  const materiList = getMateriBySubjek(params.subjek).sort((a, b) => a.level - b.level);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 font-sans">
