@@ -78,7 +78,7 @@ export default function MateriPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 font-sans relative">
       {/* Screen Header */}
-      <div className="mb-6 pb-4">
+      <div>
         <div>
           <Link
             href={`/belajar/${params.subjek}`}
@@ -87,7 +87,7 @@ export default function MateriPage() {
             <ArrowLeft size={14} /> Kembali ke Daftar Materi
           </Link>
 
-          <h1 className="text-xl sm:text-2xl font-bold font-lexend text-fg flex items-center gap-2">
+          <h1 className="text-xl sm:text-2xl font-bold font-lexend text-fg flex items-center gap-2 mb-4">
             {materi.judul}
           </h1>
         </div>
