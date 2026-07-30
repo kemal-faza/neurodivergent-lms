@@ -2,8 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import html2canvas from "html2canvas";
-import { jsPDF } from "jspdf";
 import {
   Flame,
   Star,
@@ -40,6 +38,8 @@ export default function DashboardPage() {
 
   const pdfDate = new Date().toISOString().slice(0, 10);
   const exportPdf = async () => {
+    const { default: html2canvas } = await import("html2canvas");
+    const { default: jsPDF } = await import("jspdf");
     const el = pdfRef.current;
     if (!el) return;
     await new Promise((resolve) => setTimeout(resolve, 200));
