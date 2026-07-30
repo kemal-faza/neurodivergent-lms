@@ -22,7 +22,7 @@ export function Navbar() {
   const navLinks = [
     { href: "/", label: "Beranda" },
     { href: "/belajar", label: "Belajar" },
-    { href: "/belajar/kuis/q1", label: "Kuis" },
+    { href: "/kuis", label: "Kuis" },
     { href: "/dashboard", label: "Dashboard" },
   ];
 
