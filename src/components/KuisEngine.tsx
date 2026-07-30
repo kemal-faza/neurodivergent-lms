@@ -46,7 +46,7 @@ export function KuisEngine({
       setSubmitted(false);
       setQIndex(qIndex + 1);
     } else {
-      const correct = sessionCorrect.filter(Boolean).length + (isCorrect ? 1 : 0);
+      const correct = sessionCorrect.filter(Boolean).length;
       onFinishSession(correct, soalList.length);
     }
   };
