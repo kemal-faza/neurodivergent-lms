@@ -110,7 +110,6 @@ export function AccessibilityPanel() {
             </div>
 
             <div className="mb-3 space-y-3">
-              <p className="text-[11px] font-sans text-muted mb-1.5">Ukuran &amp; Spasi</p>
               <RangeControl label="Ukuran font" value={s.fontSize} min={14} max={30} step={1} unit="px" onChange={(v) => s.setSetting("fontSize", v)} />
               <RangeControl label="Line height" value={s.lineHeight} min={1.2} max={2.4} step={0.1} onChange={(v) => s.setSetting("lineHeight", v)} />
               <RangeControl label="Letter spacing" value={s.letterSpacing} min={0} max={4} step={0.5} unit="px" onChange={(v) => s.setSetting("letterSpacing", v)} />
@@ -171,8 +170,6 @@ export function AccessibilityPanel() {
               ))}
             </div>
           </div>
-
-          <hr className="border-t-2 border-border my-4" />
 
           {/* Footer */}
           <div className="pt-1 flex items-center justify-between border-t-2 border-border">
