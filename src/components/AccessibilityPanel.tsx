@@ -61,7 +61,7 @@ export function AccessibilityPanel() {
             </button>
           </div>
 
-          <hr className="border-t-2 border-border" />
+          <hr className="border-t-2 border-border my-4" />
 
           {/* Group 1: Profil */}
           <div>
@@ -85,7 +85,7 @@ export function AccessibilityPanel() {
             </div>
           </div>
 
-          <hr className="border-t-2 border-border" />
+          <hr className="border-t-2 border-border my-4" />
 
           {/* Group 2: Tampilan */}
           <div>
@@ -141,7 +141,7 @@ export function AccessibilityPanel() {
             </div>
           </div>
 
-          <hr className="border-t-2 border-border" />
+          <hr className="border-t-2 border-border my-4" />
 
           {/* Group 3: Alat Bantu */}
           <div>
@@ -175,10 +175,10 @@ export function AccessibilityPanel() {
             </div>
           </div>
 
-          <hr className="border-t-2 border-border" />
+          <hr className="border-t-2 border-border my-4" />
 
           {/* Footer */}
-          <div className="pt-1 flex items-center justify-between">
+          <div className="pt-1 flex items-center justify-between border-t-2 border-border">
             <span className="text-[11px] font-sans text-muted">
               {activeCount > 0 ? `${activeCount} alat bantu aktif` : "Pengaturan standar"}
             </span>
