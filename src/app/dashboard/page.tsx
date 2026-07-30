@@ -263,12 +263,12 @@ export default function DashboardPage() {
           {[
             { label: "Total Poin", value: `${poin} pts`, icon: <Star size={16} className="text-amber-500" />, highlight: false },
             { label: "Streak Saat Ini", value: `${streak}`, icon: <Flame size={16} className="text-amber-500" />, highlight: false },
-            { label: "Badge Diraih", value: `${badges.filter(b => b.earned).length}/${badges.length}`, icon: <Award size={16} className="text-amber-500" />, highlight: true },
+            { label: "Badge Diraih", value: `${badges.filter(b => b.earned).length}/${badges.length}`, icon: <Award size={16} className="text-amber-500" />, highlight: false },
             { label: "Level Adaptif", value: levelText, icon: <TrendingUp size={16} className="text-amber-500" />, highlight: false },
           ].map((s) => (
-            <div key={s.label} className={`border rounded-xl p-3 ${s.highlight ? "border-amber-300 bg-amber-50" : "border-gray-200 bg-white"}`}>
+            <div key={s.label} className="border border-gray-200 bg-white rounded-xl p-3">
               <div className="flex items-center gap-1.5 mb-2">
-                <div className={`w-6 h-6 rounded-lg flex items-center justify-center ${s.highlight ? "bg-amber-100" : "bg-gray-100"}`}>{s.icon}</div>
+                <div className="w-6 h-6 rounded-lg flex items-center justify-center bg-gray-100">{s.icon}</div>
                 <span className="text-[9px] text-gray-500 font-medium">{s.label}</span>
               </div>
               <p className="text-lg font-bold text-gray-900">{s.value}</p>
@@ -282,7 +282,7 @@ export default function DashboardPage() {
           </div>
           <div className="grid grid-cols-6 gap-2">
             {badges.map((b) => (
-              <div key={b.id} className={`rounded-lg border p-2.5 text-center ${b.earned ? "bg-amber-50 border-amber-300" : "bg-gray-50 border-gray-200"}`}>
+              <div key={b.id} className={`rounded-lg border p-2.5 text-center ${b.earned ? "bg-white border-gray-200" : "bg-gray-50 border-gray-200"}`}>
                 <div className="w-[22px] h-[22px] mx-auto mb-1 flex items-center justify-center">{b.earned ? <Award size={22} className="text-amber-500" /> : <Lock size={22} className="text-gray-300" />}</div>
                 <p className={`text-[10px] font-bold leading-tight ${b.earned ? "text-gray-900" : "text-gray-400"}`}>{b.label}</p>
                 <p className={`text-[7px] leading-tight mt-0.5 ${b.earned ? "text-gray-500" : "text-gray-300"}`}>{b.desc}</p>
