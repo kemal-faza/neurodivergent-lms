@@ -1,11 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Sliders, X, Check, RotateCcw } from "lucide-react";
+import {
+  Sliders, X, Check, RotateCcw,
+  Accessibility, BookOpen, Zap, Settings2,
+  Volume2, Eye, Ruler, Focus,
+} from "lucide-react";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { CONTRAST_OPTIONS, FONT_OPTIONS } from "@/lib/constants";
 import type { Profile } from "@/lib/types";
-import { ToggleSwitch } from "./ui/WireframePrimitives";
+import type { AccessibilitySettings } from "@/lib/types";
 
 const PROFILES: Profile[] = ["disleksia", "adhd", "umum"];
 
