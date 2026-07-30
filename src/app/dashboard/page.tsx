@@ -154,7 +154,6 @@ export default function DashboardPage() {
         {/* Page Header */}
         <div className="flex flex-wrap items-start justify-between gap-4">
           <h1 className="text-xl sm:text-2xl font-bold font-sans text-fg">
-            <Hand size={24} className="inline mr-1.5 text-fg" />
             Halo, Pelajar LevelUp! Tetap Semangat Belajar!
           </h1>
 
