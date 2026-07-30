@@ -82,7 +82,7 @@ export default function MateriPage() {
         <div>
           <Link
             href={`/belajar/${params.subjek}`}
-            className="inline-flex items-center gap-1.5 text-xs font-sans font-medium text-muted hover:text-fg mb-1.5 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-sans font-medium text-muted hover:text-fg mb-3 transition-colors"
           >
             <ArrowLeft size={14} /> Kembali ke Daftar Materi
           </Link>
