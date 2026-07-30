@@ -88,4 +88,6 @@ export interface ProgressState {
   maxStreak: number;
   /** Points per day keyed by ISO date (yyyy-mm-dd). */
   dailyPoints: Record<string, number>;
+  /** Materi id -> 0-100 reading progress. */
+  materiProgress: Record<string, number>;
 }
