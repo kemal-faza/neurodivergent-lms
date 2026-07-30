@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 import { SectionLabel } from "@/components/ui/WireframePrimitives";
 import { getSubjekById, getMateriBySubjek } from "@/lib/dummy-data";
+import { getSubjekIcon } from "@/lib/icon-map";
 
 export default function SubjekPage() {
   const params = useParams<{ subjek: string }>();
@@ -40,7 +41,7 @@ export default function SubjekPage() {
         <SectionLabel>daftar materi</SectionLabel>
         <h1 className="text-2xl sm:text-3xl font-bold font-lexend text-fg flex items-center gap-3">
           <span className="w-12 h-12 rounded-xl bg-muted/10 border border-border/60 flex items-center justify-center text-2xl">
-            {subjek.icon}
+            {getSubjekIcon(subjek.icon, 24)}
           </span>
           {subjek.nama}
         </h1>
