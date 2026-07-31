@@ -213,8 +213,8 @@ export function KuisEngine({
 
         <div className="space-y-4">
           <div className="border-2 border-border bg-card rounded-xl p-4 shadow-sm">
-            <h3 className="text-xs font-sans font-semibold text-fg mb-3">Navigator Soal</h3>
-            <div className="grid grid-cols-3 gap-2">
+            <h3 className="text-sm font-sans font-semibold text-fg mb-3">Navigator Soal</h3>
+            <div className="grid grid-cols-5 gap-2">
               {soalList.map((_, i) => {
                 const answer = answers[i];
                 const isCurrent = i === qIndex;
@@ -241,7 +241,7 @@ export function KuisEngine({
                     onClick={() => handleJumpToQuestion(i)}
                     aria-current={isCurrent ? "step" : undefined}
                     aria-label={`Soal ${i + 1}, ${stateLabel}`}
-                    className={`w-11 h-11 min-h-[44px] rounded-full text-xs font-sans font-semibold flex items-center justify-center transition-all ${cls}`}
+                    className={`w-9 h-9 rounded-full text-xs font-sans font-semibold flex items-center justify-center transition-all ${cls}`}
                   >
                     {i + 1}
                   </button>
