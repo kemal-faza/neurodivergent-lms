@@ -22,7 +22,7 @@ export function Navbar() {
   const navLinks = [
     { href: "/", label: "Beranda" },
     { href: "/belajar", label: "Belajar" },
-    { href: "/belajar/kuis/q1", label: "Kuis" },
+    { href: "/kuis", label: "Kuis" },
     { href: "/dashboard", label: "Dashboard" },
   ];
 
@@ -43,13 +43,25 @@ export function Navbar() {
     };
   }, [mobileOpen]);
 
-  const isLinkActive = (href: string) => {
-    if (href === "/") return pathname === "/";
+  const getPrefix = (href: string) => {
     const segments = href.split("/").filter(Boolean);
-    const prefix = segments.length >= 2
+    return segments.length >= 2
       ? `/${segments[0]}/${segments[1]}`
       : `/${segments[0]}`;
-    return pathname?.startsWith(prefix) ?? false;
+  };
+
+  const isLinkActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    const prefix = getPrefix(href);
+    if (!pathname?.startsWith(prefix)) return false;
+    for (const link of navLinks) {
+      if (link.href === href) continue;
+      const otherPrefix = getPrefix(link.href);
+      if (otherPrefix.length > prefix.length && pathname.startsWith(otherPrefix)) {
+        return false;
+      }
+    }
+    return true;
   };
 
   return (

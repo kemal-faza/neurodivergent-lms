@@ -11,6 +11,10 @@ interface ProgressStore extends ProgressState {
   addPoin: (n: number) => void;
   /** Record a quiz attempt; updates best score, points, and adaptive level. */
   recordQuiz: (kuisId: string, correct: number, total: number) => void;
+  /** Record a full quiz session (batch); updates best score, attempts history, and points. */
+  recordQuizSession: (materiId: string, correct: number, total: number) => void;
+  /** Get progress for a specific material quiz. */
+  getQuizProgress: (materiId: string) => { isCompleted: boolean; bestScore: number | null; lastAttempt: { correct: number; total: number } | null };
   addBadge: (id: string) => void;
   setMateriProgress: (id: string, progress: number) => void;
   completeMateri: (id: string) => void;
@@ -26,7 +30,7 @@ function todayISO(): string {
 
 export const useProgressStore = create<ProgressStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       ...INITIAL_PROGRESS,
       hasHydrated: false,
       addPoin: (n) =>
@@ -50,6 +54,35 @@ export const useProgressStore = create<ProgressStore>()(
             dailyPoints: { ...s.dailyPoints, [today]: (s.dailyPoints[today] ?? 0) + points },
           };
         }),
+      recordQuizSession: (materiId, correct, total) =>
+        set((s) => {
+          const ratio = scoreToRatio(correct, total);
+          const points = quizPoints(correct, total);
+          const best = Math.max(s.quizScores[materiId] ?? 0, points);
+          const today = todayISO();
+          return {
+            poin: s.poin + points,
+            quizScores: { ...s.quizScores, [materiId]: best },
+            quizAttempts: {
+              ...s.quizAttempts,
+              [materiId]: [...(s.quizAttempts[materiId] ?? []), { correct, total, date: today }],
+            },
+            adaptiveLevel: nextAdaptiveLevel(s.adaptiveLevel, ratio),
+            dailyPoints: { ...s.dailyPoints, [today]: (s.dailyPoints[today] ?? 0) + points },
+          };
+        }),
+      getQuizProgress: (materiId) => {
+        const state = get();
+        const attempts = state.quizAttempts[materiId];
+        const bestScore = state.quizScores[materiId] ?? null;
+        const isCompleted = bestScore !== null;
+        const lastAttempt = attempts && attempts.length > 0 ? attempts[attempts.length - 1] : null;
+        return {
+          isCompleted,
+          bestScore: bestScore !== null ? Math.round(bestScore) : null,
+          lastAttempt: lastAttempt ? { correct: lastAttempt.correct, total: lastAttempt.total } : null,
+        };
+      },
       addBadge: (id) =>
         set((s) => (s.badge.includes(id) ? s : { badge: [...s.badge, id] })),
       setMateriProgress: (id, progress) =>
@@ -86,6 +119,7 @@ export const useProgressStore = create<ProgressStore>()(
         adaptiveLevel: state.adaptiveLevel,
         completedMateri: state.completedMateri,
         quizScores: state.quizScores,
+        quizAttempts: state.quizAttempts,
         maxStreak: state.maxStreak,
         dailyPoints: state.dailyPoints,
         materiProgress: state.materiProgress,

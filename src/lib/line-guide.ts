@@ -64,7 +64,7 @@ export function getNextLineIndex(
  */
 export function getAllLineRects(container: Element): LineRect[] {
   const lineRects: LineRect[] = [];
-  const blocks = container.querySelectorAll("p, h2, h3, h4, h5, h6, li");
+  const blocks = container.querySelectorAll("p, h2, h3, h4, h5, h6, li, span");
 
   for (const block of blocks) {
     const range = document.createRange();

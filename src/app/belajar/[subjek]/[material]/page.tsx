@@ -211,7 +211,7 @@ export default function MateriPage() {
         {materi.kuisId ? (
           <button
             type="button"
-            onClick={() => router.push(`/belajar/kuis/${materi.kuisId}`)}
+            onClick={() => router.push(`/kuis/${params.subjek}/${params.material}?back=${encodeURIComponent(`/belajar/${params.subjek}/${params.material}`)}`)}
             className="px-5 py-2 text-xs border-2 border-accent bg-accent text-accent-fg rounded-lg hover:opacity-90 font-sans font-semibold flex items-center gap-1.5 shadow"
           >
             Kerjakan Kuis Adaptif <ChevronRight size={14} />

@@ -152,6 +152,8 @@ export const KUIS: Kuis[] = [
       { id: "q1s1", t: "Apa warna yang dipantulkan daun?", opsi: ["Merah", "Hijau", "Biru"], benar: 1, diff: 1 },
       { id: "q1s2", t: "Apa produk sampingan fotosintesis yang kita hirup?", opsi: ["Karbon dioksida", "Oksigen", "Glukosa"], benar: 1, diff: 1 },
       { id: "q1s3", t: "Zat apa yang menyerap cahaya pada daun?", opsi: ["Klorofil", "Klorin", "Kromium"], benar: 0, diff: 2 },
+      { id: "q1s4", t: "Di bagian tumbuhan mana fotosintesis terutama terjadi?", opsi: ["Akar", "Daun", "Batang"], benar: 1, diff: 2 },
+      { id: "q1s5", t: "Apa sumber energi utama untuk fotosintesis?", opsi: ["Air", "Tanah", "Cahaya matahari"], benar: 2, diff: 1 },
     ],
   },
   {
@@ -161,6 +163,8 @@ export const KUIS: Kuis[] = [
       { id: "q2s1", t: "Planet terdekat ke Matahari adalah?", opsi: ["Venus", "Bumi", "Merkurius"], benar: 2, diff: 1 },
       { id: "q2s2", t: "Di antara planet manakah sabuk asteroid berada?", opsi: ["Bumi-Mars", "Mars-Jupiter", "Jupiter-Saturnus"], benar: 1, diff: 2 },
       { id: "q2s3", t: "Planet terbesar di tata surya adalah?", opsi: ["Saturnus", "Neptunus", "Jupiter"], benar: 2, diff: 1 },
+      { id: "q2s4", t: "Planet yang dikenal dengan cincinnya yang indah adalah?", opsi: ["Jupiter", "Saturnus", "Uranus"], benar: 1, diff: 1 },
+      { id: "q2s5", t: "Berapa lama Bumi membutuhkan waktu untuk satu kali revolusi?", opsi: ["24 jam", "365 hari", "30 hari"], benar: 1, diff: 1 },
     ],
   },
 ];
@@ -185,4 +189,8 @@ export function getMateriBySubjek(subjekId: string): Materi[] {
 
 export function getKuis(id: string): Kuis | undefined {
   return KUIS.find((k) => k.id === id);
+}
+
+export function getMateriWithQuizBySubjek(subjekId: string): Materi[] {
+  return getMateriBySubjek(subjekId).filter((m) => m.kuisId != null);
 }

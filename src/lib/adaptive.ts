@@ -42,6 +42,7 @@ export const INITIAL_PROGRESS: ProgressState = {
   adaptiveLevel: 2,
   completedMateri: [],
   quizScores: {},
+  quizAttempts: {},
   maxStreak: 5,
   dailyPoints: {},
   materiProgress: {},
