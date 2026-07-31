@@ -7,6 +7,7 @@ export type Profile = "disleksia" | "adhd" | "umum";
 export type FontFamily = "default" | "lexend" | "opendyslexic";
 
 export type Contrast = "normal" | "high" | "dark";
+import type { LucideIcon } from "lucide-react";
 
 /** All accessibility settings, persisted in IndexedDB via the accessibility store. */
 export interface AccessibilitySettings {
@@ -67,7 +68,7 @@ export interface Materi {
 export interface Subjek {
   id: string;
   nama: string;
-  icon: string;
+  icon: LucideIcon;
   materiIds: string[];
 }
 
