@@ -44,4 +44,5 @@ export const INITIAL_PROGRESS: ProgressState = {
   quizScores: {},
   maxStreak: 5,
   dailyPoints: {},
+  materiProgress: {},
 };

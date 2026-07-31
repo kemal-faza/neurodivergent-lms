@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -19,7 +19,10 @@ export default function MateriPage() {
   const materi = getMateriById(params.material);
 
   const completeMateri = useProgressStore((s) => s.completeMateri);
+  const setMateriProgress = useProgressStore((s) => s.setMateriProgress);
   const bumpStreak = useProgressStore((s) => s.bumpStreak);
+  const readerRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
 
   const ttsEnabled = useAccessibilityStore((s) => s.ttsEnabled);
   const bionic = useAccessibilityStore((s) => s.bionic);
@@ -28,13 +31,36 @@ export default function MateriPage() {
   const [activeParaIndex, setActiveParaIndex] = useState<number>(0);
   const [isPlayingTts, setIsPlayingTts] = useState<boolean>(false);
 
-  // Mark materi complete when page loads
+  // Scroll-based reading progress
   useEffect(() => {
-    if (materi?.id) {
-      completeMateri(materi.id);
-      bumpStreak();
+    if (!materi?.id || mounted) return;
+    setMounted(true);
+    bumpStreak();
+    const existing = useProgressStore.getState().materiProgress[materi.id] ?? 0;
+    if (existing < 20) setMateriProgress(materi.id, 20);
+    const handleScroll = () => {
+      const el = readerRef.current;
+      if (!el) return;
+      const existing = useProgressStore.getState().materiProgress[materi.id] ?? 0;
+      const { scrollTop, scrollHeight, clientHeight } = el;
+      const ratio = Math.min(1, scrollTop / (scrollHeight - clientHeight));
+      const pct = Math.round(20 + ratio * 80);
+      const next = Math.max(existing, pct);
+      setMateriProgress(materi.id, next);
+      if (next >= 100) {
+        const state = useProgressStore.getState();
+        if (!state.completedMateri.includes(materi.id)) completeMateri(materi.id);
+      }
+    };
+    const el = readerRef.current;
+    if (el) {
+      el.addEventListener("scroll", handleScroll, { passive: true });
+      handleScroll();
     }
-  }, [materi?.id, completeMateri, bumpStreak]);
+    return () => {
+      if (el) el.removeEventListener("scroll", handleScroll);
+    };
+  }, [materi?.id]);
 
   // Clean up TTS when unmounting or changing page
   useEffect(() => {
@@ -125,7 +151,7 @@ export default function MateriPage() {
       )}
 
       {/* Article Reader Surface Container */}
-      <div className="reader relative border-2 border-border bg-card rounded-xl p-6 sm:p-8 space-y-6 shadow-sm">
+      <div ref={readerRef} className="reader relative border-2 border-border bg-card rounded-xl p-6 sm:p-8 space-y-6 shadow-sm max-h-[70vh] overflow-y-auto">
         {/* Article Title */}
         <h2 className="text-xl sm:text-2xl font-bold font-sans text-fg border-b border-border pb-3">
           {materi.judul} — Penjelasan Lengkap

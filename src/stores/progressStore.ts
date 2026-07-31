@@ -12,6 +12,7 @@ interface ProgressStore extends ProgressState {
   /** Record a quiz attempt; updates best score, points, and adaptive level. */
   recordQuiz: (kuisId: string, correct: number, total: number) => void;
   addBadge: (id: string) => void;
+  setMateriProgress: (id: string, progress: number) => void;
   completeMateri: (id: string) => void;
   /** Call when the learner is active on a new day to extend the streak. */
   bumpStreak: () => void;
@@ -51,6 +52,10 @@ export const useProgressStore = create<ProgressStore>()(
         }),
       addBadge: (id) =>
         set((s) => (s.badge.includes(id) ? s : { badge: [...s.badge, id] })),
+      setMateriProgress: (id, progress) =>
+        set((s) => ({
+          materiProgress: { ...s.materiProgress, [id]: Math.min(100, Math.max(0, progress)) },
+        })),
       completeMateri: (id) =>
         set((s) =>
           s.completedMateri.includes(id) ? s : { completedMateri: [...s.completedMateri, id] },
@@ -83,6 +88,7 @@ export const useProgressStore = create<ProgressStore>()(
         quizScores: state.quizScores,
         maxStreak: state.maxStreak,
         dailyPoints: state.dailyPoints,
+        materiProgress: state.materiProgress,
       }),
       onRehydrateStorage: () => (state) => state?.setHasHydrated(true),
     },
