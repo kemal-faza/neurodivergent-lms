@@ -89,7 +89,7 @@ export function KuisEngine({
             <div className="flex-1 h-2.5 bg-muted/20 rounded-full overflow-hidden">
               <div
                 className="h-full bg-fg transition-all duration-300 rounded-full"
-                style={{ width: `${((qIndex + (submitted ? 1 : 0)) / totalQ) * 100}%` }}
+                style={{ width: `${(Object.keys(answers).length / totalQ) * 100}%` }}
               />
             </div>
           </div>
@@ -226,14 +226,22 @@ export function KuisEngine({
                 } else if (answer) {
                   cls = "bg-red-500 text-white";
                 }
+                const stateLabel = isCurrent
+                  ? "sedang dikerjakan"
+                  : answer?.isCorrect
+                  ? "dijawab benar"
+                  : answer
+                  ? "dijawab salah"
+                  : "belum dikerjakan";
 
                 return (
                   <button
                     key={i}
                     type="button"
                     onClick={() => handleJumpToQuestion(i)}
-                    className={`w-10 h-10 rounded-full text-xs font-sans font-semibold flex items-center justify-center transition-all ${cls}`}
-                    aria-label={`Soal ${i + 1}`}
+                    aria-current={isCurrent ? "step" : undefined}
+                    aria-label={`Soal ${i + 1}, ${stateLabel}`}
+                    className={`w-11 h-11 min-h-[44px] rounded-full text-xs font-sans font-semibold flex items-center justify-center transition-all ${cls}`}
                   >
                     {i + 1}
                   </button>
