@@ -524,7 +524,7 @@ export default function DashboardPage() {
                 {leaderboard.map((u) => (
                   <div
                     key={u.rank}
-                    className={`flex items-center gap-3 px-4 py-2.5 ${u.isMe ? "bg-muted/10 border-l-4 border-fg" : ""}`}
+                    className={`flex items-center gap-3 px-4 py-2.5 hover-lift ${u.isMe ? "bg-muted/10 border-l-4 border-fg" : ""}`}
                   >
                     <div
                       className={`w-5 h-5 rounded-full border flex items-center justify-center text-[9px] font-mono font-bold flex-shrink-0 ${
@@ -568,7 +568,7 @@ export default function DashboardPage() {
                 key={b.id}
                 className={`border rounded-xl p-3 text-center transition-opacity flex flex-col items-center gap-2 ${
                   b.earned
-                    ? "border-border/80 bg-card shadow-xs"
+                    ? "border-border/80 bg-card shadow-xs hover-lift"
                     : "border-border/60 bg-muted/5 opacity-50"
                 }`}
               >
