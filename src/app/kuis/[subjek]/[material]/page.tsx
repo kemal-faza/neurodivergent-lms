@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { getMateriById, getKuis } from "@/lib/dummy-data";
 import { useProgressStore } from "@/stores/progressStore";
 import { KuisEngine } from "@/components/KuisEngine";
@@ -8,6 +8,7 @@ import { KuisEngine } from "@/components/KuisEngine";
 export default function KuisMaterialPage() {
   const params = useParams<{ subjek: string; material: string }>();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const materi = getMateriById(params.material);
 
   const poin = useProgressStore((s) => s.poin);
@@ -44,12 +45,14 @@ export default function KuisMaterialPage() {
     router.push(`/kuis/${params.subjek}`);
   };
 
+  const backUrl = searchParams.get("back") ?? `/kuis/${params.subjek}`;
+
   return (
     <KuisEngine
       soalList={kuis.soal}
       materiId={materi.id}
       onFinishSession={handleFinish}
-      backUrl={`/kuis/${params.subjek}`}
+      backUrl={backUrl}
       poin={poin}
       streak={streak}
       adaptiveLevel={adaptiveLevel}

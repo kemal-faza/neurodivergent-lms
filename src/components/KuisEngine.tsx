@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CheckCircle, XCircle, Flame, Star, TrendingUp, AlertCircle, ChevronRight, Database } from "lucide-react";
 import type { Soal } from "@/lib/types";
@@ -24,6 +25,7 @@ export function KuisEngine({
   streak,
   adaptiveLevel,
 }: KuisEngineProps) {
+  const router = useRouter();
   const [qIndex, setQIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -160,7 +162,7 @@ export function KuisEngine({
           <div className="flex justify-between pt-3">
             <button
               type="button"
-              onClick={() => window.location.href = backUrl}
+              onClick={() => router.push(backUrl)}
               className="px-4 py-2 text-xs border-2 border-border text-fg rounded-xl hover:bg-muted/10 font-sans font-semibold min-h-[44px]"
             >
               Kembali
