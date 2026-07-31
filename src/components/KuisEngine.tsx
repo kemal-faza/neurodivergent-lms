@@ -172,7 +172,7 @@ export function KuisEngine({
                       className="px-3.5 py-1.5 bg-fg text-bg hover:opacity-90 rounded-lg text-xs flex items-center gap-1.5 font-sans font-bold shadow-sm"
                     >
                       {isPlayingTts ? <Square size={12} /> : <Volume2 size={12} />}
-                      <span>{isPlayingTts ? "Berhenti" : "Dengarkan Soal"}</span>
+                      <span>{isPlayingTts ? "Berhenti" : "Dengarkan Soal dan Jawaban"}</span>
                     </button>
                   )}
                 </div>
