@@ -1,22 +1,23 @@
 import type { Kuis, Materi, Subjek } from "./types";
+import { FlaskConical, Sigma, BookOpen } from "lucide-react";
 
 export const SUBJEK_MAP: Record<string, Subjek> = {
   ipa: {
     id: "ipa",
     nama: "Ilmu Pengetahuan Alam",
-    icon: "dna",
+    icon: FlaskConical,
     materiIds: ["fotosintesis", "tata-surya", "siklus-air"],
   },
   matematika: {
     id: "matematika",
     nama: "Matematika",
-    icon: "sigma",
+    icon: Sigma,
     materiIds: ["pecahan", "bangun-datar", "persamaan-linear"],
   },
   "bahasa-indonesia": {
     id: "bahasa-indonesia",
     nama: "Bahasa Indonesia",
-    icon: "book-open",
+    icon: BookOpen,
     materiIds: ["teks-deskripsi", "ide-pokok", "kalimat-efektif"],
   },
 };

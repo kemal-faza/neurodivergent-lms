@@ -9,7 +9,7 @@ import {
 import { getMateriById } from "@/lib/dummy-data";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { useProgressStore } from "@/stores/progressStore";
-import { SectionLabel, WBox } from "@/components/ui/WireframePrimitives";
+
 import { toBionic } from "@/lib/bionic";
 import { speak, stopSpeaking, isTTSAvailable } from "@/lib/tts";
 
@@ -45,10 +45,10 @@ export default function MateriPage() {
 
   if (!materi) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-16 text-center font-sans">
+      <div className="max-w-5xl mx-auto px-4 py-16 text-center font-sans">
         <p className="text-muted text-lg mb-4">Materi tidak ditemukan.</p>
         <button onClick={() => router.push("/belajar")} className="px-5 py-2.5 text-sm font-sans font-semibold border-2 border-border text-fg rounded-xl hover:bg-muted/10 transition-colors min-h-[44px]">
-          ← Kembali ke Daftar Mata Pelajaran
+          <ArrowLeft size={16} className="inline" /> Kembali ke Daftar Mata Pelajaran
         </button>
       </div>
     );
@@ -76,27 +76,26 @@ export default function MateriPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 font-mono relative">
+    <div className="max-w-5xl mx-auto px-4 py-8 font-sans relative">
       {/* Screen Header */}
-      <div className="mb-6 pb-4">
+      <div>
         <div>
           <Link
             href={`/belajar/${params.subjek}`}
-            className="inline-flex items-center gap-1 text-[10px] font-mono text-muted hover:text-fg mb-1.5 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-sans font-medium text-muted hover:text-fg mb-3 transition-colors"
           >
-            <ArrowLeft size={12} /> Kembali ke Daftar Materi
+            <ArrowLeft size={14} /> Kembali ke Daftar Materi
           </Link>
-          <SectionLabel>halaman materi / reader</SectionLabel>
-          <h1 className="text-xl sm:text-2xl font-bold font-sans text-fg flex items-center gap-2">
-            <BookOpen className="text-muted" size={22} />
-            Materi: {materi.judul}
+
+          <h1 className="text-xl sm:text-2xl font-bold font-lexend text-fg flex items-center gap-2 mb-4">
+            {materi.judul}
           </h1>
         </div>
       </div>
 
       {/* TTS Interactive Control Bar */}
       {ttsEnabled && (
-        <div className="mb-6 p-4 bg-orange-50 dark:bg-orange-950/20 border-2 border-orange-300 rounded-xl flex flex-wrap items-center justify-between gap-3">
+        <div className="mb-6 p-4 bg-muted/10 border-2 border-border rounded-xl flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div>
               <span className="text-xs font-bold font-sans text-fg block">Text-To-Speech (Web Speech API)</span>
@@ -107,7 +106,7 @@ export default function MateriPage() {
             <button
               type="button"
               onClick={handleToggleTts}
-              className="px-3.5 py-1.5 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-xs flex items-center gap-1.5 font-sans font-bold shadow-sm"
+              className="px-3.5 py-1.5 bg-fg text-bg hover:opacity-90 rounded-lg text-xs flex items-center gap-1.5 font-sans font-bold shadow-sm"
             >
               {isPlayingTts ? <Pause size={12} /> : <Play size={12} />}
               <span>{isPlayingTts ? "Pause Suara" : "Putar Suara"}</span>
@@ -115,12 +114,12 @@ export default function MateriPage() {
             <button
               type="button"
               onClick={handleStopTts}
-              className="p-1.5 bg-card border border-orange-300 text-muted rounded-lg hover:bg-orange-100"
+              className="p-1.5 bg-card border border-border text-muted rounded-lg hover:bg-muted/10"
               title="Stop TTS"
             >
               <Square size={12} />
             </button>
-            <span className="text-[10px] font-mono text-orange-600 border border-orange-200 bg-card px-2 py-0.5 rounded">Speed 1.0x</span>
+            <span className="text-[10px] font-sans text-muted border border-border bg-card px-2 py-0.5 rounded">Speed 1.0x</span>
           </div>
         </div>
       )}
@@ -179,20 +178,20 @@ export default function MateriPage() {
         <button
           type="button"
           onClick={() => router.push(`/belajar/${params.subjek}`)}
-          className="px-4 py-2 text-xs border-2 border-border text-fg rounded-lg hover:bg-muted/10 font-mono hover:-translate-x-0.5 transition-all"
+          className="px-4 py-2 text-xs border-2 border-border text-fg rounded-lg hover:bg-muted/10 font-sans font-semibold hover:-translate-x-0.5 transition-all"
         >
-          ← Kembali ke Daftar Materi
+          <ArrowLeft size={14} className="inline" /> Kembali ke Daftar Materi
         </button>
         {materi.kuisId ? (
           <button
             type="button"
             onClick={() => router.push(`/kuis/${params.subjek}/${params.material}`)}
-            className="px-5 py-2 text-xs border-2 border-accent bg-accent text-accent-fg rounded-lg hover:opacity-90 font-mono font-bold flex items-center gap-1.5 shadow"
+            className="px-5 py-2 text-xs border-2 border-accent bg-accent text-accent-fg rounded-lg hover:opacity-90 font-sans font-semibold flex items-center gap-1.5 shadow"
           >
             Kerjakan Kuis Adaptif <ChevronRight size={14} />
           </button>
         ) : (
-          <span className="px-5 py-2 text-xs border-2 border-red-300 text-red-400 rounded-lg font-mono cursor-not-allowed">
+          <span className="px-5 py-2 text-xs border-2 border-border text-muted bg-muted/5 rounded-lg font-sans cursor-not-allowed">
             Kuis Belum Tersedia
           </span>
         )}

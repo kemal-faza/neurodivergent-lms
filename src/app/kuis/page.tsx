@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getAllSubjek, getMateriWithQuizBySubjek } from "@/lib/dummy-data";
-import { getSubjekIcon } from "@/lib/icon-map";
 
 export default function KuisPage() {
   const subjekList = getAllSubjek();
@@ -29,7 +28,7 @@ export default function KuisPage() {
               className="group border-2 border-border bg-card rounded-xl p-6 hover:border-fg/30 transition-all hover:shadow-md flex flex-col gap-4 min-h-[44px]"
             >
               <div className="w-14 h-14 rounded-xl bg-muted/10 border border-border/60 flex items-center justify-center group-hover:scale-105 transition-transform">
-                {getSubjekIcon(subjek.icon, 28)}
+                <subjek.icon size={28} />
               </div>
               <div className="space-y-1.5 flex-1">
                 <h3 className="text-base font-bold font-lexend text-fg group-hover:text-fg transition-colors">
