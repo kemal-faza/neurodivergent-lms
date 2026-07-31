@@ -98,11 +98,11 @@ export default function KuisSubjekPage() {
 
                 {progress.isCompleted && progress.bestScore !== null && (
                   <>
-                    <span className="text-border">|</span>
+                    <span className="h-4 w-px bg-border" aria-hidden="true" />
                     <span className="text-xs font-sans text-muted">
                       Skor Terbaik: <strong className="text-fg">{progress.bestScore} pts</strong>
                     </span>
-                    <span className="text-border">|</span>
+                    <span className="h-4 w-px bg-border" aria-hidden="true" />
                     <div className="flex items-center gap-2">
                       <div className="w-24 h-2 bg-muted/20 rounded-full overflow-hidden">
                         <div
