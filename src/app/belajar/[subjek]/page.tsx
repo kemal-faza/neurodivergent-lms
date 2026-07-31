@@ -9,7 +9,7 @@ import { useProgressStore } from "@/stores/progressStore";
 export default function SubjekPage() {
   const params = useParams<{ subjek: string }>();
   const router = useRouter();
-  const completedMateri = useProgressStore((s) => s.completedMateri);
+  const materiProgress = useProgressStore((s) => s.materiProgress);
   const subjek = getSubjekById(params.subjek);
 
   if (!subjek) {
@@ -50,35 +50,56 @@ export default function SubjekPage() {
       </div>
 
       <div className="space-y-4">
-        {materiList.map((materi) => (
-          <div
-            key={materi.id}
-            className="group border-2 border-border bg-card rounded-xl p-5 hover:border-fg/30 transition-all hover:shadow-md flex flex-col sm:flex-row sm:items-center gap-4"
-          >
-            <div className="flex-1 space-y-1.5">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-base font-bold font-lexend text-fg">
-                  {materi.judul}
-                </h3>
-                <span className="text-[10px] font-sans font-semibold px-2 py-0.5 rounded-full bg-muted/10 border border-border text-muted">
-                  Level {materi.level}
-                </span>
-                {completedMateri.includes(materi.id) && (
-                  <CheckCircle size={14} className="text-emerald-500 flex-shrink-0" />
-                )}
-              </div>
-              <p className="text-xs text-muted font-sans leading-relaxed">
-                {materi.deskripsi}
-              </p>
-            </div>
-            <Link
-              href={`/belajar/${params.subjek}/${materi.id}`}
-              className="flex-shrink-0 px-5 py-2.5 text-xs font-sans font-semibold border-2 border-fg bg-fg text-bg rounded-xl hover:opacity-90 transition-all flex items-center justify-center gap-1.5 shadow-sm group-hover:shadow-md min-h-[44px]"
+        {materiList.map((materi) => {
+          const progress = materiProgress[materi.id] ?? 0;
+          const completed = progress >= 100;
+          return (
+            <div
+              key={materi.id}
+              className="group border-2 border-border bg-card rounded-xl p-5 hover:border-fg/30 transition-all hover:shadow-md flex flex-col sm:flex-row sm:items-center gap-4"
             >
-              {completedMateri.includes(materi.id) ? "Baca Lagi" : "Mulai Belajar"} <ChevronRight size={14} />
-            </Link>
-          </div>
-        ))}
+              <div className="flex-1 space-y-1.5">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="text-base font-bold font-lexend text-fg">
+                    {materi.judul}
+                  </h3>
+                  <span className="text-[10px] font-sans font-semibold px-2 py-0.5 rounded-full bg-muted/10 border border-border text-muted">
+                    Level {materi.level}
+                  </span>
+                  {completed && (
+                    <CheckCircle
+                      size={14}
+                      className="text-emerald-500 flex-shrink-0"
+                    />
+                  )}
+                </div>
+                <p className="text-xs text-muted font-sans leading-relaxed">
+                  {materi.deskripsi}
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 h-1.5 bg-muted/20 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-fg rounded-full transition-all duration-500"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                  <span
+                    className={`text-[11px] font-bold font-mono ${completed ? "text-fg" : "text-muted"}`}
+                  >
+                    {progress}%
+                  </span>
+                </div>
+              </div>
+              <Link
+                href={`/belajar/${params.subjek}/${materi.id}`}
+                className="flex-shrink-0 px-5 py-2.5 text-xs font-sans font-semibold border-2 border-fg bg-fg text-bg rounded-xl hover:opacity-90 transition-all flex items-center justify-center gap-1.5 shadow-sm group-hover:shadow-md min-h-[44px]"
+              >
+                {completed ? "Baca Lagi" : "Mulai Belajar"}{" "}
+                <ChevronRight size={14} />
+              </Link>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
