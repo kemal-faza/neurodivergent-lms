@@ -15,6 +15,7 @@ import {
   Lock,
   Brain,
   Medal,
+  CheckCircle2,
 } from "lucide-react";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { useProgressStore } from "@/stores/progressStore";
@@ -35,6 +36,7 @@ export default function DashboardPage() {
   const completedMateri = useProgressStore((s) => s.completedMateri);
   const materiProgress = useProgressStore((s) => s.materiProgress);
   const quizScores = useProgressStore((s) => s.quizScores);
+  const hasHydrated = useProgressStore((s) => s.hasHydrated);
 
   const pdfDate = new Date().toISOString().slice(0, 10);
   const exportPdf = async () => {
@@ -166,6 +168,113 @@ export default function DashboardPage() {
           </button>
         </div>
 
+        {!hasHydrated ? (
+          <div className="space-y-8 animate-pulse">
+            <section>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[...Array(4)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="border border-border/80 bg-card rounded-xl p-4 shadow-xs"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="h-3 w-16 bg-muted/20 rounded" />
+                      <div className="w-10 h-10 rounded-xl bg-muted/20" />
+                    </div>
+                    <div className="h-6 w-20 bg-muted/20 rounded" />
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-2 space-y-6">
+                <div>
+                  <div className="border border-border/80 bg-card rounded-xl p-5 shadow-xs space-y-3">
+                    <div className="flex items-end gap-3 h-32 pt-4">
+                      {[...Array(7)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end"
+                        >
+                          <div
+                            className="w-full bg-muted/20 rounded-t-md"
+                            style={{ height: `${25 + ((i * 17) % 50)}%` }}
+                          />
+                          <div className="h-2.5 w-6 bg-muted/20 rounded" />
+                        </div>
+                      ))}
+                    </div>
+                    <div className="border-t border-border/60 pt-2 flex justify-between">
+                      <div className="h-2.5 w-36 bg-muted/20 rounded" />
+                      <div className="h-2.5 w-16 bg-muted/20 rounded" />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="border border-border/80 bg-card rounded-xl overflow-hidden shadow-xs divide-y divide-border/60">
+                    {[...Array(3)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center gap-4 px-5 py-4 bg-muted/5"
+                      >
+                        <div className="w-11 h-11 rounded-xl bg-muted/20" />
+                        <div className="flex-1 space-y-2">
+                          <div className="h-3.5 w-40 bg-muted/20 rounded" />
+                          <div className="h-2.5 w-28 bg-muted/20 rounded" />
+                        </div>
+                        <div className="w-10 h-10 rounded-full bg-muted/20" />
+                        <div className="w-4 h-4 bg-muted/20 rounded" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className="border border-border/80 bg-card rounded-xl overflow-hidden shadow-xs">
+                  <div className="border-b border-border/60 px-4 py-2.5">
+                    <div className="h-3 w-20 bg-muted/20 rounded" />
+                  </div>
+                  <div className="divide-y divide-border">
+                    {[...Array(5)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center gap-3 px-4 py-2.5"
+                      >
+                        <div className="w-5 h-5 rounded-full bg-muted/20" />
+                        <div className="flex-1 space-y-1.5">
+                          <div className="h-3 w-24 bg-muted/20 rounded" />
+                          <div className="h-2 w-16 bg-muted/20 rounded" />
+                        </div>
+                        <div className="h-3 w-8 bg-muted/20 rounded" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <section>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                {[...Array(6)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="border border-border/80 bg-card rounded-xl p-3 flex flex-col items-center gap-2"
+                  >
+                    <div className="w-7 h-7 rounded-full bg-muted/20" />
+                    <div className="w-full space-y-1.5 flex flex-col items-center">
+                      <div className="h-3 w-16 bg-muted/20 rounded" />
+                      <div className="h-2 w-24 bg-muted/20 rounded" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        ) : (
+          <>
         {/* Main Stats Row */}
         <section>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -246,10 +355,9 @@ export default function DashboardPage() {
               <div className="border border-border/80 bg-card rounded-xl overflow-hidden shadow-xs">
                 {subjekList.map((subjek, si) => {
                   const colors = {
-                    dot: "bg-fg",
-                    ring: "text-fg",
-                    light: "bg-muted/5",
+                    light: "bg-bg",
                     border: "border-border/60",
+                    ring: "text-fg",
                     bar: "bg-fg",
                     accent: "border-l-fg",
                   };
@@ -265,7 +373,7 @@ export default function DashboardPage() {
                       <button
                         type="button"
                         onClick={() => toggleSubjek(subjek.id)}
-                        className="w-full flex items-center gap-4 px-5 py-4 text-left hover:bg-muted/5 transition-all"
+                        className="w-full flex items-center gap-4 px-5 py-4 text-left bg-muted/5 hover:bg-muted/10 transition-colors"
                       >
                         <div
                           className={`w-11 h-11 rounded-xl flex items-center justify-center text-xl ${colors.light} ${colors.border} border flex-shrink-0`}
@@ -276,9 +384,10 @@ export default function DashboardPage() {
                           <p className="text-sm font-sans font-bold text-fg">
                             {subjek.nama}
                           </p>
-                          <p className="text-[10px] font-mono text-muted mt-0.5">
-                            <span
-                              className={`inline-block w-2 h-2 rounded-full ${colors.dot} mr-1.5 align-middle`}
+                          <p className="text-[10px] font-mono text-muted mt-0.5 flex items-center gap-1">
+                            <CheckCircle2
+                              size={11}
+                              className="text-muted inline"
                             />
                             {
                               subjek.materis.filter((m) => m.progress >= 100)
@@ -328,14 +437,14 @@ export default function DashboardPage() {
                       <div
                         className={`overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
                       >
-                        <div className="border-t border-border/40 bg-muted/[0.02]">
+                        <div className="border-t-2 border-border/60 bg-bg">
                           {subjek.materis.map((m, mi) => {
                             const completed = m.progress >= 100;
                             const hasQuiz = m.quizScore !== null;
                             return (
                               <div
                                 key={m.id}
-                                className={`flex items-center gap-3 px-5 py-3 ${mi > 0 ? "border-t border-border/30" : ""} ${colors.accent} border-l-2 pl-[52px] hover:bg-muted/5 transition-colors`}
+                                className={`flex items-center gap-3 px-5 py-3.5 ${mi > 0 ? "border-t border-border/30" : ""} ${colors.accent} border-l-2 pl-[52px] hover:bg-muted/5 transition-colors`}
                               >
                                 <div
                                   className={`w-7 h-7 rounded-lg flex items-center justify-center border flex-shrink-0 ${completed ? `${colors.border} ${colors.light}` : "border-border/60 bg-bg"} shadow-xs`}
@@ -480,6 +589,8 @@ export default function DashboardPage() {
             ))}
           </div>
         </section>
+          </>
+        )}
       </div>
 
       {/* PDF template — hidden off-screen */}
@@ -633,8 +744,8 @@ export default function DashboardPage() {
                       {m.label}
                     </span>
                   </td>
-                  <td className="py-2.5 pr-3">
-                    <div className="h-2 bg-gray-200 rounded-full overflow-hidden w-24">
+                  <td className="py-2.5 pr-3 w-[180px]">
+                    <div className="h-2 bg-gray-200 rounded-full overflow-hidden w-full min-w-[100px]">
                       <div
                         className="h-full bg-gray-900 rounded-full transition-all"
                         style={{ width: `${m.progress}%` }}
