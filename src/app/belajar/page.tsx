@@ -7,7 +7,7 @@ import { useProgressStore } from "@/stores/progressStore";
 
 export default function BelajarPage() {
   const subjekList = getAllSubjek();
-  const completedMateri = useProgressStore((s) => s.completedMateri);
+  const materiProgress = useProgressStore((s) => s.materiProgress);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 font-sans">
@@ -39,15 +39,34 @@ export default function BelajarPage() {
               </p>
               <div className="space-y-1">
                 {(() => {
-                  const completed = completedMateri.filter((id) => subjek.materiIds.includes(id)).length;
-                  const total = subjek.materiIds.length;
-                  const pct = Math.round((completed / total) * 100);
+                  const materis = subjek.materiIds.map(
+                    (id) => materiProgress[id] ?? 0,
+                  );
+                  const avg = materis.length
+                    ? Math.round(
+                        materis.reduce((a, b) => a + b, 0) / materis.length,
+                      )
+                    : 0;
+                  const selesai = materis.filter((p) => p >= 100).length;
+                  const total = materis.length;
                   return (
                     <>
-                      <div className="h-1.5 bg-muted/20 rounded-full overflow-hidden">
-                        <div className="h-full bg-fg rounded-full transition-all" style={{ width: `${pct}%` }} />
+                      <div className="flex items-center gap-3">
+                        <div className="flex-1 h-1.5 bg-muted/20 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-fg rounded-full transition-all"
+                            style={{ width: `${avg}%` }}
+                          />
+                        </div>
+                        <span
+                          className={`text-[11px] font-bold font-mono ${avg >= 100 ? "text-fg" : "text-muted"}`}
+                        >
+                          {avg}%
+                        </span>
                       </div>
-                      <span className="text-[10px] font-sans text-muted">{completed}/{total} selesai</span>
+                      <span className="text-[10px] font-sans text-muted">
+                        {selesai}/{total} selesai
+                      </span>
                     </>
                   );
                 })()}
