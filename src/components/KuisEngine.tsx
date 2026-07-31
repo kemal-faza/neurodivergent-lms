@@ -81,7 +81,6 @@ export function KuisEngine({
           <div className="border-2 border-border rounded-lg px-3 py-1.5 text-xs font-sans font-semibold flex items-center gap-1.5">
             <TrendingUp size={14} />
             <span>Level: <strong>{levelLabel}</strong></span>
-            <span className="text-[9px] text-muted ml-1">(auto-adjust)</span>
           </div>
 
           <div className="flex items-center gap-3 flex-1 min-w-[200px]">
@@ -114,7 +113,7 @@ export function KuisEngine({
                 <div className="w-8 h-8 border-2 border-border rounded-lg flex items-center justify-center text-xs text-muted font-bold flex-shrink-0">
                   {qIndex + 1}
                 </div>
-                <p className="text-base sm:text-lg text-fg font-sans font-medium leading-relaxed">{q.t}</p>
+                <p className="text-fg font-medium reader">{q.t}</p>
               </div>
             </div>
           </div>
@@ -141,7 +140,7 @@ export function KuisEngine({
                     }`}>
                       {selected === i && <div className="w-2 h-2 bg-bg rounded-full" />}
                     </div>
-                    <span className="text-fg flex-1">{opt}</span>
+                    <span className="text-fg flex-1 reader">{opt}</span>
                     {submitted && i === q.benar && <CheckCircle size={16} className="text-emerald-600 flex-shrink-0" />}
                     {submitted && selected === i && i !== q.benar && <XCircle size={16} className="text-red-500 flex-shrink-0" />}
                   </button>
