@@ -104,13 +104,13 @@ export default function KuisSubjekPage() {
                     </span>
                     <span className="text-border">|</span>
                     <div className="flex items-center gap-2">
-                      <div className="w-20 h-1.5 bg-muted/20 rounded-full overflow-hidden">
+                      <div className="w-24 h-2 bg-muted/20 rounded-full overflow-hidden">
                         <div
                           className="h-full bg-emerald-500 rounded-full transition-all"
                           style={{ width: `${lastRatio}%` }}
                         />
                       </div>
-                      <span className="text-[10px] font-mono text-muted">{lastRatio}%</span>
+                      <span className="text-xs font-sans font-semibold text-fg">{lastRatio}%</span>
                     </div>
                   </>
                 )}
