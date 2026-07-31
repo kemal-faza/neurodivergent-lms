@@ -1,9 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { CheckCircle, XCircle, Flame, Star, TrendingUp, AlertCircle, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { CheckCircle, XCircle, Flame, Star, TrendingUp, AlertCircle, ChevronRight, Volume2, Square } from "lucide-react";
 import type { Soal } from "@/lib/types";
+import { useAccessibilityStore } from "@/stores/accessibilityStore";
+import { toBionic } from "@/lib/bionic";
+import { speak, stopSpeaking } from "@/lib/tts";
 
 
 interface KuisEngineProps {
@@ -26,11 +29,24 @@ export function KuisEngine({
   adaptiveLevel,
 }: KuisEngineProps) {
   const router = useRouter();
+  const bionic = useAccessibilityStore((s) => s.bionic);
+  const ttsEnabled = useAccessibilityStore((s) => s.ttsEnabled);
+  const focusMode = useAccessibilityStore((s) => s.focusMode);
   const [qIndex, setQIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [sessionCorrect, setSessionCorrect] = useState<number[]>([]);
   const [answers, setAnswers] = useState<Record<number, { selected: number; isCorrect: boolean }>>({});
+  const [isPlayingTts, setIsPlayingTts] = useState(false);
+  const [questionFocused, setQuestionFocused] = useState(false);
+
+  useEffect(() => {
+    stopSpeaking();
+    setIsPlayingTts(false);
+    setQuestionFocused(false);
+  }, [qIndex]);
+
+  useEffect(() => () => stopSpeaking(), []);
 
   const q = soalList[qIndex] || soalList[0];
   const totalQ = soalList.length;
@@ -71,13 +87,27 @@ export function KuisEngine({
     }
   };
 
+  const handleToggleTts = () => {
+    if (isPlayingTts) {
+      stopSpeaking();
+      setIsPlayingTts(false);
+    } else {
+      const text = `${q.t} ${q.opsi.join(". ")}`;
+      speak(text, {
+        onend: () => setIsPlayingTts(false),
+        onerror: () => setIsPlayingTts(false),
+      });
+      setIsPlayingTts(true);
+    }
+  };
+
   const levelLabel = adaptiveLevel === 1 ? "Mudah" : adaptiveLevel === 2 ? "Sedang" : "Sulit";
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 font-sans">
       <div className="mb-6 space-y-3">
 
 
-        <div className="flex items-center gap-4 flex-wrap justify-between bg-card border-2 border-border p-4 rounded-xl shadow-sm">
+        <div className={`flex items-center gap-4 flex-wrap justify-between bg-card border-2 border-border p-4 rounded-xl shadow-sm ${focusMode && questionFocused ? "focus-dimmed" : ""}`}>
           <div className="border-2 border-border rounded-lg px-3 py-1.5 text-xs font-sans font-semibold flex items-center gap-1.5">
             <TrendingUp size={14} />
             <span>Level: <strong>{levelLabel}</strong></span>
@@ -108,12 +138,43 @@ export function KuisEngine({
         <div className="md:col-span-2 space-y-4">
           <div>
 
-            <div className="border-2 border-border bg-card rounded-xl p-5 sm:p-6 shadow-sm">
+            <div
+              className={`border-2 border-border bg-card rounded-xl p-5 sm:p-6 shadow-sm transition-all ${focusMode ? "cursor-pointer" : ""} ${
+                focusMode && questionFocused ? "ring-2 ring-purple-500" : ""
+              }`}
+              onClick={() => focusMode && setQuestionFocused((f) => !f)}
+            >
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 border-2 border-border rounded-lg flex items-center justify-center text-xs text-muted font-bold flex-shrink-0">
                   {qIndex + 1}
                 </div>
-                <p className="text-fg font-medium reader">{q.t}</p>
+                <div className="flex-1 space-y-3">
+                  <div className="flex items-start gap-2">
+                    {bionic ? (
+                      <p
+                        className="text-fg font-medium reader flex-1"
+                        dangerouslySetInnerHTML={{ __html: toBionic(q.t) }}
+                      />
+                    ) : (
+                      <p className="text-fg font-medium reader flex-1">{q.t}</p>
+                    )}
+                    {focusMode && questionFocused && (
+                      <span className="text-[9px] bg-purple-600 text-white px-2 py-0.5 rounded font-bold flex-shrink-0">
+                        Fokus
+                      </span>
+                    )}
+                  </div>
+                  {ttsEnabled && (
+                    <button
+                      type="button"
+                      onClick={handleToggleTts}
+                      className="px-3.5 py-1.5 bg-fg text-bg hover:opacity-90 rounded-lg text-xs flex items-center gap-1.5 font-sans font-bold shadow-sm"
+                    >
+                      {isPlayingTts ? <Square size={12} /> : <Volume2 size={12} />}
+                      <span>{isPlayingTts ? "Berhenti" : "Dengarkan Soal"}</span>
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -140,7 +201,14 @@ export function KuisEngine({
                     }`}>
                       {selected === i && <div className="w-2 h-2 bg-bg rounded-full" />}
                     </div>
-                    <span className="text-fg flex-1 reader">{opt}</span>
+                    {bionic ? (
+                      <span
+                        className="text-fg flex-1 reader"
+                        dangerouslySetInnerHTML={{ __html: toBionic(opt) }}
+                      />
+                    ) : (
+                      <span className="text-fg flex-1 reader">{opt}</span>
+                    )}
                     {submitted && i === q.benar && <CheckCircle size={16} className="text-emerald-600 flex-shrink-0" />}
                     {submitted && selected === i && i !== q.benar && <XCircle size={16} className="text-red-500 flex-shrink-0" />}
                   </button>
@@ -210,7 +278,7 @@ export function KuisEngine({
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className={`space-y-4 ${focusMode && questionFocused ? "focus-dimmed" : ""}`}>
           <div className="border-2 border-border bg-card rounded-xl p-4 shadow-sm">
             <h3 className="text-sm font-sans font-semibold text-fg mb-3">Navigator Soal</h3>
             <div className="grid grid-cols-5 gap-2">
