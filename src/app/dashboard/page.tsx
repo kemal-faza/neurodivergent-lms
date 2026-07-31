@@ -376,9 +376,9 @@ export default function DashboardPage() {
                         className="w-full flex items-center gap-4 px-5 py-4 text-left bg-muted/5 hover:bg-muted/10 transition-colors"
                       >
                         <div
-                          className={`w-11 h-11 rounded-xl flex items-center justify-center text-xl ${colors.light} ${colors.border} border flex-shrink-0`}
+                          className={`w-11 h-11 rounded-xl flex items-center justify-center ${colors.light} ${colors.border} border flex-shrink-0`}
                         >
-                          {subjek.icon}
+                          <subjek.icon size={24} className="text-fg" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-sans font-bold text-fg">
