@@ -107,8 +107,8 @@ export function KuisEngine({
               {q.opsi.map((opt, i) => {
                 let stateClass = "border-border bg-card hover:border-fg hover:bg-muted/10";
                 if (selected === i && !submitted) stateClass = "border-fg bg-muted/10 shadow-sm";
-                if (submitted && i === q.benar) stateClass = "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-950 dark:text-emerald-200 font-semibold";
-                if (submitted && selected === i && i !== q.benar) stateClass = "border-red-400 bg-red-50 dark:bg-red-950/30 opacity-70";
+                if (submitted && i === q.benar) stateClass = "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-950 dark:text-emerald-200 font-semibold";
+                if (submitted && selected === i && i !== q.benar) stateClass = "border-red-500 bg-red-50 dark:bg-red-950/20 opacity-70";
 
                 return (
                   <button
@@ -134,14 +134,14 @@ export function KuisEngine({
 
           {submitted && (
             <div className={`border-2 rounded-xl p-5 animate-fade-in ${
-              isCorrect ? "border-emerald-500 bg-emerald-50/60 dark:bg-emerald-950/20" : "border-amber-400 bg-amber-50/60 dark:bg-amber-950/20"
+              isCorrect ? "border-emerald-500 bg-emerald-50/60 dark:bg-emerald-950/5" : "border-red-500 bg-amber-50/60 dark:bg-amber-950/5"
             }`}>
 
               <div className="flex items-start gap-3">
                 {isCorrect ? (
                   <CheckCircle size={20} className="text-emerald-600 flex-shrink-0 mt-0.5" />
                 ) : (
-                  <AlertCircle size={20} className="text-amber-600 flex-shrink-0 mt-0.5" />
+                  <AlertCircle size={20} className="text-red-500 flex-shrink-0 mt-0.5" />
                 )}
                 <div className="space-y-2 flex-1">
                   <p className="text-xs font-sans font-semibold text-fg">
