@@ -135,7 +135,8 @@ export function KuisEngine({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 space-y-4">
+         <div className="md:col-span-2 space-y-4">
+          <div className="reader space-y-4">
           <div>
 
             <div
@@ -152,11 +153,11 @@ export function KuisEngine({
                   <div className="flex items-start gap-2">
                     {bionic ? (
                       <p
-                        className="text-fg font-medium reader flex-1"
+                        className="text-fg font-medium flex-1"
                         dangerouslySetInnerHTML={{ __html: toBionic(q.t) }}
                       />
                     ) : (
-                      <p className="text-fg font-medium reader flex-1">{q.t}</p>
+                      <p className="text-fg font-medium flex-1">{q.t}</p>
                     )}
                     {focusMode && questionFocused && (
                       <span className="text-[9px] bg-purple-600 text-white px-2 py-0.5 rounded font-bold flex-shrink-0">
@@ -203,11 +204,11 @@ export function KuisEngine({
                     </div>
                     {bionic ? (
                       <span
-                        className="text-fg flex-1 reader"
+                        className="text-fg flex-1"
                         dangerouslySetInnerHTML={{ __html: toBionic(opt) }}
                       />
                     ) : (
-                      <span className="text-fg flex-1 reader">{opt}</span>
+                      <span className="text-fg flex-1">{opt}</span>
                     )}
                     {submitted && i === q.benar && <CheckCircle size={16} className="text-emerald-600 flex-shrink-0" />}
                     {submitted && selected === i && i !== q.benar && <XCircle size={16} className="text-red-500 flex-shrink-0" />}
@@ -215,6 +216,7 @@ export function KuisEngine({
                 );
               })}
             </div>
+          </div>
           </div>
 
           {submitted && (
