@@ -195,7 +195,7 @@ export function KuisEngine({
                     type="button"
                     onClick={() => !submitted && setSelected(i)}
                     disabled={submitted}
-                    className={`w-full text-left border-2 rounded-xl px-4 py-3.5 text-sm font-sans transition-all flex items-center gap-3 ${stateClass}`}
+                    className={`w-full text-left border-2 rounded-xl px-4 py-3.5 transition-all flex items-center gap-3 ${stateClass}`}
                   >
                     <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
                       selected === i ? "border-fg bg-fg" : "border-border"
@@ -205,10 +205,16 @@ export function KuisEngine({
                     {bionic ? (
                       <span
                         className="text-fg flex-1"
+                        style={{ wordSpacing: "var(--reader-word-spacing)" }}
                         dangerouslySetInnerHTML={{ __html: toBionic(opt) }}
                       />
                     ) : (
-                      <span className="text-fg flex-1">{opt}</span>
+                      <span
+                        className="text-fg flex-1"
+                        style={{ wordSpacing: "var(--reader-word-spacing)" }}
+                      >
+                        {opt}
+                      </span>
                     )}
                     {submitted && i === q.benar && <CheckCircle size={16} className="text-emerald-600 flex-shrink-0" />}
                     {submitted && selected === i && i !== q.benar && <XCircle size={16} className="text-red-500 flex-shrink-0" />}
