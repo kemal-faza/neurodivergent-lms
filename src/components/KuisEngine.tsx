@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { CheckCircle, XCircle, Flame, Star, TrendingUp, AlertCircle, ChevronRight, Database } from "lucide-react";
+import { CheckCircle, XCircle, Flame, Star, TrendingUp, AlertCircle, ChevronRight } from "lucide-react";
 import type { Soal } from "@/lib/types";
 
 
@@ -30,6 +30,7 @@ export function KuisEngine({
   const [selected, setSelected] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [sessionCorrect, setSessionCorrect] = useState<number[]>([]);
+  const [answers, setAnswers] = useState<Record<number, { selected: number; isCorrect: boolean }>>({});
 
   const q = soalList[qIndex] || soalList[0];
   const totalQ = soalList.length;
@@ -38,6 +39,10 @@ export function KuisEngine({
   const handleSubmit = () => {
     if (selected === null) return;
     setSubmitted(true);
+    setAnswers((prev) => ({
+      ...prev,
+      [qIndex]: { selected: selected!, isCorrect },
+    }));
     const newSession = [...sessionCorrect, isCorrect ? 1 : 0];
     setSessionCorrect(newSession);
   };
@@ -50,6 +55,19 @@ export function KuisEngine({
     } else {
       const correct = sessionCorrect.filter(Boolean).length;
       onFinishSession(correct, soalList.length);
+    }
+  };
+
+  const handleJumpToQuestion = (index: number) => {
+    if (index === qIndex) return;
+    setQIndex(index);
+    const answer = answers[index];
+    if (answer) {
+      setSelected(answer.selected);
+      setSubmitted(true);
+    } else {
+      setSelected(null);
+      setSubmitted(false);
     }
   };
 
@@ -195,45 +213,33 @@ export function KuisEngine({
 
         <div className="space-y-4">
           <div className="border-2 border-border bg-card rounded-xl p-4 shadow-sm">
+            <h3 className="text-xs font-sans font-semibold text-fg mb-3">Navigator Soal</h3>
+            <div className="grid grid-cols-3 gap-2">
+              {soalList.map((_, i) => {
+                const answer = answers[i];
+                const isCurrent = i === qIndex;
+                let cls = "border-2 border-border text-muted";
+                if (isCurrent) {
+                  cls = "bg-fg text-bg ring-2 ring-fg";
+                } else if (answer?.isCorrect) {
+                  cls = "bg-emerald-500 text-white";
+                } else if (answer) {
+                  cls = "bg-red-500 text-white";
+                }
 
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-xs font-sans text-muted">Total Poin</span>
-                <span className="text-lg font-sans font-bold text-fg">{poin}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-xs font-sans text-muted flex items-center gap-1">
-                  <Flame size={12} className="text-amber-500" /> Streak
-                </span>
-                <span className="text-lg font-sans font-bold text-fg">{streak}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-xs font-sans text-muted">Level Adaptif</span>
-                <span className="text-xs font-sans border-2 border-border rounded px-2 py-0.5 font-semibold">{levelLabel}</span>
-              </div>
+                return (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => handleJumpToQuestion(i)}
+                    className={`w-10 h-10 rounded-full text-xs font-sans font-semibold flex items-center justify-center transition-all ${cls}`}
+                    aria-label={`Soal ${i + 1}`}
+                  >
+                    {i + 1}
+                  </button>
+                );
+              })}
             </div>
-          </div>
-
-          <div className="border-2 border-border bg-card rounded-xl p-4">
-            <div className="space-y-2 text-[11px] font-sans text-muted">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span>Score ≥ 80% → naik level</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-red-400" />
-                <span>Score ≤ 40% → turun level</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-amber-400" />
-                <span>40–80% → level tetap</span>
-              </div>
-              <span className="text-[10px] font-sans text-muted mt-2 block">Threshold disimpan di progressStore</span>
-            </div>
-          </div>
-
-          <div className="border-2 border-border rounded-lg p-3 text-[10px] text-muted font-sans bg-muted/5 flex items-center gap-1.5">
-            <Database size={12} /> Progress kuis otomatis tersimpan ke IndexedDB (idb-keyval)
           </div>
         </div>
       </div>
