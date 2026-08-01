@@ -3,7 +3,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { idbStorage } from "./storage";
-import type { ProgressState, QuizSession } from "../lib/types";
+import type { ProgressState, QuizResult, QuizSession } from "../lib/types";
 import { INITIAL_PROGRESS, nextAdaptiveLevel, scoreToRatio, quizPoints } from "../lib/adaptive";
 
 interface ProgressStore extends ProgressState {
@@ -21,6 +21,7 @@ interface ProgressStore extends ProgressState {
   setQuizProgress: (id: string, progress: number) => void;
   saveQuizSession: (id: string, session: QuizSession) => void;
   clearQuizSession: (id: string) => void;
+  saveQuizResult: (result: QuizResult) => void;
   completeMateri: (id: string) => void;
   /** Call when the learner is active on a new day to extend the streak. */
   bumpStreak: () => void;
@@ -110,6 +111,7 @@ export const useProgressStore = create<ProgressStore>()(
           delete next[id];
           return { quizSessions: next };
         }),
+      saveQuizResult: (result) => set(() => ({ lastQuizResult: result })),
       completeMateri: (id) =>
         set((s) =>
           s.completedMateri.includes(id) ? s : { completedMateri: [...s.completedMateri, id] },
@@ -146,6 +148,7 @@ export const useProgressStore = create<ProgressStore>()(
         materiProgress: state.materiProgress,
         quizProgress: state.quizProgress,
         quizSessions: state.quizSessions,
+        lastQuizResult: state.lastQuizResult,
       }),
       onRehydrateStorage: () => (state) => state?.setHasHydrated(true),
     },
