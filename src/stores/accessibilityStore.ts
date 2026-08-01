@@ -29,6 +29,7 @@ const SETTING_KEYS: (keyof Settings)[] = [
   "bionic",
   "ttsEnabled",
   "lineGuide",
+  "pomodoroEnabled",
   "focusMode",
 ];
 
@@ -58,6 +59,7 @@ export const useAccessibilityStore = create<AccessibilityStore>()(
           bionic: state.bionic,
           ttsEnabled: state.ttsEnabled,
           lineGuide: state.lineGuide,
+          pomodoroEnabled: state.pomodoroEnabled,
           focusMode: state.focusMode,
         }) as Partial<AccessibilityStore>,
       onRehydrateStorage: () => (state) => state?.setHasHydrated(true),

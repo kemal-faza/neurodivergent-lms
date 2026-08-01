@@ -28,6 +28,8 @@ export interface AccessibilitySettings {
   ttsEnabled: boolean;
   /** Reading ruler / line guide overlay follows the cursor. */
   lineGuide: boolean;
+  /** Pomodoro timer untuk sesi belajar (hanya di halaman materi). */
+  pomodoroEnabled: boolean;
   /** Focus mode: dim surrounding content, optionally paired with a Pomodoro timer. */
   focusMode: boolean;
 }

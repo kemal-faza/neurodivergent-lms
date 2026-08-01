@@ -24,6 +24,18 @@ describe("accessibilityStore", () => {
     expect(s.focusMode).toBe(true);
   });
 
+  test("applyProfile adhd enables pomodoro", () => {
+    useAccessibilityStore.getState().applyProfile("adhd");
+    expect(useAccessibilityStore.getState().pomodoroEnabled).toBe(true);
+  });
+
+  test("setSetting toggles pomodoroEnabled", () => {
+    useAccessibilityStore.getState().setSetting("pomodoroEnabled", true);
+    expect(useAccessibilityStore.getState().pomodoroEnabled).toBe(true);
+    useAccessibilityStore.getState().setSetting("pomodoroEnabled", false);
+    expect(useAccessibilityStore.getState().pomodoroEnabled).toBe(false);
+  });
+
   test("setSetting updates a single field", () => {
     useAccessibilityStore.getState().setSetting("bionic", true);
     expect(useAccessibilityStore.getState().bionic).toBe(true);
