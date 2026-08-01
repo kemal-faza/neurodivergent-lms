@@ -8,7 +8,7 @@ import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { toBionic } from "@/lib/bionic";
 import { speak, stopSpeaking } from "@/lib/tts";
 import { nextQuestionLevel, selectNextSoal } from "@/lib/adaptive";
-import { buildInitialSession } from "@/lib/quiz-session";
+import { buildInitialSession, type InitialSession } from "@/lib/quiz-session";
 import { useProgressStore } from "@/stores/progressStore";
 
 
@@ -35,28 +35,34 @@ export function KuisEngine({
   const bionic = useAccessibilityStore((s) => s.bionic);
   const ttsEnabled = useAccessibilityStore((s) => s.ttsEnabled);
   const focusMode = useAccessibilityStore((s) => s.focusMode);
-  const [initial] = useState(() =>
-    buildInitialSession(
-      soalList,
-      adaptiveLevel,
-      useProgressStore.getState().quizSessions[materiId],
-    ),
+  const hasHydrated = useProgressStore((s) => s.hasHydrated);
+  const [session, setSession] = useState<InitialSession | null>(() =>
+    hasHydrated
+      ? buildInitialSession(
+          soalList,
+          adaptiveLevel,
+          useProgressStore.getState().quizSessions[materiId],
+        )
+      : null,
   );
-  const [qIndex, setQIndex] = useState(initial.startIndex);
+  const [qIndex, setQIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
-  const [sessionCorrect, setSessionCorrect] = useState<number[]>(
-    initial.sessionCorrect,
-  );
-  const [answers, setAnswers] = useState<Record<number, { selected: number; isCorrect: boolean }>>(
-    initial.answers,
-  );
-  const [orderedSoal, setOrderedSoal] = useState<Soal[]>(initial.orderedSoal);
-  const [questionLevels, setQuestionLevels] = useState<number[]>(
-    initial.questionLevels,
-  );
+  const [sessionCorrect, setSessionCorrect] = useState<number[]>([]);
+  const [answers, setAnswers] = useState<Record<number, { selected: number; isCorrect: boolean }>>({});
+  const [orderedSoal, setOrderedSoal] = useState<Soal[]>([]);
+  const [questionLevels, setQuestionLevels] = useState<number[]>([]);
   const [isPlayingTts, setIsPlayingTts] = useState(false);
   const [questionFocused, setQuestionFocused] = useState(false);
+
+  useEffect(() => {
+    if (!session) return;
+    setQIndex(session.startIndex);
+    setSessionCorrect(session.sessionCorrect);
+    setAnswers(session.answers);
+    setOrderedSoal(session.orderedSoal);
+    setQuestionLevels(session.questionLevels);
+  }, [session]);
 
   useEffect(() => {
     stopSpeaking();
@@ -65,6 +71,10 @@ export function KuisEngine({
   }, [qIndex]);
 
   useEffect(() => () => stopSpeaking(), []);
+
+  if (!session) {
+    return null;
+  }
 
   const q = orderedSoal[qIndex] || orderedSoal[0];
   const totalQ = soalList.length;
@@ -84,17 +94,21 @@ export function KuisEngine({
     const nextLevel = nextQuestionLevel(currentLevel, isCorrect);
     const usedIds = orderedSoal.map((s) => s.id);
     const nextSoal = selectNextSoal(soalList, nextLevel, usedIds);
-    if (nextSoal) {
-      setOrderedSoal((prev) => [...prev, nextSoal]);
-      setQuestionLevels((prev) => [...prev, nextLevel]);
-    }
+    const nextOrderedSoal = nextSoal
+      ? [...orderedSoal, nextSoal]
+      : orderedSoal;
+    const nextQuestionLevels = nextSoal
+      ? [...questionLevels, nextLevel]
+      : questionLevels;
+    setOrderedSoal(nextOrderedSoal);
+    setQuestionLevels(nextQuestionLevels);
     const sessionAnswers = Object.keys(nextAnswers)
       .map(Number)
       .sort((a, b) => a - b)
       .map((i) => nextAnswers[i]);
     useProgressStore.getState().saveQuizSession(materiId, {
-      soalIds: orderedSoal.map((s) => s.id),
-      levels: questionLevels,
+      soalIds: nextOrderedSoal.map((s) => s.id),
+      levels: nextQuestionLevels,
       answers: sessionAnswers,
       updatedAt: new Date().toISOString(),
     });

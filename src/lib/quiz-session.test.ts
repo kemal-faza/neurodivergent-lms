@@ -58,6 +58,23 @@ describe("parseStoredSession", () => {
     expect(r!.answers[0]).toEqual({ selected: 0, isCorrect: true });
     expect(r!.startIndex).toBe(1);
   });
+  test("snapshot dengan satu soal cadangan (soalIds = answers + 1) valid untuk resume", () => {
+    const r = parseStoredSession(
+      pool,
+      stored({
+        soalIds: ["s1", "s3", "s2"],
+        levels: [1, 1, 2],
+        answers: [
+          { selected: 0, isCorrect: true },
+          { selected: 1, isCorrect: false },
+        ],
+      }),
+    );
+    expect(r).not.toBeNull();
+    expect(r!.orderedSoal).toHaveLength(3);
+    expect(r!.startIndex).toBe(2);
+    expect(r!.answers[1]).toEqual({ selected: 1, isCorrect: false });
+  });
 });
 
 describe("buildInitialSession", () => {
