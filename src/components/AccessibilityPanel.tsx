@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Fragment } from "react";
+import { usePathname } from "next/navigation";
 import {
   Sliders, X, Check, RotateCcw,
   Accessibility, BookOpen, Zap, Settings2,
-  Volume2, Eye, Ruler, Focus, Timer,
+  Volume2, Eye, Ruler, Focus, Timer, Info,
 } from "lucide-react";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { CONTRAST_OPTIONS, FONT_OPTIONS } from "@/lib/constants";
@@ -35,6 +36,8 @@ export function AccessibilityPanel() {
   const panelRef = useRef<HTMLDivElement>(null);
   const s = useAccessibilityStore();
   const setPanelOpen = useAccessibilityStore((st) => st.setPanelOpen);
+  const pathname = usePathname();
+  const isMateriPage = /^\/belajar\/[^/]+\/[^/]+$/.test(pathname ?? "");
 
   useEffect(() => {
     setPanelOpen(open);
@@ -181,29 +184,38 @@ export function AccessibilityPanel() {
             <h4 className="text-xs font-bold font-lexend text-fg mb-2.5">Alat Bantu</h4>
             <div className="space-y-1.5">
               {TOOLS.map(({ key, label, desc, icon: Icon }) => (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => s.setSetting(key, !s[key])}
-                  className={`w-full flex items-center gap-3 px-3.5 py-3 border-2 rounded-xl text-left transition-all font-sans ${
-                    s[key]
-                      ? "border-fg bg-fg/5 shadow-sm"
-                      : "border-border bg-card hover:bg-muted/10"
-                  }`}
-                >
-                  <Icon size={18} className={s[key] ? "text-fg" : "text-muted"} />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold text-fg">{label}</p>
-                    <p className="text-[10px] text-muted leading-tight">{desc}</p>
-                  </div>
-                  <div className={`w-9 h-5 rounded-full transition-colors flex items-center px-0.5 flex-shrink-0 border border-border ${
-                    s[key]                       ? "bg-fg" : "bg-border"
-                  }`}>
-                    <div className={`w-3.5 h-3.5 rounded-full bg-bg transition-transform ${
-                      s[key] ? "translate-x-4" : "translate-x-0"
-                    }`} />
-                  </div>
-                </button>
+                <Fragment key={key}>
+                  <button
+                    type="button"
+                    onClick={() => s.setSetting(key, !s[key])}
+                    className={`w-full flex items-center gap-3 px-3.5 py-3 border-2 rounded-xl text-left transition-all font-sans ${
+                      s[key]
+                        ? "border-fg bg-fg/5 shadow-sm"
+                        : "border-border bg-card hover:bg-muted/10"
+                    }`}
+                  >
+                    <Icon size={18} className={s[key] ? "text-fg" : "text-muted"} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold text-fg">{label}</p>
+                      <p className="text-[10px] text-muted leading-tight">{desc}</p>
+                    </div>
+                    <div className={`w-9 h-5 rounded-full transition-colors flex items-center px-0.5 flex-shrink-0 border border-border ${
+                      s[key]                       ? "bg-fg" : "bg-border"
+                    }`}>
+                      <div className={`w-3.5 h-3.5 rounded-full bg-bg transition-transform ${
+                        s[key] ? "translate-x-4" : "translate-x-0"
+                      }`} />
+                    </div>
+                  </button>
+                  {key === "pomodoroEnabled" && s.pomodoroEnabled && !isMateriPage && (
+                    <div className="flex items-start gap-2 px-3.5 py-2.5 border-2 border-amber-500/40 bg-amber-500/15 text-amber-700 dark:text-amber-300 rounded-xl text-[10px] font-sans leading-tight">
+                      <Info size={14} className="flex-shrink-0 mt-0.5" />
+                      <span>
+                        Timer Pomodoro aktif. Widget akan muncul saat kamu masuk ke halaman materi.
+                      </span>
+                    </div>
+                  )}
+                </Fragment>
               ))}
             </div>
           </div>
