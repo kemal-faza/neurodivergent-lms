@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ChevronRight, CheckCircle, Circle } from "lucide-react";
+import { ArrowLeft, ChevronRight, CheckCircle, Circle, Clock } from "lucide-react";
 import { getSubjekById, getMateriWithQuizBySubjek } from "@/lib/dummy-data";
 import { useProgressStore } from "@/stores/progressStore";
 
@@ -89,13 +89,23 @@ export default function KuisSubjekPage() {
               </div>
 
               <div className="flex items-center gap-4 flex-wrap">
-                <div className="flex items-center gap-1.5">
+                <div
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border font-sans text-xs font-semibold ${
+                    selesai
+                      ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-600"
+                      : progress > 0
+                        ? "border-amber-500/40 bg-amber-500/15 text-amber-600"
+                        : "border-border bg-muted/10 text-muted"
+                  }`}
+                >
                   {selesai ? (
-                    <CheckCircle size={14} className="text-emerald-500" />
+                    <CheckCircle size={13} className="text-emerald-500" />
+                  ) : progress > 0 ? (
+                    <Clock size={13} className="text-amber-500" />
                   ) : (
-                    <Circle size={14} className="text-muted" />
+                    <Circle size={13} className="text-muted" />
                   )}
-                  <span className="text-xs font-sans text-muted">
+                  <span>
                     {selesai
                       ? "Selesai"
                       : progress > 0
