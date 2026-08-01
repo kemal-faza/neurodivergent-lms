@@ -10,10 +10,14 @@ type Settings = AccessibilitySettings;
 
 interface AccessibilityStore extends Settings {
   hasHydrated: boolean;
+  /** Runtime (non-persisted) flag: accessibility panel is open. */
+  panelOpen: boolean;
   /** Update a single setting. */
   setSetting: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   /** Apply a profile preset (PRD: panel auto-config per profile). */
   applyProfile: (profile: Profile) => void;
+  /** Set whether the accessibility panel is open (not persisted). */
+  setPanelOpen: (v: boolean) => void;
   reset: () => void;
   setHasHydrated: (v: boolean) => void;
 }
@@ -38,8 +42,10 @@ export const useAccessibilityStore = create<AccessibilityStore>()(
     (set) => ({
       ...DEFAULT_SETTINGS,
       hasHydrated: false,
+      panelOpen: false,
       setSetting: (key, value) => set({ [key]: value } as Partial<AccessibilityStore>),
       applyProfile: (profile) => set({ profile, ...PROFILE_PRESETS[profile] }),
+      setPanelOpen: (v) => set({ panelOpen: v }),
       reset: () => set({ ...DEFAULT_SETTINGS, hasHydrated: true }),
       setHasHydrated: (v) => set({ hasHydrated: v }),
     }),

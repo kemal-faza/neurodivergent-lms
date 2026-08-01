@@ -34,6 +34,11 @@ export function AccessibilityPanel() {
   const [animatingOut, setAnimatingOut] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const s = useAccessibilityStore();
+  const setPanelOpen = useAccessibilityStore((st) => st.setPanelOpen);
+
+  useEffect(() => {
+    setPanelOpen(open);
+  }, [open, setPanelOpen]);
 
   const closeWithAnimation = () => {
     setAnimatingOut(true);

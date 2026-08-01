@@ -13,6 +13,7 @@ function formatTime(totalSec: number): string {
 
 export function PomodoroWidget() {
   const enabled = useAccessibilityStore((s) => s.pomodoroEnabled);
+  const panelOpen = useAccessibilityStore((s) => s.panelOpen);
   const { mode, remainingSec, running, completedCycles, toggle, reset, skip } =
     usePomodoro(enabled);
 
@@ -23,7 +24,11 @@ export function PomodoroWidget() {
   const isFocus = mode === "focus";
 
   return (
-    <div className="fixed bottom-24 right-3 sm:bottom-24 sm:right-5 z-40 w-56 bg-card border-2 border-border rounded-xl shadow-2xl p-4 font-sans">
+    <div
+      className={`fixed bottom-24 right-3 sm:bottom-24 sm:right-5 z-40 w-56 bg-card border-2 border-border rounded-xl shadow-2xl p-4 font-sans transition-[right] duration-200 ${
+        panelOpen ? "sm:right-[22rem] hidden sm:block" : ""
+      }`}
+    >
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-1.5">
           <Timer size={14} className={isFocus ? "text-fg" : "text-emerald-700 dark:text-emerald-400"} />
