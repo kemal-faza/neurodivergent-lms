@@ -41,7 +41,7 @@ export default function KuisMaterialPage() {
 
   const handleFinish = (correct: number, total: number) => {
     recordQuizSession(materi.id, correct, total);
-    router.push(`/kuis/${params.subjek}`);
+    router.push(`/hasil/${materi.id}`);
   };
 
   const backUrl = searchParams.get("back") ?? `/kuis/${params.subjek}`;

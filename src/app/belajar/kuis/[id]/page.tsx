@@ -27,7 +27,7 @@ export default function KuisPage() {
 
   const handleFinish = (correct: number, total: number) => {
     recordQuiz(kuis.id, correct, total);
-    router.push("/dashboard");
+    router.push(`/hasil/${kuis.materiId}?back=/belajar`);
   };
 
   return (
