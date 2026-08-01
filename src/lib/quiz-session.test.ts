@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import type { QuizSession, Soal } from "./types";
-import { buildInitialSession, parseStoredSession } from "./quiz-session";
+import { buildInitialSession, parseStoredSession, trailingCorrectStreak } from "./quiz-session";
 
 function soal(id: string, diff: number): Soal {
   return { id, t: id, opsi: ["a", "b", "c"], benar: 0, diff };
@@ -97,5 +97,23 @@ describe("buildInitialSession", () => {
     const b = buildInitialSession(pool, 2, stored({ soalIds: ["s1", "hilang"] }));
     expect(b.startIndex).toBe(0);
     expect(b.questionLevels).toEqual([2]);
+  });
+});
+
+describe("trailingCorrectStreak", () => {
+  test("nol saat tidak ada jawaban", () => {
+    expect(trailingCorrectStreak([])).toBe(0);
+  });
+  test("nol saat jawaban terakhir salah", () => {
+    expect(trailingCorrectStreak([1, 1, 0])).toBe(0);
+  });
+  test("menghitung benar beruntun di akhir", () => {
+    expect(trailingCorrectStreak([1, 0, 1, 1])).toBe(2);
+  });
+  test("semua benar", () => {
+    expect(trailingCorrectStreak([1, 1, 1, 1, 1])).toBe(5);
+  });
+  test("benar beruntun setelah salah", () => {
+    expect(trailingCorrectStreak([0, 1, 1, 1])).toBe(3);
   });
 });
