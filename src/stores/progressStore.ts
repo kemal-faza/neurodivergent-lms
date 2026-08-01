@@ -3,7 +3,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { idbStorage } from "./storage";
-import type { ProgressState } from "../lib/types";
+import type { ProgressState, QuizSession } from "../lib/types";
 import { INITIAL_PROGRESS, nextAdaptiveLevel, scoreToRatio, quizPoints } from "../lib/adaptive";
 
 interface ProgressStore extends ProgressState {
@@ -17,6 +17,9 @@ interface ProgressStore extends ProgressState {
   getQuizProgress: (materiId: string) => { isCompleted: boolean; bestScore: number | null; lastAttempt: { correct: number; total: number } | null };
   addBadge: (id: string) => void;
   setMateriProgress: (id: string, progress: number) => void;
+  setQuizProgress: (id: string, progress: number) => void;
+  saveQuizSession: (id: string, session: QuizSession) => void;
+  clearQuizSession: (id: string) => void;
   completeMateri: (id: string) => void;
   /** Call when the learner is active on a new day to extend the streak. */
   bumpStreak: () => void;
@@ -89,6 +92,23 @@ export const useProgressStore = create<ProgressStore>()(
         set((s) => ({
           materiProgress: { ...s.materiProgress, [id]: Math.min(100, Math.max(0, progress)) },
         })),
+      setQuizProgress: (id, progress) =>
+        set((s) => ({
+          quizProgress: {
+            ...s.quizProgress,
+            [id]: Math.min(100, Math.max(0, progress)),
+          },
+        })),
+      saveQuizSession: (id, session) =>
+        set((s) => ({
+          quizSessions: { ...s.quizSessions, [id]: session },
+        })),
+      clearQuizSession: (id) =>
+        set((s) => {
+          const next = { ...s.quizSessions };
+          delete next[id];
+          return { quizSessions: next };
+        }),
       completeMateri: (id) =>
         set((s) =>
           s.completedMateri.includes(id) ? s : { completedMateri: [...s.completedMateri, id] },
@@ -123,6 +143,8 @@ export const useProgressStore = create<ProgressStore>()(
         maxStreak: state.maxStreak,
         dailyPoints: state.dailyPoints,
         materiProgress: state.materiProgress,
+        quizProgress: state.quizProgress,
+        quizSessions: state.quizSessions,
       }),
       onRehydrateStorage: () => (state) => state?.setHasHydrated(true),
     },
