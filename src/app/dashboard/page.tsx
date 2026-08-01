@@ -36,6 +36,7 @@ export default function DashboardPage() {
   const completedMateri = useProgressStore((s) => s.completedMateri);
   const materiProgress = useProgressStore((s) => s.materiProgress);
   const quizScores = useProgressStore((s) => s.quizScores);
+  const quizProgress = useProgressStore((s) => s.quizProgress);
   const hasHydrated = useProgressStore((s) => s.hasHydrated);
 
   const pdfDate = new Date().toISOString().slice(0, 10);
@@ -127,6 +128,7 @@ export default function DashboardPage() {
       quizScore:
         quizScores[m.id] ??
         (m.kuisId ? (quizScores[m.kuisId] ?? null) : null),
+      quizProgress: quizProgress[m.id] ?? 0,
     }));
     const avgProgress =
       materis.length > 0
@@ -480,16 +482,16 @@ export default function DashboardPage() {
                                     <span className="text-[10px] font-mono text-muted">
                                       KUIS
                                     </span>
-                                    {m.quizScore !== null && (
-                                      <span className="text-[10px] font-mono text-muted">
-                                        {m.quizScore} pts
-                                      </span>
-                                    )}
+                                    <span className="text-[10px] font-mono text-muted">
+                                      {m.quizScore !== null
+                                        ? `${m.quizScore} pts`
+                                        : `${m.quizProgress}%`}
+                                    </span>
                                   </div>
                                   <div className="h-1 bg-muted/20 rounded-full overflow-hidden">
                                     <div
                                       className="h-full bg-fg rounded-full transition-all duration-500"
-                                      style={{ width: `${Math.min(m.quizScore ?? 0, 100)}%` }}
+                                      style={{ width: `${m.quizProgress}%` }}
                                     />
                                   </div>
                                 </div>
@@ -772,13 +774,15 @@ export default function DashboardPage() {
                         KUIS
                       </span>
                       <span className="text-[9px] text-gray-700">
-                        {m.quizScore !== null ? `${m.quizScore} pts` : ""}
+                        {m.quizScore !== null
+                          ? `${m.quizScore} pts`
+                          : `${m.quizProgress}%`}
                       </span>
                     </div>
                     <div className="h-2 bg-gray-200 rounded-full overflow-hidden w-full">
                       <div
                         className="h-full bg-gray-900 rounded-full"
-                        style={{ width: `${Math.min(m.quizScore ?? 0, 100)}%` }}
+                        style={{ width: `${m.quizProgress}%` }}
                       />
                     </div>
                   </td>
