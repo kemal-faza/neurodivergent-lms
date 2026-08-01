@@ -13,10 +13,11 @@ interface ProgressStore extends ProgressState {
   recordQuiz: (kuisId: string, correct: number, total: number) => void;
   /** Record a full quiz session (batch); updates best score, attempts history, and points. */
   recordQuizSession: (materiId: string, correct: number, total: number) => void;
-  /** Get progress for a specific material quiz. */
+  /** Get quiz result summary for a material quiz (completion, best score, last attempt). */
   getQuizProgress: (materiId: string) => { isCompleted: boolean; bestScore: number | null; lastAttempt: { correct: number; total: number } | null };
   addBadge: (id: string) => void;
   setMateriProgress: (id: string, progress: number) => void;
+  /** Set answered-questions progress (0-100) for a material quiz. */
   setQuizProgress: (id: string, progress: number) => void;
   saveQuizSession: (id: string, session: QuizSession) => void;
   clearQuizSession: (id: string) => void;
