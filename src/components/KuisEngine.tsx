@@ -2,11 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { CheckCircle, XCircle, Flame, Star, TrendingUp, AlertCircle, ChevronRight, Volume2, Square, ArrowLeft } from "lucide-react";
+import { CheckCircle, XCircle, Flame, Star, TrendingUp, AlertCircle, ChevronRight, Play, Pause, Volume2, Square, ArrowLeft } from "lucide-react";
 import type { Soal } from "@/lib/types";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { toBionic } from "@/lib/bionic";
-import { speak, stopSpeaking } from "@/lib/tts";
+import { pauseSpeaking, resumeSpeaking, speak, stopSpeaking } from "@/lib/tts";
 import { nextQuestionLevel, selectNextSoal } from "@/lib/adaptive";
 import { buildInitialSession, trailingCorrectStreak, type InitialSession } from "@/lib/quiz-session";
 import { useProgressStore } from "@/stores/progressStore";
@@ -45,6 +45,8 @@ export function KuisEngine({
   const [orderedSoal, setOrderedSoal] = useState<Soal[]>([]);
   const [questionLevels, setQuestionLevels] = useState<number[]>([]);
   const [isPlayingTts, setIsPlayingTts] = useState(false);
+  const [isPausedTts, setIsPausedTts] = useState(false);
+  const [ttsRate, setTtsRate] = useState(1);
   const [questionFocused, setQuestionFocused] = useState(false);
 
   useEffect(() => {
@@ -66,6 +68,7 @@ export function KuisEngine({
   useEffect(() => {
     stopSpeaking();
     setIsPlayingTts(false);
+    setIsPausedTts(false);
     setQuestionFocused(false);
   }, [qIndex]);
 
@@ -201,18 +204,45 @@ export function KuisEngine({
     }
   };
 
+  const questionText = `${q.t} ${q.opsi.join(". ")}`;
+
+  const resetTtsState = () => {
+    setIsPlayingTts(false);
+    setIsPausedTts(false);
+  };
+
+  const startTts = (rate: number = ttsRate) => {
+    speak(questionText, {
+      rate,
+      onend: resetTtsState,
+      onerror: resetTtsState,
+    });
+    setIsPlayingTts(true);
+    setIsPausedTts(false);
+  };
+
   const handleToggleTts = () => {
-    if (isPlayingTts) {
-      stopSpeaking();
-      setIsPlayingTts(false);
-    } else {
-      const text = `${q.t} ${q.opsi.join(". ")}`;
-      speak(text, {
-        onend: () => setIsPlayingTts(false),
-        onerror: () => setIsPlayingTts(false),
-      });
+    if (isPausedTts) {
+      resumeSpeaking();
       setIsPlayingTts(true);
+      setIsPausedTts(false);
+    } else if (isPlayingTts) {
+      pauseSpeaking();
+      setIsPlayingTts(false);
+      setIsPausedTts(true);
+    } else {
+      startTts();
     }
+  };
+
+  const handleRestartTts = () => {
+    startTts();
+  };
+
+  const handleRateChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const nextRate = Number(event.target.value);
+    setTtsRate(nextRate);
+    if (isPlayingTts || isPausedTts) startTts(nextRate);
   };
 
   const levelLabel = (level: number) =>
@@ -317,14 +347,38 @@ export function KuisEngine({
                     )}
                   </div>
                   {ttsEnabled && (
-                    <button
-                      type="button"
-                      onClick={handleToggleTts}
-                      className="px-3.5 py-1.5 bg-fg text-bg hover:opacity-90 rounded-lg text-xs flex items-center gap-1.5 font-sans font-bold shadow-sm"
-                    >
-                      {isPlayingTts ? <Square size={12} /> : <Volume2 size={12} />}
-                      <span>{isPlayingTts ? "Berhenti" : "Dengarkan Soal dan Jawaban"}</span>
-                    </button>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <button
+                        type="button"
+                        onClick={handleToggleTts}
+                        className="px-3.5 py-1.5 bg-fg text-bg hover:opacity-90 rounded-lg text-xs flex items-center gap-1.5 font-sans font-bold shadow-sm"
+                      >
+                        {isPlayingTts ? <Pause size={12} /> : isPausedTts ? <Play size={12} /> : <Volume2 size={12} />}
+                        <span>{isPlayingTts ? "Pause" : isPausedTts ? "Lanjutkan" : "Dengarkan Soal dan Jawaban"}</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleRestartTts}
+                        className="p-1.5 bg-card border border-border text-muted rounded-lg hover:bg-muted/10"
+                        title="Ulangi dari awal"
+                        aria-label="Ulangi suara dari awal"
+                      >
+                        <Square size={12} />
+                      </button>
+                      <label className="text-[10px] font-sans text-muted border border-border bg-card px-2 py-1 rounded flex items-center gap-1.5">
+                        <span>Speed</span>
+                        <select
+                          value={ttsRate}
+                          onChange={handleRateChange}
+                          className="bg-transparent text-fg font-semibold outline-none cursor-pointer"
+                          aria-label="Kecepatan suara"
+                        >
+                          {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => (
+                            <option key={rate} value={rate}>{rate}x</option>
+                          ))}
+                        </select>
+                      </label>
+                    </div>
                   )}
                 </div>
               </div>
