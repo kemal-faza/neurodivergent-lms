@@ -222,17 +222,17 @@ export function KuisEngine({
     switch (level) {
       case 1:
         return {
-          container: "bg-emerald-50 border-emerald-500 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-600",
+          container: "bg-emerald-50 border-emerald-500 text-fg dark:bg-emerald-950/30 dark:text-fg dark:border-emerald-600",
           icon: "text-emerald-600 dark:text-emerald-400"
         };
       case 2:
         return {
-          container: "bg-amber-50 border-amber-500 text-amber-700 dark:bg-amber-950/30 dark:text-amber-300 dark:border-amber-600",
+          container: "bg-amber-50 border-amber-500 text-fg dark:bg-amber-950/30 dark:text-fg dark:border-amber-600",
           icon: "text-amber-600 dark:text-amber-400"
         };
       case 3:
         return {
-          container: "bg-red-50 border-red-500 text-red-700 dark:bg-red-950/30 dark:text-red-300 dark:border-red-600",
+          container: "bg-red-50 border-red-500 text-fg dark:bg-red-950/30 dark:text-fg dark:border-red-600",
           icon: "text-red-600 dark:text-red-400"
         };
       default:
