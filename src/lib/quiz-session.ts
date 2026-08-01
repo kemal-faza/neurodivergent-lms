@@ -74,3 +74,12 @@ export function buildInitialSession(
     sessionCorrect: [],
   };
 }
+
+/** Count of consecutive correct answers at the end of a session. */
+export function trailingCorrectStreak(sessionCorrect: number[]): number {
+  let streak = 0;
+  for (let i = sessionCorrect.length - 1; i >= 0 && sessionCorrect[i] === 1; i--) {
+    streak++;
+  }
+  return streak;
+}
