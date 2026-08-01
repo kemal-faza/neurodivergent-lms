@@ -96,7 +96,11 @@ export default function KuisSubjekPage() {
                     <Circle size={14} className="text-muted" />
                   )}
                   <span className="text-xs font-sans text-muted">
-                    {selesai ? "Selesai" : "Belum Selesai"}
+                    {selesai
+                      ? "Selesai"
+                      : progress > 0
+                        ? "Belum Selesai"
+                        : "Belum Dikerjakan"}
                   </span>
                 </div>
 
