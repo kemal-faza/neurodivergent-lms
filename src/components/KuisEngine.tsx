@@ -7,6 +7,7 @@ import type { Soal } from "@/lib/types";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { toBionic } from "@/lib/bionic";
 import { speak, stopSpeaking } from "@/lib/tts";
+import { nextQuestionLevel, selectNextSoal } from "@/lib/adaptive";
 
 
 interface KuisEngineProps {
@@ -39,6 +40,11 @@ export function KuisEngine({
   const [answers, setAnswers] = useState<Record<number, { selected: number; isCorrect: boolean }>>({});
   const [isPlayingTts, setIsPlayingTts] = useState(false);
   const [questionFocused, setQuestionFocused] = useState(false);
+  const [orderedSoal, setOrderedSoal] = useState<Soal[]>(() => {
+    const first = selectNextSoal(soalList, adaptiveLevel, []);
+    return first ? [first] : soalList.length > 0 ? [soalList[0]] : [];
+  });
+  const [questionLevels, setQuestionLevels] = useState<number[]>(() => [adaptiveLevel]);
 
   useEffect(() => {
     stopSpeaking();
@@ -48,7 +54,7 @@ export function KuisEngine({
 
   useEffect(() => () => stopSpeaking(), []);
 
-  const q = soalList[qIndex] || soalList[0];
+  const q = orderedSoal[qIndex] || orderedSoal[0];
   const totalQ = soalList.length;
   const isCorrect = selected === q.benar;
 
@@ -61,10 +67,21 @@ export function KuisEngine({
     }));
     const newSession = [...sessionCorrect, isCorrect ? 1 : 0];
     setSessionCorrect(newSession);
+    const currentLevel = questionLevels[qIndex] ?? adaptiveLevel;
+    const nextLevel = nextQuestionLevel(currentLevel, isCorrect);
+    const usedIds = orderedSoal.map((s) => s.id);
+    const nextSoal = selectNextSoal(soalList, nextLevel, usedIds);
+    if (nextSoal) {
+      setOrderedSoal((prev) => [...prev, nextSoal]);
+      setQuestionLevels((prev) => [...prev, nextLevel]);
+    }
   };
 
+  const canAdvance =
+    qIndex + 1 < soalList.length && qIndex + 1 < orderedSoal.length;
+
   const handleNext = () => {
-    if (qIndex + 1 < soalList.length) {
+    if (canAdvance) {
       setSelected(null);
       setSubmitted(false);
       setQIndex(qIndex + 1);
@@ -75,7 +92,7 @@ export function KuisEngine({
   };
 
   const handleJumpToQuestion = (index: number) => {
-    if (index === qIndex) return;
+    if (index === qIndex || index > Object.keys(answers).length) return;
     setQIndex(index);
     const answer = answers[index];
     if (answer) {
@@ -101,7 +118,13 @@ export function KuisEngine({
     }
   };
 
-  const levelLabel = adaptiveLevel === 1 ? "Mudah" : adaptiveLevel === 2 ? "Sedang" : "Sulit";
+  const levelLabel = (level: number) =>
+    level === 1 ? "Mudah" : level === 2 ? "Sedang" : "Sulit";
+  const currentLevel = questionLevels[qIndex] ?? adaptiveLevel;
+  const feedbackNextLevel =
+    submitted && answers[qIndex]
+      ? nextQuestionLevel(questionLevels[qIndex] ?? adaptiveLevel, answers[qIndex].isCorrect)
+      : null;
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 font-sans">
       <div className="mb-6 space-y-3">
@@ -110,7 +133,7 @@ export function KuisEngine({
         <div className={`flex items-center gap-4 flex-wrap justify-between bg-card border-2 border-border p-4 rounded-xl shadow-sm ${focusMode && questionFocused ? "focus-dimmed" : ""}`}>
           <div className="border-2 border-border rounded-lg px-3 py-1.5 text-xs font-sans font-semibold flex items-center gap-1.5">
             <TrendingUp size={14} />
-            <span>Level: <strong>{levelLabel}</strong></span>
+            <span>Level: <strong>{levelLabel(currentLevel)}</strong></span>
           </div>
 
           <div className="flex items-center gap-3 flex-1 min-w-[200px]">
@@ -247,6 +270,12 @@ export function KuisEngine({
                       ? "Bagus sekali! Pemahaman kamu mengenai materi ini sudah sangat tepat. Lanjutkan ke pertanyaan berikutnya."
                       : "Jangan berkecil hati! Pelajari kembali poin utama materi jika perlu. Tingkat kesulitan soal berikutnya akan disesuaikan."}
                   </p>
+                  {feedbackNextLevel !== null &&
+                    feedbackNextLevel !== currentLevel && (
+                      <p className="text-xs font-sans font-semibold text-fg">
+                        Level soal berikutnya: {levelLabel(feedbackNextLevel)}
+                      </p>
+                    )}
                 </div>
               </div>
             </div>
@@ -280,7 +309,7 @@ export function KuisEngine({
                 onClick={handleNext}
                 className="px-6 py-2.5 text-xs font-sans font-semibold border-2 border-fg bg-fg text-bg rounded-xl hover:opacity-90 flex items-center gap-2 shadow-sm min-h-[44px]"
               >
-                {qIndex + 1 < soalList.length ? "Soal Berikutnya" : "Lihat Hasil →"} <ChevronRight size={14} />
+                {canAdvance ? "Soal Berikutnya" : "Lihat Hasil →"} <ChevronRight size={14} />
               </button>
             )}
           </div>
@@ -293,6 +322,7 @@ export function KuisEngine({
               {soalList.map((_, i) => {
                 const answer = answers[i];
                 const isCurrent = i === qIndex;
+                const isFuture = i > Object.keys(answers).length;
                 let cls = "border-2 border-border text-muted";
                 if (isCurrent) {
                   cls = "bg-fg text-bg ring-2 ring-fg";
@@ -314,9 +344,11 @@ export function KuisEngine({
                     key={i}
                     type="button"
                     onClick={() => handleJumpToQuestion(i)}
+                    disabled={isFuture}
+                    aria-disabled={isFuture}
                     aria-current={isCurrent ? "step" : undefined}
                     aria-label={`Soal ${i + 1}, ${stateLabel}`}
-                    className={`w-9 h-9 rounded-full text-xs font-sans font-semibold flex items-center justify-center transition-all ${cls}`}
+                    className={`w-9 h-9 rounded-full text-xs font-sans font-semibold flex items-center justify-center transition-all ${cls} ${isFuture ? "opacity-40 cursor-not-allowed" : ""}`}
                   >
                     {i + 1}
                   </button>
