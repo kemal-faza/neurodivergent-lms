@@ -27,6 +27,8 @@ export default function KuisPage() {
 
   const handleFinish = (correct: number, total: number) => {
     recordQuiz(kuis.id, correct, total);
+    useProgressStore.getState().setQuizProgress(kuis.materiId, 100);
+    useProgressStore.getState().clearQuizSession(kuis.materiId);
     router.push(`/hasil/${kuis.materiId}?back=/belajar`);
   };
 
