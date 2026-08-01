@@ -52,9 +52,12 @@ export default function KuisSubjekPage() {
 
       <div className="space-y-4">
         {materiList.map((materi) => {
-          const progress = quizProgress[materi.id] ?? 0;
-          const selesai = progress >= 100;
           const quiz = getQuizProgress(materi.id);
+          const progress = Math.max(
+            quizProgress[materi.id] ?? 0,
+            quiz.isCompleted ? 100 : 0,
+          );
+          const selesai = progress >= 100;
 
           return (
             <div
