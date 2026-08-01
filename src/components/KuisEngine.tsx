@@ -121,10 +121,7 @@ export function KuisEngine({
   const levelLabel = (level: number) =>
     level === 1 ? "Mudah" : level === 2 ? "Sedang" : "Sulit";
   const currentLevel = questionLevels[qIndex] ?? adaptiveLevel;
-  const feedbackNextLevel =
-    submitted && answers[qIndex]
-      ? nextQuestionLevel(questionLevels[qIndex] ?? adaptiveLevel, answers[qIndex].isCorrect)
-      : null;
+  const nextStoredLevel = questionLevels[qIndex + 1];
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 font-sans">
       <div className="mb-6 space-y-3">
@@ -270,10 +267,10 @@ export function KuisEngine({
                       ? "Bagus sekali! Pemahaman kamu mengenai materi ini sudah sangat tepat. Lanjutkan ke pertanyaan berikutnya."
                       : "Jangan berkecil hati! Pelajari kembali poin utama materi jika perlu. Tingkat kesulitan soal berikutnya akan disesuaikan."}
                   </p>
-                  {feedbackNextLevel !== null &&
-                    feedbackNextLevel !== currentLevel && (
+                  {nextStoredLevel !== undefined &&
+                    nextStoredLevel !== currentLevel && (
                       <p className="text-xs font-sans font-semibold text-fg">
-                        Level soal berikutnya: {levelLabel(feedbackNextLevel)}
+                        Level soal berikutnya: {levelLabel(nextStoredLevel)}
                       </p>
                     )}
                 </div>
