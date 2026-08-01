@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { speak } from "./tts";
+import { pauseSpeaking, resumeSpeaking, speak } from "./tts";
 
 type MockVoice = { lang: string; name: string };
 
@@ -23,18 +23,22 @@ afterEach(() => {
 function setupTts(voices: MockVoice[]) {
   const speakMock = vi.fn();
   const cancelMock = vi.fn();
+  const pauseMock = vi.fn();
+  const resumeMock = vi.fn();
   const getVoicesMock = vi.fn(() => voices);
 
   globalThis.window = {
     speechSynthesis: {
       speak: speakMock,
       cancel: cancelMock,
+      pause: pauseMock,
+      resume: resumeMock,
       getVoices: getVoicesMock,
     },
   } as unknown as Window & typeof globalThis;
   globalThis.SpeechSynthesisUtterance = MockUtterance as unknown as typeof SpeechSynthesisUtterance;
 
-  return { speakMock, cancelMock, getVoicesMock };
+  return { speakMock, cancelMock, pauseMock, resumeMock, getVoicesMock };
 }
 
 describe("speak", () => {
@@ -75,5 +79,24 @@ describe("speak", () => {
     const utterance = speakMock.mock.calls[0][0] as MockUtterance;
     expect(utterance.onend).toBe(onend);
     expect(utterance.onerror).toBe(onerror);
+  });
+
+  test("menjeda dan melanjutkan pembacaan", () => {
+    const { pauseMock, resumeMock } = setupTts([]);
+
+    pauseSpeaking();
+    resumeSpeaking();
+
+    expect(pauseMock).toHaveBeenCalledOnce();
+    expect(resumeMock).toHaveBeenCalledOnce();
+  });
+
+  test("menerapkan kecepatan pembacaan", () => {
+    const { speakMock } = setupTts([]);
+
+    speak("Pembacaan cepat", { rate: 1.5 });
+
+    const utterance = speakMock.mock.calls[0][0] as MockUtterance & { rate: number };
+    expect(utterance.rate).toBe(1.5);
   });
 });

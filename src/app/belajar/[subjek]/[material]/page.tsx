@@ -11,7 +11,7 @@ import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { useProgressStore } from "@/stores/progressStore";
 
 import { toBionic } from "@/lib/bionic";
-import { speak, stopSpeaking, isTTSAvailable } from "@/lib/tts";
+import { pauseSpeaking, resumeSpeaking, speak, stopSpeaking, isTTSAvailable } from "@/lib/tts";
 
 export default function MateriPage() {
   const params = useParams<{ subjek: string; material: string }>();
@@ -30,6 +30,8 @@ export default function MateriPage() {
 
   const [activeParaIndex, setActiveParaIndex] = useState<number>(0);
   const [isPlayingTts, setIsPlayingTts] = useState<boolean>(false);
+  const [isPausedTts, setIsPausedTts] = useState<boolean>(false);
+  const [ttsRate, setTtsRate] = useState<number>(1);
 
   // Scroll-based reading progress
   useEffect(() => {
@@ -82,23 +84,46 @@ export default function MateriPage() {
 
   const paragraphs = materi.paragraphs;
 
+  const fullContent = paragraphs.map((p) => p.text).join(" ");
+
+  const resetTtsState = () => {
+    setIsPlayingTts(false);
+    setIsPausedTts(false);
+  };
+
+  const startTts = (rate: number = ttsRate) => {
+    if (!isTTSAvailable()) return;
+    speak(fullContent, {
+      rate,
+      onend: resetTtsState,
+      onerror: resetTtsState,
+    });
+    setIsPlayingTts(true);
+    setIsPausedTts(false);
+  };
+
   const handleToggleTts = () => {
-    if (isPlayingTts) {
-      stopSpeaking();
-      setIsPlayingTts(false);
-    } else {
-      const fullContent = paragraphs.map((p) => p.text).join(" ");
-      speak(fullContent, {
-        onend: () => setIsPlayingTts(false),
-        onerror: () => setIsPlayingTts(false),
-      });
+    if (isPausedTts) {
+      resumeSpeaking();
       setIsPlayingTts(true);
+      setIsPausedTts(false);
+    } else if (isPlayingTts) {
+      pauseSpeaking();
+      setIsPlayingTts(false);
+      setIsPausedTts(true);
+    } else {
+      startTts();
     }
   };
 
-  const handleStopTts = () => {
-    stopSpeaking();
-    setIsPlayingTts(false);
+  const handleRestartTts = () => {
+    startTts();
+  };
+
+  const handleRateChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const nextRate = Number(event.target.value);
+    setTtsRate(nextRate);
+    if (isPlayingTts || isPausedTts) startTts(nextRate);
   };
 
   return (
@@ -135,17 +160,30 @@ export default function MateriPage() {
               className="px-3.5 py-1.5 bg-fg text-bg hover:opacity-90 rounded-lg text-xs flex items-center gap-1.5 font-sans font-bold shadow-sm"
             >
               {isPlayingTts ? <Pause size={12} /> : <Play size={12} />}
-              <span>{isPlayingTts ? "Pause Suara" : "Putar Suara"}</span>
+              <span>{isPlayingTts ? "Pause Suara" : isPausedTts ? "Lanjutkan Suara" : "Putar Suara"}</span>
             </button>
             <button
               type="button"
-              onClick={handleStopTts}
+              onClick={handleRestartTts}
               className="p-1.5 bg-card border border-border text-muted rounded-lg hover:bg-muted/10"
-              title="Stop TTS"
+              title="Ulangi dari awal"
+              aria-label="Ulangi suara dari awal"
             >
               <Square size={12} />
             </button>
-            <span className="text-[10px] font-sans text-muted border border-border bg-card px-2 py-0.5 rounded">Speed 1.0x</span>
+            <label className="text-[10px] font-sans text-muted border border-border bg-card px-2 py-0.5 rounded flex items-center gap-1.5">
+              <span>Speed</span>
+              <select
+                value={ttsRate}
+                onChange={handleRateChange}
+                className="bg-transparent text-fg font-semibold outline-none cursor-pointer"
+                aria-label="Kecepatan suara"
+              >
+                {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => (
+                  <option key={rate} value={rate}>{rate}x</option>
+                ))}
+              </select>
+            </label>
           </div>
         </div>
       )}

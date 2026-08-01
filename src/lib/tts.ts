@@ -13,13 +13,25 @@ export function speak(text: string, opts?: Partial<SpeechSynthesisUtterance>): v
   // is configured for another language.
   utterance.lang = "id-ID";
 
-  const voices = window.speechSynthesis.getVoices();
+  const voices = typeof window.speechSynthesis.getVoices === "function"
+    ? window.speechSynthesis.getVoices()
+    : [];
   const indonesianVoice = voices.find((voice) =>
     voice.lang.toLowerCase().startsWith("id")
   );
   if (indonesianVoice) utterance.voice = indonesianVoice;
 
   window.speechSynthesis.speak(utterance);
+}
+
+export function pauseSpeaking(): void {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+  window.speechSynthesis.pause();
+}
+
+export function resumeSpeaking(): void {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+  window.speechSynthesis.resume();
 }
 
 export function stopSpeaking(): void {
