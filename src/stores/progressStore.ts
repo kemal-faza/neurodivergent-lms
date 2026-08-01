@@ -19,6 +19,8 @@ interface ProgressStore extends ProgressState {
   setMateriProgress: (id: string, progress: number) => void;
   /** Set answered-questions progress (0-100) for a material quiz. */
   setQuizProgress: (id: string, progress: number) => void;
+  /** Self-heal stale quizProgress values (run on rehydrate). */
+  migrateQuizProgress: () => void;
   saveQuizSession: (id: string, session: QuizSession) => void;
   clearQuizSession: (id: string) => void;
   saveQuizResult: (result: QuizResult) => void;
@@ -101,6 +103,18 @@ export const useProgressStore = create<ProgressStore>()(
             [id]: Math.min(100, Math.max(0, progress)),
           },
         })),
+      migrateQuizProgress: () =>
+        set((s) => {
+          let changed = false;
+          const next = { ...s.quizProgress };
+          Object.keys(s.quizScores).forEach((id) => {
+            if ((next[id] ?? 0) < 100) {
+              next[id] = 100;
+              changed = true;
+            }
+          });
+          return changed ? { quizProgress: next } : s;
+        }),
       saveQuizSession: (id, session) =>
         set((s) => ({
           quizSessions: { ...s.quizSessions, [id]: session },
@@ -150,7 +164,10 @@ export const useProgressStore = create<ProgressStore>()(
         quizSessions: state.quizSessions,
         lastQuizResult: state.lastQuizResult,
       }),
-      onRehydrateStorage: () => (state) => state?.setHasHydrated(true),
+      onRehydrateStorage: () => (state) => {
+        state?.migrateQuizProgress();
+        state?.setHasHydrated(true);
+      },
     },
   ),
 );

@@ -36,6 +36,7 @@ export default function DashboardPage() {
   const completedMateri = useProgressStore((s) => s.completedMateri);
   const materiProgress = useProgressStore((s) => s.materiProgress);
   const quizScores = useProgressStore((s) => s.quizScores);
+  const quizProgress = useProgressStore((s) => s.quizProgress);
   const hasHydrated = useProgressStore((s) => s.hasHydrated);
 
   const pdfDate = new Date().toISOString().slice(0, 10);
@@ -124,7 +125,10 @@ export default function DashboardPage() {
       subjekId: m.subjekId,
       label: m.judul,
       progress: materiProgress[m.id] ?? 0,
-      quizScore: m.kuisId ? (quizScores[m.kuisId] ?? null) : null,
+      quizScore:
+        quizScores[m.id] ??
+        (m.kuisId ? (quizScores[m.kuisId] ?? null) : null),
+      quizProgress: quizProgress[m.id] ?? 0,
     }));
     const avgProgress =
       materis.length > 0
@@ -373,7 +377,7 @@ export default function DashboardPage() {
                       <button
                         type="button"
                         onClick={() => toggleSubjek(subjek.id)}
-                        className="w-full flex items-center gap-4 px-5 py-4 text-left bg-muted/5 hover:bg-muted/10 transition-colors"
+                        className={`w-full flex items-center gap-4 px-5 py-4 text-left bg-muted/5 transition-all ${isOpen ? "bg-muted/10" : "hover:bg-muted/10 hover-lift"}`}
                       >
                         <div
                           className={`w-11 h-11 rounded-xl flex items-center justify-center ${colors.light} ${colors.border} border flex-shrink-0`}
@@ -440,7 +444,6 @@ export default function DashboardPage() {
                         <div className="border-t-2 border-border/60 bg-bg">
                           {subjek.materis.map((m, mi) => {
                             const completed = m.progress >= 100;
-                            const hasQuiz = m.quizScore !== null;
                             return (
                               <div
                                 key={m.id}
@@ -475,27 +478,35 @@ export default function DashboardPage() {
                                       style={{ width: `${m.progress}%` }}
                                     />
                                   </div>
+                                  <div className="flex items-center justify-between gap-2 mt-1.5">
+                                    <span className="text-[10px] font-mono text-muted">
+                                      KUIS
+                                    </span>
+                                    <span className="text-[10px] font-mono text-muted">
+                                      {m.quizScore !== null
+                                        ? `${m.quizScore} pts`
+                                        : `${m.quizProgress}%`}
+                                    </span>
+                                  </div>
+                                  <div className="h-1 bg-muted/20 rounded-full overflow-hidden">
+                                    <div
+                                      className="h-full bg-fg rounded-full transition-all duration-500"
+                                      style={{ width: `${m.quizProgress}%` }}
+                                    />
+                                  </div>
                                 </div>
                                 <div className="flex-shrink-0">
-                                  {hasQuiz ? (
-                                    <span
-                                      className={`text-[9px] font-mono border px-1.5 py-0.5 rounded font-bold ${completed ? `${colors.border} ${colors.ring}` : "border-border text-fg"}`}
-                                    >
-                                      {m.quizScore}%
-                                    </span>
-                                  ) : (
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        router.push(
-                                          `/belajar/${m.subjekId}/${m.id}`,
-                                        )
-                                      }
-                                      className="text-[9px] font-mono border border-border/60 px-1.5 py-0.5 rounded text-muted hover:bg-muted/10 flex items-center gap-0.5 transition-colors"
-                                    >
-                                      Mulai <ChevronRight size={8} />
-                                    </button>
-                                  )}
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      router.push(
+                                        `/belajar/${m.subjekId}/${m.id}`,
+                                      )
+                                    }
+                                    className="text-[9px] font-mono border border-border/60 px-1.5 py-0.5 rounded text-muted hover:bg-fg hover:text-bg flex items-center gap-0.5 transition-colors"
+                                  >
+                                    Mulai <ChevronRight size={8} />
+                                  </button>
                                 </div>
                               </div>
                             );
@@ -725,11 +736,8 @@ export default function DashboardPage() {
                 <th className="text-left text-[9px] text-gray-500 font-semibold pb-2">
                   Progress
                 </th>
-                <th className="text-right text-[9px] text-gray-500 font-semibold pb-2 pr-1">
-                  %
-                </th>
-                <th className="text-right text-[9px] text-gray-500 font-semibold pb-2 pr-1">
-                  Skor Kuis
+                <th className="text-right text-[9px] text-gray-500 font-semibold pb-2 pl-4 pr-1">
+                  Progress Kuis
                 </th>
               </tr>
             </thead>
@@ -744,19 +752,39 @@ export default function DashboardPage() {
                       {m.label}
                     </span>
                   </td>
-                  <td className="py-2.5 pr-3 w-[180px]">
-                    <div className="h-2 bg-gray-200 rounded-full overflow-hidden w-full min-w-[100px]">
-                      <div
-                        className="h-full bg-gray-900 rounded-full transition-all"
-                        style={{ width: `${m.progress}%` }}
-                      />
+                  <td className="py-2.5 pr-4">
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <div className="h-2 bg-gray-200 rounded-full overflow-hidden flex-1 min-w-[100px]">
+                        <div
+                          className="h-full bg-gray-900 rounded-full transition-all"
+                          style={{ width: `${m.progress}%` }}
+                        />
+                      </div>
+                      <span
+                        className="text-[11px] text-gray-700 font-medium flex-shrink-0"
+                        style={{ minWidth: "32px", textAlign: "right" }}
+                      >
+                        {m.progress}%
+                      </span>
                     </div>
                   </td>
-                  <td className="py-2.5 text-right pr-1 text-[11px] text-gray-700 font-medium">
-                    {m.progress}%
-                  </td>
-                  <td className="py-2.5 text-right pr-1 text-[11px] text-gray-700">
-                    {m.quizScore !== null ? `${m.quizScore}%` : "—"}
+                  <td className="py-2.5 pl-4 pr-1 w-[130px]">
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <span className="text-[8px] text-gray-400 font-medium">
+                        KUIS
+                      </span>
+                      <span className="text-[9px] text-gray-700">
+                        {m.quizScore !== null
+                          ? `${m.quizScore} pts`
+                          : `${m.quizProgress}%`}
+                      </span>
+                    </div>
+                    <div className="h-2 bg-gray-200 rounded-full overflow-hidden w-full">
+                      <div
+                        className="h-full bg-gray-900 rounded-full"
+                        style={{ width: `${m.quizProgress}%` }}
+                      />
+                    </div>
                   </td>
                 </tr>
               ))}
