@@ -1,4 +1,4 @@
-import type { ProgressState } from "./types";
+import type { ProgressState, Soal } from "./types";
 
 export const MIN_LEVEL = 1;
 export const MAX_LEVEL = 3;
@@ -47,3 +47,28 @@ export const INITIAL_PROGRESS: ProgressState = {
   dailyPoints: {},
   materiProgress: {},
 };
+
+/**
+ * Next question difficulty during a session: +1 on correct, -1 on wrong,
+ * clamped to [MIN_LEVEL, MAX_LEVEL].
+ */
+export function nextQuestionLevel(current: number, isCorrect: boolean): number {
+  const next = isCorrect ? current + 1 : current - 1;
+  return Math.min(MAX_LEVEL, Math.max(MIN_LEVEL, next));
+}
+
+/**
+ * Pick an unused soal whose diff is closest to targetDiff.
+ * Returns undefined when there is no unused soal left.
+ */
+export function selectNextSoal(
+  soalList: Soal[],
+  targetDiff: number,
+  usedIds: string[],
+): Soal | undefined {
+  const unused = soalList.filter((s) => !usedIds.includes(s.id));
+  if (unused.length === 0) return undefined;
+  return [...unused].sort(
+    (a, b) => Math.abs(a.diff - targetDiff) - Math.abs(b.diff - targetDiff),
+  )[0];
+}
