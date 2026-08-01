@@ -35,7 +35,6 @@ export default function DashboardPage() {
   const badgeEarned = useProgressStore((s) => s.badge);
   const completedMateri = useProgressStore((s) => s.completedMateri);
   const materiProgress = useProgressStore((s) => s.materiProgress);
-  const quizProgress = useProgressStore((s) => s.quizProgress);
   const quizScores = useProgressStore((s) => s.quizScores);
   const hasHydrated = useProgressStore((s) => s.hasHydrated);
 
@@ -125,8 +124,7 @@ export default function DashboardPage() {
       subjekId: m.subjekId,
       label: m.judul,
       progress: materiProgress[m.id] ?? 0,
-      quizScore: quizScores[m.id] ?? null,
-      quizProgress: quizProgress[m.id] ?? 0,
+      quizScore: m.kuisId ? (quizScores[m.kuisId] ?? null) : null,
     }));
     const avgProgress =
       materis.length > 0
