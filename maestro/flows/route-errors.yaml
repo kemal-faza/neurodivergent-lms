@@ -1,0 +1,44 @@
+url: http://localhost:3000
+name: "Invalid route and empty result states"
+tags:
+  - errors
+  - regression
+---
+- launchApp:
+    clearState: true
+
+- openLink: "http://localhost:3000/belajar/not-found"
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Mata pelajaran tidak ditemukan."
+- tapOn: ".*Kembali ke Daftar Mata Pelajaran"
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Pilih Mata Pelajaran"
+
+- openLink: "http://localhost:3000/belajar/ipa/not-found"
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Materi tidak ditemukan."
+- tapOn: ".*Kembali ke Daftar Mata Pelajaran"
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Pilih Mata Pelajaran"
+
+- openLink: "http://localhost:3000/kuis/ipa/not-found"
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Kuis tidak ditemukan untuk materi ini."
+- tapOn: "Ke Daftar Kuis"
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Pilih Mata Pelajaran"
+
+- openLink: "http://localhost:3000/hasil/fotosintesis"
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Belum ada hasil kuis."
+- tapOn: ".*Kembali ke Daftar Kuis"
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Ilmu Pengetahuan Alam"

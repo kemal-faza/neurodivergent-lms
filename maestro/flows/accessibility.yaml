@@ -1,0 +1,53 @@
+url: http://localhost:3000/belajar
+name: "Accessibility panel and reading controls"
+tags:
+  - accessibility
+  - regression
+---
+- launchApp:
+    clearState: true
+
+- extendedWaitUntil:
+    visible: "Pilih Mata Pelajaran"
+    timeout: 10000
+
+- assertVisible:
+    id: "notification-button"
+
+- tapOn: "Aksesibilitas"
+- assertVisible: "Panel Aksesibilitas"
+- assertVisible: "Profil Belajar"
+
+- tapOn: "Bionic Reading"
+- swipe:
+    start: "90%, 60%"
+    end: "90%, 30%"
+    duration: 500
+- assertVisible: "1 alat bantu aktif"
+
+- tapOn: ".*Reset"
+- assertVisible: "Pengaturan standar"
+
+- scrollUntilVisible:
+    element: "Disleksia"
+    direction: UP
+    timeout: 5000
+- tapOn: "Disleksia"
+- tapOn:
+    id: "close-accessibility-panel-button"
+- waitForAnimationToEnd:
+    timeout: 1000
+- assertNotVisible: "Panel Aksesibilitas"
+
+- openLink: "http://localhost:3000/belajar/ipa/fotosintesis"
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Text-To-Speech \\(Web Speech API\\)"
+- assertVisible: "Putar Suara"
+- assertVisible:
+    id: "stop-tts-button"
+
+- tapOn: "Putar Suara"
+- tapOn:
+    id: "stop-tts-button"

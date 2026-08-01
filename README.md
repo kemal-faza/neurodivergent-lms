@@ -73,6 +73,34 @@ npx vitest run src/lib/adaptive.test.ts   # single test file
 
 Tests run in a Node environment, so stores are tested against an in-memory fallback instead of IndexedDB.
 
+### Browser E2E tests
+
+The browser flows use Maestro Web and Chromium. Install the Maestro CLI separately, then start the Next.js server in one terminal:
+
+```bash
+npm run dev
+```
+
+Run the short smoke flow:
+
+```bash
+npm run test:e2e:smoke
+```
+
+Run the complete suite:
+
+```bash
+npm run test:e2e
+```
+
+The flows clear browser state before each journey because progress and accessibility settings are stored locally in IndexedDB.
+
+Selector policy:
+
+- Use visible text with `tapOn` whenever the target has text.
+- Use an explicit HTML `id` only for controls without visible text.
+- Do not replace text selectors with coordinates or CSS selectors.
+
 ## Deployment
 
 Deploy to Vercel by importing the repository. The default Next.js settings work as-is and the build command is `npm run build`.

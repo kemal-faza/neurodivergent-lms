@@ -118,6 +118,7 @@ export function Navbar() {
               👤
             </div>
             <button
+              id="notification-button"
               type="button"
               className="p-2 rounded-lg hover:bg-muted/10 transition-colors flex items-center justify-center text-muted hover:text-fg"
               aria-label="Notifikasi"
@@ -127,6 +128,7 @@ export function Navbar() {
 
             {/* Hamburger Button — shown below lg */}
             <button
+              id="navigation-menu-button"
               type="button"
               onClick={() => setMobileOpen((o) => !o)}
               className="lg:hidden p-2 text-fg rounded-lg hover:bg-muted/10 flex items-center justify-center"
@@ -151,6 +153,7 @@ export function Navbar() {
             <div className="flex justify-between items-center mb-4 pb-3 border-b border-border">
               <span className="text-sm font-bold font-lexend text-fg">Menu Navigasi</span>
               <button
+                id="close-navigation-menu-button"
                 type="button"
                 onClick={() => setMobileOpen(false)}
                 className="p-1.5 rounded-lg text-muted hover:text-fg hover:bg-muted/10"

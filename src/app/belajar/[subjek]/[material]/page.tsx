@@ -138,6 +138,7 @@ export default function MateriPage() {
               <span>{isPlayingTts ? "Pause Suara" : "Putar Suara"}</span>
             </button>
             <button
+              id="stop-tts-button"
               type="button"
               onClick={handleStopTts}
               className="p-1.5 bg-card border border-border text-muted rounded-lg hover:bg-muted/10"

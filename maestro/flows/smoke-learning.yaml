@@ -1,0 +1,51 @@
+url: http://localhost:3000
+name: "Smoke - landing to first quiz question"
+tags:
+  - smoke
+  - navigation
+---
+- launchApp:
+    clearState: true
+
+- extendedWaitUntil:
+    visible: "Belajar Nyaman.*"
+    timeout: 10000
+
+- assertVisible: "Aksesibilitas"
+
+# NOTE: "Mulai Belajar Sekarang" (Hero CTA) applies the Disleksia profile
+# before navigating, which enables ttsEnabled — that is why the TTS bar
+# and stop-tts-button below are visible despite clearState: true.
+- tapOn: "Mulai Belajar Sekarang"
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Pilih Mata Pelajaran"
+- tapOn: "Ilmu Pengetahuan Alam"
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Fotosintesis"
+- tapOn:
+    text: "Mulai Belajar.*"
+    index: 0
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Pengertian & Fungsi Utama"
+- assertVisible: "Text-To-Speech \\(Web Speech API\\)"
+- assertVisible:
+    id: "stop-tts-button"
+
+- scrollUntilVisible:
+    element: "Kerjakan Kuis Adaptif.*"
+    direction: DOWN
+    timeout: 10000
+    visibilityPercentage: 80
+
+- tapOn: "Kerjakan Kuis Adaptif.*"
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Soal 1/15"
+- assertVisible: "Zat apa yang menyerap cahaya pada daun\\?"
