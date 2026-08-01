@@ -7,6 +7,7 @@ import { useProgressStore } from "@/stores/progressStore";
 
 export default function KuisPage() {
   const subjekList = getAllSubjek();
+  const getQuizProgress = useProgressStore((s) => s.getQuizProgress);
   const quizProgress = useProgressStore((s) => s.quizProgress);
 
   return (
@@ -42,7 +43,13 @@ export default function KuisPage() {
                 <div className="space-y-1">
                   {(() => {
                     const materis = getMateriWithQuizBySubjek(subjek.id).map(
-                      (m) => quizProgress[m.id] ?? 0,
+                      (m) => {
+                        const quiz = getQuizProgress(m.id);
+                        return Math.max(
+                          quizProgress[m.id] ?? 0,
+                          quiz.isCompleted ? 100 : 0,
+                        );
+                      },
                     );
                     const avg = materis.length
                       ? Math.round(
