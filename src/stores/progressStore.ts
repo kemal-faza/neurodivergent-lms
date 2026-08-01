@@ -3,7 +3,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { idbStorage } from "./storage";
-import type { ProgressState } from "../lib/types";
+import type { ProgressState, QuizResult, QuizSession } from "../lib/types";
 import { INITIAL_PROGRESS, nextAdaptiveLevel, scoreToRatio, quizPoints } from "../lib/adaptive";
 
 interface ProgressStore extends ProgressState {
@@ -11,8 +11,17 @@ interface ProgressStore extends ProgressState {
   addPoin: (n: number) => void;
   /** Record a quiz attempt; updates best score, points, and adaptive level. */
   recordQuiz: (kuisId: string, correct: number, total: number) => void;
+  /** Record a full quiz session (batch); updates best score, attempts history, and points. */
+  recordQuizSession: (materiId: string, correct: number, total: number) => void;
+  /** Get quiz result summary for a material quiz (completion, best score, last attempt). */
+  getQuizProgress: (materiId: string) => { isCompleted: boolean; bestScore: number | null; lastAttempt: { correct: number; total: number } | null };
   addBadge: (id: string) => void;
   setMateriProgress: (id: string, progress: number) => void;
+  /** Set answered-questions progress (0-100) for a material quiz. */
+  setQuizProgress: (id: string, progress: number) => void;
+  saveQuizSession: (id: string, session: QuizSession) => void;
+  clearQuizSession: (id: string) => void;
+  saveQuizResult: (result: QuizResult) => void;
   completeMateri: (id: string) => void;
   /** Call when the learner is active on a new day to extend the streak. */
   bumpStreak: () => void;
@@ -26,7 +35,7 @@ function todayISO(): string {
 
 export const useProgressStore = create<ProgressStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       ...INITIAL_PROGRESS,
       hasHydrated: false,
       addPoin: (n) =>
@@ -50,12 +59,59 @@ export const useProgressStore = create<ProgressStore>()(
             dailyPoints: { ...s.dailyPoints, [today]: (s.dailyPoints[today] ?? 0) + points },
           };
         }),
+      recordQuizSession: (materiId, correct, total) =>
+        set((s) => {
+          const ratio = scoreToRatio(correct, total);
+          const points = quizPoints(correct, total);
+          const best = Math.max(s.quizScores[materiId] ?? 0, points);
+          const today = todayISO();
+          return {
+            poin: s.poin + points,
+            quizScores: { ...s.quizScores, [materiId]: best },
+            quizAttempts: {
+              ...s.quizAttempts,
+              [materiId]: [...(s.quizAttempts[materiId] ?? []), { correct, total, date: today }],
+            },
+            adaptiveLevel: nextAdaptiveLevel(s.adaptiveLevel, ratio),
+            dailyPoints: { ...s.dailyPoints, [today]: (s.dailyPoints[today] ?? 0) + points },
+          };
+        }),
+      getQuizProgress: (materiId) => {
+        const state = get();
+        const attempts = state.quizAttempts[materiId];
+        const bestScore = state.quizScores[materiId] ?? null;
+        const isCompleted = bestScore !== null;
+        const lastAttempt = attempts && attempts.length > 0 ? attempts[attempts.length - 1] : null;
+        return {
+          isCompleted,
+          bestScore: bestScore !== null ? Math.round(bestScore) : null,
+          lastAttempt: lastAttempt ? { correct: lastAttempt.correct, total: lastAttempt.total } : null,
+        };
+      },
       addBadge: (id) =>
         set((s) => (s.badge.includes(id) ? s : { badge: [...s.badge, id] })),
       setMateriProgress: (id, progress) =>
         set((s) => ({
           materiProgress: { ...s.materiProgress, [id]: Math.min(100, Math.max(0, progress)) },
         })),
+      setQuizProgress: (id, progress) =>
+        set((s) => ({
+          quizProgress: {
+            ...s.quizProgress,
+            [id]: Math.min(100, Math.max(0, progress)),
+          },
+        })),
+      saveQuizSession: (id, session) =>
+        set((s) => ({
+          quizSessions: { ...s.quizSessions, [id]: session },
+        })),
+      clearQuizSession: (id) =>
+        set((s) => {
+          const next = { ...s.quizSessions };
+          delete next[id];
+          return { quizSessions: next };
+        }),
+      saveQuizResult: (result) => set(() => ({ lastQuizResult: result })),
       completeMateri: (id) =>
         set((s) =>
           s.completedMateri.includes(id) ? s : { completedMateri: [...s.completedMateri, id] },
@@ -86,9 +142,13 @@ export const useProgressStore = create<ProgressStore>()(
         adaptiveLevel: state.adaptiveLevel,
         completedMateri: state.completedMateri,
         quizScores: state.quizScores,
+        quizAttempts: state.quizAttempts,
         maxStreak: state.maxStreak,
         dailyPoints: state.dailyPoints,
         materiProgress: state.materiProgress,
+        quizProgress: state.quizProgress,
+        quizSessions: state.quizSessions,
+        lastQuizResult: state.lastQuizResult,
       }),
       onRehydrateStorage: () => (state) => state?.setHasHydrated(true),
     },

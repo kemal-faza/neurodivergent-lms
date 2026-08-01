@@ -152,6 +152,18 @@ export const KUIS: Kuis[] = [
       { id: "q1s1", t: "Apa warna yang dipantulkan daun?", opsi: ["Merah", "Hijau", "Biru"], benar: 1, diff: 1 },
       { id: "q1s2", t: "Apa produk sampingan fotosintesis yang kita hirup?", opsi: ["Karbon dioksida", "Oksigen", "Glukosa"], benar: 1, diff: 1 },
       { id: "q1s3", t: "Zat apa yang menyerap cahaya pada daun?", opsi: ["Klorofil", "Klorin", "Kromium"], benar: 0, diff: 2 },
+      { id: "q1s4", t: "Di bagian tumbuhan mana fotosintesis terutama terjadi?", opsi: ["Akar", "Daun", "Batang"], benar: 1, diff: 2 },
+      { id: "q1s5", t: "Apa sumber energi utama untuk fotosintesis?", opsi: ["Air", "Tanah", "Cahaya matahari"], benar: 2, diff: 1 },
+      { id: "q1s6", t: "Gas apa yang dibutuhkan tumbuhan untuk fotosintesis?", opsi: ["Oksigen", "Karbon dioksida", "Nitrogen"], benar: 1, diff: 1 },
+      { id: "q1s7", t: "Apa hasil utama fotosintesis selain oksigen?", opsi: ["Air", "Gula (glukosa)", "Garam"], benar: 1, diff: 1 },
+      { id: "q1s8", t: "Kapan fotosintesis paling aktif terjadi pada tumbuhan?", opsi: ["Malam hari", "Saat ada cahaya matahari", "Saat hujan"], benar: 1, diff: 2 },
+      { id: "q1s9", t: "Di mana reaksi gelap (Siklus Calvin) terjadi di dalam kloroplas?", opsi: ["Membran tilakoid", "Stroma", "Dinding sel"], benar: 1, diff: 2 },
+      { id: "q1s10", t: "Organel sel apa yang menjadi tempat berlangsungnya fotosintesis?", opsi: ["Mitokondria", "Kloroplas", "Ribosom"], benar: 1, diff: 2 },
+      { id: "q1s11", t: "Mengapa daun tampak hijau?", opsi: ["Klorofil menyerap cahaya merah", "Klorofil memantulkan cahaya hijau", "Daun menyerap semua warna"], benar: 1, diff: 3 },
+      { id: "q1s12", t: "Apa yang digunakan reaksi gelap dari reaksi terang untuk membentuk glukosa?", opsi: ["ATP", "Oksigen", "Cahaya matahari"], benar: 0, diff: 3 },
+      { id: "q1s13", t: "Apa fungsi utama klorofil dalam reaksi fotosintesis?", opsi: ["Menangkap energi cahaya", "Menghasilkan karbon dioksida", "Menyimpan gula"], benar: 0, diff: 3 },
+      { id: "q1s14", t: "Mengapa tanpa fotosintesis rantai makanan di Bumi tidak akan berjalan?", opsi: ["Tumbuhan adalah produsen yang mengubah energi matahari menjadi makanan", "Hewan herbivora dapat membuat makanannya sendiri dari udara", "Fotosintesis menghasilkan karbon dioksida sebagai makanan"], benar: 0, diff: 3 },
+      { id: "q1s15", t: "Apa yang dipecah oleh reaksi terang sehingga menghasilkan oksigen?", opsi: ["Molekul air", "Molekul glukosa", "Molekul karbon dioksida"], benar: 0, diff: 3 },
     ],
   },
   {
@@ -161,6 +173,18 @@ export const KUIS: Kuis[] = [
       { id: "q2s1", t: "Planet terdekat ke Matahari adalah?", opsi: ["Venus", "Bumi", "Merkurius"], benar: 2, diff: 1 },
       { id: "q2s2", t: "Di antara planet manakah sabuk asteroid berada?", opsi: ["Bumi-Mars", "Mars-Jupiter", "Jupiter-Saturnus"], benar: 1, diff: 2 },
       { id: "q2s3", t: "Planet terbesar di tata surya adalah?", opsi: ["Saturnus", "Neptunus", "Jupiter"], benar: 2, diff: 1 },
+      { id: "q2s4", t: "Planet terkecil di tata surya adalah?", opsi: ["Merkurius", "Mars", "Pluto"], benar: 0, diff: 1 },
+      { id: "q2s5", t: "Berapa lama Bumi membutuhkan waktu untuk satu kali revolusi?", opsi: ["24 jam", "365 hari", "30 hari"], benar: 1, diff: 1 },
+      { id: "q2s6", t: "Benda langit yang menjadi pusat tata surya adalah?", opsi: ["Matahari", "Bumi", "Jupiter"], benar: 0, diff: 1 },
+      { id: "q2s7", t: "Manakah yang termasuk planet luar (raksasa gas)?", opsi: ["Jupiter, Saturnus, Uranus, Neptunus", "Merkurius, Venus, Bumi, Mars", "Bumi, Mars, Jupiter, Saturnus"], benar: 0, diff: 2 },
+      { id: "q2s8", t: "Apa nama satelit alami Bumi?", opsi: ["Bulan", "Mars", "Venus"], benar: 0, diff: 2 },
+      { id: "q2s9", t: "Planet manakah yang letaknya paling jauh dari Matahari?", opsi: ["Uranus", "Saturnus", "Neptunus"], benar: 2, diff: 2 },
+      { id: "q2s10", t: "Berapa lama waktu revolusi Merkurius mengelilingi Matahari?", opsi: ["88 hari", "365 hari", "165 tahun"], benar: 0, diff: 2 },
+      { id: "q2s11", t: "Mengapa Neptunus membutuhkan waktu revolusi jauh lebih lama daripada Merkurius?", opsi: ["Karena orbitnya lebih jauh dari Matahari", "Karena ukurannya lebih kecil", "Karena ia tidak memiliki satelit"], benar: 0, diff: 3 },
+      { id: "q2s12", t: "Urutan planet dari yang terdekat hingga terjauh dari Matahari yang benar adalah?", opsi: ["Merkurius, Venus, Bumi, Mars", "Venus, Merkurius, Bumi, Mars", "Merkurius, Bumi, Venus, Mars"], benar: 0, diff: 3 },
+      { id: "q2s13", t: "Berdasarkan bahan penyusunnya, planet dalam dan planet luar dibedakan menjadi?", opsi: ["Berbatu dan raksasa gas", "Berdiameter besar dan kecil", "Beratmosfer dan tidak beratmosfer"], benar: 0, diff: 3 },
+      { id: "q2s14", t: "Mengapa Pluto kini dikategorikan sebagai planet kerdil?", opsi: ["Karena ukurannya kecil dan orbitnya tidak bersih dari objek lain", "Karena letaknya terlalu dekat dengan Matahari", "Karena tidak memiliki satelit"], benar: 0, diff: 3 },
+      { id: "q2s15", t: "Berdasarkan contoh Merkurius (88 hari) dan Neptunus (165 tahun), planet yang lebih jauh dari Matahari cenderung memiliki waktu revolusi yang?", opsi: ["Lebih lama", "Lebih singkat", "Sama"], benar: 0, diff: 3 },
     ],
   },
 ];
@@ -185,4 +209,8 @@ export function getMateriBySubjek(subjekId: string): Materi[] {
 
 export function getKuis(id: string): Kuis | undefined {
   return KUIS.find((k) => k.id === id);
+}
+
+export function getMateriWithQuizBySubjek(subjekId: string): Materi[] {
+  return getMateriBySubjek(subjekId).filter((m) => m.kuisId != null);
 }

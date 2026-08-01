@@ -23,9 +23,11 @@ next-env.d.ts
 
 # local-only docs (jangan dicomit)
 PLAN.md
+AGENTS.md
 docs/
 CONTEXT.md
 PRD*.md
+AGENTS.md
 
 # AI & dev-local perintilan
 .opencode/
