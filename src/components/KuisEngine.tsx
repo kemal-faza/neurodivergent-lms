@@ -36,15 +36,7 @@ export function KuisEngine({
   const ttsEnabled = useAccessibilityStore((s) => s.ttsEnabled);
   const focusMode = useAccessibilityStore((s) => s.focusMode);
   const hasHydrated = useProgressStore((s) => s.hasHydrated);
-  const [session, setSession] = useState<InitialSession | null>(() =>
-    hasHydrated
-      ? buildInitialSession(
-          soalList,
-          adaptiveLevel,
-          useProgressStore.getState().quizSessions[materiId],
-        )
-      : null,
-  );
+  const [session, setSession] = useState<InitialSession | null>(null);
   const [qIndex, setQIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -56,13 +48,19 @@ export function KuisEngine({
   const [questionFocused, setQuestionFocused] = useState(false);
 
   useEffect(() => {
-    if (!session) return;
-    setQIndex(session.startIndex);
-    setSessionCorrect(session.sessionCorrect);
-    setAnswers(session.answers);
-    setOrderedSoal(session.orderedSoal);
-    setQuestionLevels(session.questionLevels);
-  }, [session]);
+    if (!hasHydrated || session) return;
+    const built = buildInitialSession(
+      soalList,
+      adaptiveLevel,
+      useProgressStore.getState().quizSessions[materiId],
+    );
+    setSession(built);
+    setQIndex(built.startIndex);
+    setSessionCorrect(built.sessionCorrect);
+    setAnswers(built.answers);
+    setOrderedSoal(built.orderedSoal);
+    setQuestionLevels(built.questionLevels);
+  }, [hasHydrated, session, soalList, adaptiveLevel, materiId]);
 
   useEffect(() => {
     stopSpeaking();
@@ -72,7 +70,7 @@ export function KuisEngine({
 
   useEffect(() => () => stopSpeaking(), []);
 
-  if (!session) {
+  if (!session || orderedSoal.length === 0) {
     return null;
   }
 
