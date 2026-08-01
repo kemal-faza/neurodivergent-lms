@@ -8,6 +8,17 @@ export function speak(text: string, opts?: Partial<SpeechSynthesisUtterance>): v
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   if (opts) Object.assign(utterance, opts);
+
+  // Keep the spoken language Indonesian even when the browser's default voice
+  // is configured for another language.
+  utterance.lang = "id-ID";
+
+  const voices = window.speechSynthesis.getVoices();
+  const indonesianVoice = voices.find((voice) =>
+    voice.lang.toLowerCase().startsWith("id")
+  );
+  if (indonesianVoice) utterance.voice = indonesianVoice;
+
   window.speechSynthesis.speak(utterance);
 }
 
