@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { CheckCircle, XCircle, Flame, Star, TrendingUp, AlertCircle, ChevronRight, Volume2, Square } from "lucide-react";
+import { CheckCircle, XCircle, Flame, Star, TrendingUp, AlertCircle, ChevronRight, Volume2, Square, ArrowLeft } from "lucide-react";
 import type { Soal } from "@/lib/types";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { toBionic } from "@/lib/bionic";
@@ -41,6 +41,7 @@ export function KuisEngine({
   const [sessionCorrect, setSessionCorrect] = useState<number[]>([]);
   const [quizStreak, setQuizStreak] = useState(0);
   const [answers, setAnswers] = useState<Record<number, { selected: number; isCorrect: boolean }>>({});
+  const [tempAnswers, setTempAnswers] = useState<Record<number, number>>({});
   const [orderedSoal, setOrderedSoal] = useState<Soal[]>([]);
   const [questionLevels, setQuestionLevels] = useState<number[]>([]);
   const [isPlayingTts, setIsPlayingTts] = useState(false);
@@ -115,6 +116,9 @@ export function KuisEngine({
       materiId,
       Math.round((sessionAnswers.length / soalList.length) * 100),
     );
+    const newTempAnswers = { ...tempAnswers };
+    delete newTempAnswers[qIndex];
+    setTempAnswers(newTempAnswers);
   };
 
   const canAdvance =
@@ -122,9 +126,16 @@ export function KuisEngine({
 
   const handleNext = () => {
     if (canAdvance) {
+      if (selected !== null && !submitted) {
+        setTempAnswers({ ...tempAnswers, [qIndex]: selected });
+      }
       setSelected(null);
       setSubmitted(false);
       setQIndex(qIndex + 1);
+      const nextIndex = qIndex + 1;
+      if (tempAnswers[nextIndex] !== undefined) {
+        setSelected(tempAnswers[nextIndex]);
+      }
     } else {
       const correct = sessionCorrect.filter(Boolean).length;
       const sessionAnswers = Object.keys(answers)
@@ -148,11 +159,42 @@ export function KuisEngine({
 
   const handleJumpToQuestion = (index: number) => {
     if (index === qIndex || index > Object.keys(answers).length) return;
+    
+    if (selected !== null && !submitted) {
+      setTempAnswers({ ...tempAnswers, [qIndex]: selected });
+    }
+    
     setQIndex(index);
     const answer = answers[index];
     if (answer) {
       setSelected(answer.selected);
       setSubmitted(true);
+    } else if (tempAnswers[index] !== undefined) {
+      setSelected(tempAnswers[index]);
+      setSubmitted(false);
+    } else {
+      setSelected(null);
+      setSubmitted(false);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (qIndex === 0) return;
+    
+    if (selected !== null && !submitted) {
+      setTempAnswers({ ...tempAnswers, [qIndex]: selected });
+    }
+    
+    const prevIndex = qIndex - 1;
+    setQIndex(prevIndex);
+    
+    const prevAnswer = answers[prevIndex];
+    if (prevAnswer) {
+      setSelected(prevAnswer.selected);
+      setSubmitted(true);
+    } else if (tempAnswers[prevIndex] !== undefined) {
+      setSelected(tempAnswers[prevIndex]);
+      setSubmitted(false);
     } else {
       setSelected(null);
       setSubmitted(false);
@@ -179,6 +221,14 @@ export function KuisEngine({
   const nextStoredLevel = questionLevels[qIndex + 1];
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 font-sans">
+      <button
+        type="button"
+        onClick={() => router.push(backUrl)}
+        className="inline-flex items-center gap-1.5 text-xs font-sans font-medium text-muted hover:text-fg mb-3 transition-colors"
+      >
+        <ArrowLeft size={14} /> Keluar dari Kuis
+      </button>
+
       <div className="mb-6 space-y-3">
 
 
@@ -336,10 +386,15 @@ export function KuisEngine({
           <div className="flex justify-between pt-3">
             <button
               type="button"
-              onClick={() => router.push(backUrl)}
-              className="px-4 py-2 text-xs border-2 border-border text-fg rounded-xl hover:bg-muted/10 font-sans font-semibold min-h-[44px]"
+              onClick={handlePrevious}
+              disabled={qIndex === 0}
+              className={`px-4 py-2 text-xs border-2 rounded-xl font-sans font-semibold min-h-[44px] flex items-center gap-1.5 transition-all ${
+                qIndex === 0
+                  ? "border-border text-muted bg-muted/10 cursor-not-allowed opacity-50"
+                  : "border-border text-fg hover:bg-muted/10"
+              }`}
             >
-              Kembali
+              <ArrowLeft size={14} /> Soal Sebelumnya
             </button>
 
             {!submitted ? (
