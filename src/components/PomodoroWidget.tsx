@@ -23,10 +23,10 @@ export function PomodoroWidget() {
   const isFocus = mode === "focus";
 
   return (
-    <div className="fixed bottom-24 right-3 sm:bottom-5 sm:right-5 z-40 w-56 bg-card border-2 border-border rounded-xl shadow-2xl p-4 font-sans">
+    <div className="fixed bottom-24 right-3 sm:bottom-24 sm:right-5 z-40 w-56 bg-card border-2 border-border rounded-xl shadow-2xl p-4 font-sans">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-1.5">
-          <Timer size={14} className={isFocus ? "text-fg" : "text-emerald-600"} />
+          <Timer size={14} className={isFocus ? "text-fg" : "text-emerald-700 dark:text-emerald-400"} />
           <span className="text-xs font-bold font-lexend text-fg">Pomodoro</span>
         </div>
         <div className="flex items-center gap-1.5">
@@ -34,7 +34,7 @@ export function PomodoroWidget() {
             className={`px-2 py-0.5 rounded-full border text-[10px] font-sans font-semibold ${
               isFocus
                 ? "border-fg bg-fg/10 text-fg"
-                : "border-emerald-500/40 bg-emerald-500/15 text-emerald-600"
+                : "border-emerald-500/40 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
             }`}
           >
             {isFocus ? "Fokus" : "Istirahat"}
@@ -50,7 +50,7 @@ export function PomodoroWidget() {
       <div className="text-center py-2">
         <span
           className={`text-3xl font-mono font-bold ${
-            isFocus ? "text-fg" : "text-emerald-600"
+            isFocus ? "text-fg" : "text-emerald-700 dark:text-emerald-400"
           }`}
         >
           {formatTime(remainingSec)}
