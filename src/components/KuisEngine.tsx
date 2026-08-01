@@ -8,7 +8,7 @@ import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { toBionic } from "@/lib/bionic";
 import { speak, stopSpeaking } from "@/lib/tts";
 import { nextQuestionLevel, selectNextSoal } from "@/lib/adaptive";
-import { buildInitialSession, type InitialSession } from "@/lib/quiz-session";
+import { buildInitialSession, trailingCorrectStreak, type InitialSession } from "@/lib/quiz-session";
 import { useProgressStore } from "@/stores/progressStore";
 
 
@@ -18,7 +18,6 @@ interface KuisEngineProps {
   onFinishSession: (correct: number, total: number) => void;
   backUrl: string;
   poin: number;
-  streak: number;
   adaptiveLevel: number;
 }
 
@@ -28,7 +27,6 @@ export function KuisEngine({
   onFinishSession,
   backUrl,
   poin,
-  streak,
   adaptiveLevel,
 }: KuisEngineProps) {
   const router = useRouter();
@@ -41,6 +39,7 @@ export function KuisEngine({
   const [selected, setSelected] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [sessionCorrect, setSessionCorrect] = useState<number[]>([]);
+  const [quizStreak, setQuizStreak] = useState(0);
   const [answers, setAnswers] = useState<Record<number, { selected: number; isCorrect: boolean }>>({});
   const [orderedSoal, setOrderedSoal] = useState<Soal[]>([]);
   const [questionLevels, setQuestionLevels] = useState<number[]>([]);
@@ -57,6 +56,7 @@ export function KuisEngine({
     setSession(built);
     setQIndex(built.startIndex);
     setSessionCorrect(built.sessionCorrect);
+    setQuizStreak(trailingCorrectStreak(built.sessionCorrect));
     setAnswers(built.answers);
     setOrderedSoal(built.orderedSoal);
     setQuestionLevels(built.questionLevels);
@@ -88,6 +88,7 @@ export function KuisEngine({
     setSubmitted(true);
     const newSession = [...sessionCorrect, isCorrect ? 1 : 0];
     setSessionCorrect(newSession);
+    setQuizStreak(isCorrect ? quizStreak + 1 : 0);
     const currentLevel = questionLevels[qIndex] ?? adaptiveLevel;
     const nextLevel = nextQuestionLevel(currentLevel, isCorrect);
     const usedIds = orderedSoal.map((s) => s.id);
@@ -189,7 +190,7 @@ export function KuisEngine({
               <Star size={13} className="text-amber-500" /> {poin} pts
             </span>
             <span className="border-2 border-border px-2.5 py-1 rounded flex items-center gap-1.5">
-              <Flame size={13} className="text-amber-500" /> {streak} streak
+              <Flame size={13} className="text-amber-500" /> {quizStreak} streak benar
             </span>
           </div>
         </div>
