@@ -15,6 +15,9 @@ import { playChime } from "./pomodoro-audio";
 
 const IDB_AVAILABLE = typeof indexedDB !== "undefined";
 
+/** Throttle IndexedDB writes while running to avoid per-second jank. */
+const PERSIST_INTERVAL_MS = 10_000;
+
 export function usePomodoro(enabled: boolean) {
   const [snapshot, setSnapshot] = useState<PomodoroSnapshot>(() =>
     initialSnapshot(Date.now()),
@@ -22,6 +25,7 @@ export function usePomodoro(enabled: boolean) {
   const [loaded, setLoaded] = useState(false);
   const snapshotRef = useRef(snapshot);
   snapshotRef.current = snapshot;
+  const lastPersistAtRef = useRef(0);
 
   // Load snapshot from IndexedDB on mount.
   useEffect(() => {
@@ -42,10 +46,12 @@ export function usePomodoro(enabled: boolean) {
     };
   }, []);
 
-  // Persist snapshot on every change (after load).
+  // Persist snapshot — immediately on pause, throttled while running (after load).
   useEffect(() => {
-    if (!loaded) return;
-    if (IDB_AVAILABLE) {
+    if (!loaded || !IDB_AVAILABLE) return;
+    const now = Date.now();
+    if (!snapshot.running || now - lastPersistAtRef.current >= PERSIST_INTERVAL_MS) {
+      lastPersistAtRef.current = now;
       set(POMODORO_STORAGE_KEY, snapshot).catch(() => {});
     }
   }, [snapshot, loaded]);
@@ -69,7 +75,31 @@ export function usePomodoro(enabled: boolean) {
     return () => clearInterval(id);
   }, [enabled, snapshot.running]);
 
-  // Pause & persist when disabled.
+  // Recompute immediately when the tab regains focus (skip throttled ticks).
+  useEffect(() => {
+    if (!enabled || typeof document === "undefined") return;
+    const handleVisibility = () => {
+      if (document.visibilityState !== "visible") return;
+      const cur = snapshotRef.current;
+      if (!cur.running) return;
+      const now = Date.now();
+      const next = computeRemaining(cur, now);
+      if (next.transitioned) {
+        playChime();
+      }
+      setSnapshot((prev) => ({
+        ...prev,
+        remainingSec: next.remainingSec,
+        mode: next.mode,
+        completedCycles: next.completedCycles,
+        updatedAt: new Date(now).toISOString(),
+      }));
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
+  }, [enabled]);
+
+  // Pause when disabled (persist effect writes immediately on pause).
   useEffect(() => {
     if (!enabled && snapshot.running) {
       setSnapshot((prev) => ({ ...prev, running: false }));
