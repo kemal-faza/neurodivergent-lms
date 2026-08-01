@@ -11,6 +11,7 @@ export default function KuisSubjekPage() {
   const router = useRouter();
   const subjek = getSubjekById(params.subjek);
   const getQuizProgress = useProgressStore((s) => s.getQuizProgress);
+  const quizProgress = useProgressStore((s) => s.quizProgress);
 
   if (!subjek) {
     return (
@@ -51,10 +52,9 @@ export default function KuisSubjekPage() {
 
       <div className="space-y-4">
         {materiList.map((materi) => {
-          const progress = getQuizProgress(materi.id);
-          const lastRatio = progress.lastAttempt
-            ? Math.round((progress.lastAttempt.correct / progress.lastAttempt.total) * 100)
-            : 0;
+          const progress = quizProgress[materi.id] ?? 0;
+          const selesai = progress >= 100;
+          const quiz = getQuizProgress(materi.id);
 
           return (
             <div
@@ -80,40 +80,46 @@ export default function KuisSubjekPage() {
                   href={`/kuis/${params.subjek}/${materi.id}`}
                   className="flex-shrink-0 px-5 py-2.5 text-xs font-sans font-semibold border-2 border-fg bg-fg text-bg rounded-xl hover:opacity-90 transition-all flex items-center justify-center gap-1.5 shadow-sm min-h-[44px]"
                 >
-                  {progress.isCompleted ? "Ulangi Kuis" : "Mulai Kuis"} <ChevronRight size={14} />
+                  {selesai ? "Ulangi Kuis" : progress > 0 ? "Lanjutkan Kuis" : "Mulai Kuis"}{" "}
+                  <ChevronRight size={14} />
                 </Link>
               </div>
 
               <div className="flex items-center gap-4 flex-wrap">
                 <div className="flex items-center gap-1.5">
-                  {progress.isCompleted ? (
+                  {selesai ? (
                     <CheckCircle size={14} className="text-emerald-500" />
                   ) : (
                     <Circle size={14} className="text-muted" />
                   )}
                   <span className="text-xs font-sans text-muted">
-                    {progress.isCompleted ? "Selesai" : "Belum Dikerjakan"}
+                    {selesai ? "Selesai" : "Belum Selesai"}
                   </span>
                 </div>
 
-                {progress.isCompleted && progress.bestScore !== null && (
+                {quiz.isCompleted && quiz.bestScore !== null && (
                   <>
                     <span className="h-4 w-px bg-border" aria-hidden="true" />
                     <span className="text-xs font-sans text-muted">
-                      Skor Terbaik: <strong className="text-fg">{progress.bestScore} pts</strong>
+                      Skor Terbaik:{" "}
+                      <strong className="text-fg">{quiz.bestScore} pts</strong>
                     </span>
-                    <span className="h-4 w-px bg-border" aria-hidden="true" />
-                    <div className="flex items-center gap-2">
-                      <div className="w-24 h-2 bg-muted/20 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-emerald-500 rounded-full transition-all"
-                          style={{ width: `${lastRatio}%` }}
-                        />
-                      </div>
-                      <span className="text-xs font-sans font-semibold text-fg">{lastRatio}%</span>
-                    </div>
                   </>
                 )}
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-1.5 bg-muted/20 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-fg rounded-full transition-all"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+                <span
+                  className={`text-[11px] font-bold font-mono ${selesai ? "text-fg" : "text-muted"}`}
+                >
+                  {progress}%
+                </span>
               </div>
             </div>
           );
