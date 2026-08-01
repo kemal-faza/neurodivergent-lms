@@ -7,6 +7,9 @@ import type { Soal } from "@/lib/types";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { toBionic } from "@/lib/bionic";
 import { speak, stopSpeaking } from "@/lib/tts";
+import { nextQuestionLevel, selectNextSoal } from "@/lib/adaptive";
+import { buildInitialSession, trailingCorrectStreak, type InitialSession } from "@/lib/quiz-session";
+import { useProgressStore } from "@/stores/progressStore";
 
 
 interface KuisEngineProps {
@@ -15,7 +18,6 @@ interface KuisEngineProps {
   onFinishSession: (correct: number, total: number) => void;
   backUrl: string;
   poin: number;
-  streak: number;
   adaptiveLevel: number;
 }
 
@@ -25,20 +27,40 @@ export function KuisEngine({
   onFinishSession,
   backUrl,
   poin,
-  streak,
   adaptiveLevel,
 }: KuisEngineProps) {
   const router = useRouter();
   const bionic = useAccessibilityStore((s) => s.bionic);
   const ttsEnabled = useAccessibilityStore((s) => s.ttsEnabled);
   const focusMode = useAccessibilityStore((s) => s.focusMode);
+  const hasHydrated = useProgressStore((s) => s.hasHydrated);
+  const [session, setSession] = useState<InitialSession | null>(null);
   const [qIndex, setQIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [sessionCorrect, setSessionCorrect] = useState<number[]>([]);
+  const [quizStreak, setQuizStreak] = useState(0);
   const [answers, setAnswers] = useState<Record<number, { selected: number; isCorrect: boolean }>>({});
+  const [orderedSoal, setOrderedSoal] = useState<Soal[]>([]);
+  const [questionLevels, setQuestionLevels] = useState<number[]>([]);
   const [isPlayingTts, setIsPlayingTts] = useState(false);
   const [questionFocused, setQuestionFocused] = useState(false);
+
+  useEffect(() => {
+    if (!hasHydrated || session) return;
+    const built = buildInitialSession(
+      soalList,
+      adaptiveLevel,
+      useProgressStore.getState().quizSessions[materiId],
+    );
+    setSession(built);
+    setQIndex(built.startIndex);
+    setSessionCorrect(built.sessionCorrect);
+    setQuizStreak(trailingCorrectStreak(built.sessionCorrect));
+    setAnswers(built.answers);
+    setOrderedSoal(built.orderedSoal);
+    setQuestionLevels(built.questionLevels);
+  }, [hasHydrated, session, soalList, adaptiveLevel, materiId]);
 
   useEffect(() => {
     stopSpeaking();
@@ -48,34 +70,84 @@ export function KuisEngine({
 
   useEffect(() => () => stopSpeaking(), []);
 
-  const q = soalList[qIndex] || soalList[0];
+  if (!session || orderedSoal.length === 0) {
+    return null;
+  }
+
+  const q = orderedSoal[qIndex] || orderedSoal[0];
   const totalQ = soalList.length;
   const isCorrect = selected === q.benar;
 
   const handleSubmit = () => {
     if (selected === null) return;
-    setSubmitted(true);
-    setAnswers((prev) => ({
-      ...prev,
+    const nextAnswers = {
+      ...answers,
       [qIndex]: { selected: selected!, isCorrect },
-    }));
+    };
+    setAnswers(nextAnswers);
+    setSubmitted(true);
     const newSession = [...sessionCorrect, isCorrect ? 1 : 0];
     setSessionCorrect(newSession);
+    setQuizStreak(isCorrect ? quizStreak + 1 : 0);
+    const currentLevel = questionLevels[qIndex] ?? adaptiveLevel;
+    const nextLevel = nextQuestionLevel(currentLevel, isCorrect);
+    const usedIds = orderedSoal.map((s) => s.id);
+    const nextSoal = selectNextSoal(soalList, nextLevel, usedIds);
+    const nextOrderedSoal = nextSoal
+      ? [...orderedSoal, nextSoal]
+      : orderedSoal;
+    const nextQuestionLevels = nextSoal
+      ? [...questionLevels, nextLevel]
+      : questionLevels;
+    setOrderedSoal(nextOrderedSoal);
+    setQuestionLevels(nextQuestionLevels);
+    const sessionAnswers = Object.keys(nextAnswers)
+      .map(Number)
+      .sort((a, b) => a - b)
+      .map((i) => nextAnswers[i]);
+    useProgressStore.getState().saveQuizSession(materiId, {
+      soalIds: nextOrderedSoal.map((s) => s.id),
+      levels: nextQuestionLevels,
+      answers: sessionAnswers,
+      updatedAt: new Date().toISOString(),
+    });
+    useProgressStore.getState().setQuizProgress(
+      materiId,
+      Math.round((sessionAnswers.length / soalList.length) * 100),
+    );
   };
 
+  const canAdvance =
+    qIndex + 1 < soalList.length && qIndex + 1 < orderedSoal.length;
+
   const handleNext = () => {
-    if (qIndex + 1 < soalList.length) {
+    if (canAdvance) {
       setSelected(null);
       setSubmitted(false);
       setQIndex(qIndex + 1);
     } else {
       const correct = sessionCorrect.filter(Boolean).length;
+      const sessionAnswers = Object.keys(answers)
+        .map(Number)
+        .sort((a, b) => a - b)
+        .map((i) => answers[i]);
+      useProgressStore.getState().saveQuizResult({
+        materiId,
+        soalIds: orderedSoal.map((s) => s.id),
+        levels: questionLevels,
+        answers: sessionAnswers,
+        correct,
+        total: soalList.length,
+        date: new Date().toISOString(),
+      });
+      useProgressStore.getState().setQuizProgress(materiId, 100);
+      useProgressStore.getState().clearQuizSession(materiId);
       onFinishSession(correct, soalList.length);
     }
   };
 
   const handleJumpToQuestion = (index: number) => {
-    if (index === qIndex) return;
+    if (index === qIndex || index > Object.keys(answers).length) return;
     setQIndex(index);
     const answer = answers[index];
     if (answer) {
@@ -101,7 +173,10 @@ export function KuisEngine({
     }
   };
 
-  const levelLabel = adaptiveLevel === 1 ? "Mudah" : adaptiveLevel === 2 ? "Sedang" : "Sulit";
+  const levelLabel = (level: number) =>
+    level === 1 ? "Mudah" : level === 2 ? "Sedang" : "Sulit";
+  const currentLevel = questionLevels[qIndex] ?? adaptiveLevel;
+  const nextStoredLevel = questionLevels[qIndex + 1];
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 font-sans">
       <div className="mb-6 space-y-3">
@@ -110,7 +185,7 @@ export function KuisEngine({
         <div className={`flex items-center gap-4 flex-wrap justify-between bg-card border-2 border-border p-4 rounded-xl shadow-sm ${focusMode && questionFocused ? "focus-dimmed" : ""}`}>
           <div className="border-2 border-border rounded-lg px-3 py-1.5 text-xs font-sans font-semibold flex items-center gap-1.5">
             <TrendingUp size={14} />
-            <span>Level: <strong>{levelLabel}</strong></span>
+            <span>Level: <strong>{levelLabel(currentLevel)}</strong></span>
           </div>
 
           <div className="flex items-center gap-3 flex-1 min-w-[200px]">
@@ -128,7 +203,7 @@ export function KuisEngine({
               <Star size={13} className="text-amber-500" /> {poin} pts
             </span>
             <span className="border-2 border-border px-2.5 py-1 rounded flex items-center gap-1.5">
-              <Flame size={13} className="text-amber-500" /> {streak} streak
+              <Flame size={13} className="text-amber-500" /> {quizStreak} streak benar
             </span>
           </div>
         </div>
@@ -247,6 +322,12 @@ export function KuisEngine({
                       ? "Bagus sekali! Pemahaman kamu mengenai materi ini sudah sangat tepat. Lanjutkan ke pertanyaan berikutnya."
                       : "Jangan berkecil hati! Pelajari kembali poin utama materi jika perlu. Tingkat kesulitan soal berikutnya akan disesuaikan."}
                   </p>
+                  {nextStoredLevel !== undefined &&
+                    nextStoredLevel !== currentLevel && (
+                      <p className="text-xs font-sans font-semibold text-fg">
+                        Level soal berikutnya: {levelLabel(nextStoredLevel)}
+                      </p>
+                    )}
                 </div>
               </div>
             </div>
@@ -280,7 +361,7 @@ export function KuisEngine({
                 onClick={handleNext}
                 className="px-6 py-2.5 text-xs font-sans font-semibold border-2 border-fg bg-fg text-bg rounded-xl hover:opacity-90 flex items-center gap-2 shadow-sm min-h-[44px]"
               >
-                {qIndex + 1 < soalList.length ? "Soal Berikutnya" : "Lihat Hasil →"} <ChevronRight size={14} />
+                {canAdvance ? "Soal Berikutnya" : "Lihat Hasil →"} <ChevronRight size={14} />
               </button>
             )}
           </div>
@@ -293,6 +374,7 @@ export function KuisEngine({
               {soalList.map((_, i) => {
                 const answer = answers[i];
                 const isCurrent = i === qIndex;
+                const isFuture = i > Object.keys(answers).length;
                 let cls = "border-2 border-border text-muted";
                 if (isCurrent) {
                   cls = "bg-fg text-bg ring-2 ring-fg";
@@ -314,9 +396,11 @@ export function KuisEngine({
                     key={i}
                     type="button"
                     onClick={() => handleJumpToQuestion(i)}
+                    disabled={isFuture}
+                    aria-disabled={isFuture}
                     aria-current={isCurrent ? "step" : undefined}
                     aria-label={`Soal ${i + 1}, ${stateLabel}`}
-                    className={`w-9 h-9 rounded-full text-xs font-sans font-semibold flex items-center justify-center transition-all ${cls}`}
+                    className={`w-9 h-9 rounded-full text-xs font-sans font-semibold flex items-center justify-center transition-all ${cls} ${isFuture ? "opacity-40 cursor-not-allowed" : ""}`}
                   >
                     {i + 1}
                   </button>

@@ -11,7 +11,6 @@ export default function KuisPage() {
   const kuis = getKuis(params.id || "q1");
 
   const poin = useProgressStore((s) => s.poin);
-  const streak = useProgressStore((s) => s.streak);
   const adaptiveLevel = useProgressStore((s) => s.adaptiveLevel);
   const recordQuiz = useProgressStore((s) => s.recordQuiz);
 
@@ -28,7 +27,7 @@ export default function KuisPage() {
 
   const handleFinish = (correct: number, total: number) => {
     recordQuiz(kuis.id, correct, total);
-    router.push("/dashboard");
+    router.push(`/hasil/${kuis.materiId}?back=/belajar`);
   };
 
   return (
@@ -38,7 +37,6 @@ export default function KuisPage() {
       onFinishSession={handleFinish}
       backUrl="/belajar"
       poin={poin}
-      streak={streak}
       adaptiveLevel={adaptiveLevel}
     />
   );

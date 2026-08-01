@@ -78,6 +78,28 @@ export interface QuizAttempt {
   date: string;
 }
 
+export interface QuizSessionAnswer {
+  selected: number;
+  isCorrect: boolean;
+}
+
+export interface QuizSession {
+  soalIds: string[];
+  levels: number[];
+  answers: QuizSessionAnswer[];
+  updatedAt: string;
+}
+
+export interface QuizResult {
+  materiId: string;
+  soalIds: string[];
+  levels: number[];
+  answers: QuizSessionAnswer[];
+  correct: number;
+  total: number;
+  date: string;
+}
+
 export interface ProgressState {
   userId: string;
   poin: number;
@@ -99,4 +121,10 @@ export interface ProgressState {
   dailyPoints: Record<string, number>;
   /** Materi id -> 0-100 reading progress. */
   materiProgress: Record<string, number>;
+  /** Materi id -> 0-100 quiz progress (answered questions / total). */
+  quizProgress: Record<string, number>;
+  /** Materi id -> in-progress quiz session snapshot (for resume). */
+  quizSessions: Record<string, QuizSession>;
+  /** Last completed quiz result snapshot, used by the results page. */
+  lastQuizResult: QuizResult | null;
 }

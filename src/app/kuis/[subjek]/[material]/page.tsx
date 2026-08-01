@@ -12,7 +12,6 @@ export default function KuisMaterialPage() {
   const materi = getMateriById(params.material);
 
   const poin = useProgressStore((s) => s.poin);
-  const streak = useProgressStore((s) => s.streak);
   const adaptiveLevel = useProgressStore((s) => s.adaptiveLevel);
   const recordQuizSession = useProgressStore((s) => s.recordQuizSession);
 
@@ -42,7 +41,7 @@ export default function KuisMaterialPage() {
 
   const handleFinish = (correct: number, total: number) => {
     recordQuizSession(materi.id, correct, total);
-    router.push(`/kuis/${params.subjek}`);
+    router.push(`/hasil/${materi.id}`);
   };
 
   const backUrl = searchParams.get("back") ?? `/kuis/${params.subjek}`;
@@ -54,7 +53,6 @@ export default function KuisMaterialPage() {
       onFinishSession={handleFinish}
       backUrl={backUrl}
       poin={poin}
-      streak={streak}
       adaptiveLevel={adaptiveLevel}
     />
   );

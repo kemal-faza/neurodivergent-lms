@@ -3,7 +3,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { idbStorage } from "./storage";
-import type { ProgressState } from "../lib/types";
+import type { ProgressState, QuizResult, QuizSession } from "../lib/types";
 import { INITIAL_PROGRESS, nextAdaptiveLevel, scoreToRatio, quizPoints } from "../lib/adaptive";
 
 interface ProgressStore extends ProgressState {
@@ -13,10 +13,15 @@ interface ProgressStore extends ProgressState {
   recordQuiz: (kuisId: string, correct: number, total: number) => void;
   /** Record a full quiz session (batch); updates best score, attempts history, and points. */
   recordQuizSession: (materiId: string, correct: number, total: number) => void;
-  /** Get progress for a specific material quiz. */
+  /** Get quiz result summary for a material quiz (completion, best score, last attempt). */
   getQuizProgress: (materiId: string) => { isCompleted: boolean; bestScore: number | null; lastAttempt: { correct: number; total: number } | null };
   addBadge: (id: string) => void;
   setMateriProgress: (id: string, progress: number) => void;
+  /** Set answered-questions progress (0-100) for a material quiz. */
+  setQuizProgress: (id: string, progress: number) => void;
+  saveQuizSession: (id: string, session: QuizSession) => void;
+  clearQuizSession: (id: string) => void;
+  saveQuizResult: (result: QuizResult) => void;
   completeMateri: (id: string) => void;
   /** Call when the learner is active on a new day to extend the streak. */
   bumpStreak: () => void;
@@ -89,6 +94,24 @@ export const useProgressStore = create<ProgressStore>()(
         set((s) => ({
           materiProgress: { ...s.materiProgress, [id]: Math.min(100, Math.max(0, progress)) },
         })),
+      setQuizProgress: (id, progress) =>
+        set((s) => ({
+          quizProgress: {
+            ...s.quizProgress,
+            [id]: Math.min(100, Math.max(0, progress)),
+          },
+        })),
+      saveQuizSession: (id, session) =>
+        set((s) => ({
+          quizSessions: { ...s.quizSessions, [id]: session },
+        })),
+      clearQuizSession: (id) =>
+        set((s) => {
+          const next = { ...s.quizSessions };
+          delete next[id];
+          return { quizSessions: next };
+        }),
+      saveQuizResult: (result) => set(() => ({ lastQuizResult: result })),
       completeMateri: (id) =>
         set((s) =>
           s.completedMateri.includes(id) ? s : { completedMateri: [...s.completedMateri, id] },
@@ -123,6 +146,9 @@ export const useProgressStore = create<ProgressStore>()(
         maxStreak: state.maxStreak,
         dailyPoints: state.dailyPoints,
         materiProgress: state.materiProgress,
+        quizProgress: state.quizProgress,
+        quizSessions: state.quizSessions,
+        lastQuizResult: state.lastQuizResult,
       }),
       onRehydrateStorage: () => (state) => state?.setHasHydrated(true),
     },
