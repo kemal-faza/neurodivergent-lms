@@ -124,7 +124,9 @@ export default function DashboardPage() {
       subjekId: m.subjekId,
       label: m.judul,
       progress: materiProgress[m.id] ?? 0,
-      quizScore: m.kuisId ? (quizScores[m.kuisId] ?? null) : null,
+      quizScore:
+        quizScores[m.id] ??
+        (m.kuisId ? (quizScores[m.kuisId] ?? null) : null),
     }));
     const avgProgress =
       materis.length > 0
