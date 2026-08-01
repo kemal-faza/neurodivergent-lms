@@ -73,6 +73,37 @@ describe("quiz progress & sessions", () => {
     store.clearQuizSession("m1");
     expect(useProgressStore.getState().quizSessions["m1"]).toBeUndefined();
   });
+
+  test("getQuizProgress.isCompleted is true when a score exists", () => {
+    useProgressStore.getState().recordQuizSession("m1", 11, 15);
+    const quiz = useProgressStore.getState().getQuizProgress("m1");
+    expect(quiz.isCompleted).toBe(true);
+    expect(quiz.bestScore).not.toBeNull();
+  });
+
+  test("getQuizProgress.isCompleted is false when no score exists", () => {
+    const quiz = useProgressStore.getState().getQuizProgress("never-attempted");
+    expect(quiz.isCompleted).toBe(false);
+    expect(quiz.bestScore).toBeNull();
+  });
+
+  test("migrateQuizProgress sets stale progress to 100 for completed quizzes", () => {
+    const store = useProgressStore.getState();
+    store.setQuizProgress("m1", 20);
+    store.recordQuizSession("m1", 11, 15);
+    useProgressStore.getState().migrateQuizProgress();
+    expect(useProgressStore.getState().quizProgress["m1"]).toBe(100);
+  });
+
+  test("migrateQuizProgress leaves uncompleted quizzes untouched", () => {
+    const store = useProgressStore.getState();
+    store.setQuizProgress("m1", 0);
+    store.recordQuizSession("m1", 5, 15);
+    store.setQuizProgress("m2", 40);
+    useProgressStore.getState().migrateQuizProgress();
+    expect(useProgressStore.getState().quizProgress["m1"]).toBe(100);
+    expect(useProgressStore.getState().quizProgress["m2"]).toBe(40);
+  });
 });
 
 describe("quiz result", () => {
