@@ -208,7 +208,7 @@ export function AccessibilityPanel() {
                     </div>
                   </button>
                   {key === "pomodoroEnabled" && s.pomodoroEnabled && !isMateriPage && (
-                    <div className="flex items-start gap-2 px-3.5 py-2.5 border-2 border-amber-500/40 bg-amber-500/15 text-amber-700 dark:text-amber-300 rounded-xl text-[10px] font-sans leading-tight">
+                    <div className="flex items-start gap-2 px-3.5 py-2.5 border-2 border-amber-500/40 bg-amber-500/15 text-amber-900 dark:text-amber-300 rounded-xl text-[10px] font-sans leading-tight">
                       <Info size={14} className="flex-shrink-0 mt-0.5" />
                       <span>
                         Timer Pomodoro aktif. Widget akan muncul saat kamu masuk ke halaman materi.
