@@ -127,6 +127,19 @@ export function KuisEngine({
       setQIndex(qIndex + 1);
     } else {
       const correct = sessionCorrect.filter(Boolean).length;
+      const sessionAnswers = Object.keys(answers)
+        .map(Number)
+        .sort((a, b) => a - b)
+        .map((i) => answers[i]);
+      useProgressStore.getState().saveQuizResult({
+        materiId,
+        soalIds: orderedSoal.map((s) => s.id),
+        levels: questionLevels,
+        answers: sessionAnswers,
+        correct,
+        total: soalList.length,
+        date: new Date().toISOString(),
+      });
       useProgressStore.getState().setQuizProgress(materiId, 100);
       useProgressStore.getState().clearQuizSession(materiId);
       onFinishSession(correct, soalList.length);
