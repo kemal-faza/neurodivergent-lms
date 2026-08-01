@@ -217,6 +217,32 @@ export function KuisEngine({
 
   const levelLabel = (level: number) =>
     level === 1 ? "Mudah" : level === 2 ? "Sedang" : "Sulit";
+
+  const getLevelStyles = (level: number) => {
+    switch (level) {
+      case 1:
+        return {
+          container: "bg-emerald-50 border-emerald-500 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-600",
+          icon: "text-emerald-600 dark:text-emerald-400"
+        };
+      case 2:
+        return {
+          container: "bg-amber-50 border-amber-500 text-amber-700 dark:bg-amber-950/30 dark:text-amber-300 dark:border-amber-600",
+          icon: "text-amber-600 dark:text-amber-400"
+        };
+      case 3:
+        return {
+          container: "bg-red-50 border-red-500 text-red-700 dark:bg-red-950/30 dark:text-red-300 dark:border-red-600",
+          icon: "text-red-600 dark:text-red-400"
+        };
+      default:
+        return {
+          container: "bg-card border-border text-fg",
+          icon: "text-fg"
+        };
+    }
+  };
+
   const currentLevel = questionLevels[qIndex] ?? adaptiveLevel;
   const nextStoredLevel = questionLevels[qIndex + 1];
   return (
@@ -233,8 +259,8 @@ export function KuisEngine({
 
 
         <div className={`flex items-center gap-4 flex-wrap justify-between bg-card border-2 border-border p-4 rounded-xl shadow-sm ${focusMode && questionFocused ? "focus-dimmed" : ""}`}>
-          <div className="border-2 border-border rounded-lg px-3 py-1.5 text-xs font-sans font-semibold flex items-center gap-1.5">
-            <TrendingUp size={14} />
+          <div className={`border-2 rounded-lg px-3 py-1.5 text-xs font-sans font-semibold flex items-center gap-1.5 transition-colors ${getLevelStyles(currentLevel).container}`}>
+            <TrendingUp size={14} className={getLevelStyles(currentLevel).icon} />
             <span>Level: <strong>{levelLabel(currentLevel)}</strong></span>
           </div>
 
