@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import {
   Sliders, X, Check, RotateCcw,
   Accessibility, BookOpen, Zap, Settings2,
-  Volume2, Eye, Ruler, Focus,
+  Volume2, Eye, Ruler, Focus, Timer,
 } from "lucide-react";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { CONTRAST_OPTIONS, FONT_OPTIONS } from "@/lib/constants";
@@ -26,6 +26,7 @@ const TOOLS: {
   { key: "bionic", label: "Bionic Reading", desc: "Highlight awal kata untuk fokus membaca", icon: Eye },
   { key: "lineGuide", label: "Line Guide Ruler", desc: "Garis bantu mengikuti kursor", icon: Ruler },
   { key: "focusMode", label: "Focus Mode", desc: "Fokus pada satu paragraf saja", icon: Focus },
+  { key: "pomodoroEnabled", label: "Timer Pomodoro", desc: "Timer 25/5 menit untuk sesi fokus", icon: Timer },
 ];
 
 export function AccessibilityPanel() {
@@ -61,7 +62,7 @@ export function AccessibilityPanel() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
-  const activeCount = [s.bionic, s.lineGuide, s.focusMode, s.ttsEnabled].filter(Boolean).length;
+  const activeCount = [s.bionic, s.lineGuide, s.focusMode, s.ttsEnabled, s.pomodoroEnabled].filter(Boolean).length;
 
   return (
     <div ref={panelRef} className="fixed bottom-4 right-3 sm:bottom-5 sm:right-5 z-50 font-sans flex flex-col items-end">

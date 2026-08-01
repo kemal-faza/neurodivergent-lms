@@ -12,6 +12,7 @@ import { useProgressStore } from "@/stores/progressStore";
 
 import { toBionic } from "@/lib/bionic";
 import { speak, stopSpeaking, isTTSAvailable } from "@/lib/tts";
+import { PomodoroWidget } from "@/components/PomodoroWidget";
 
 export default function MateriPage() {
   const params = useParams<{ subjek: string; material: string }>();
@@ -222,6 +223,8 @@ export default function MateriPage() {
           </span>
         )}
       </div>
+
+      <PomodoroWidget />
     </div>
   );
 }
