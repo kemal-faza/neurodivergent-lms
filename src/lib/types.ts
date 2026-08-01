@@ -90,6 +90,16 @@ export interface QuizSession {
   updatedAt: string;
 }
 
+export interface QuizResult {
+  materiId: string;
+  soalIds: string[];
+  levels: number[];
+  answers: QuizSessionAnswer[];
+  correct: number;
+  total: number;
+  date: string;
+}
+
 export interface ProgressState {
   userId: string;
   poin: number;
@@ -115,4 +125,6 @@ export interface ProgressState {
   quizProgress: Record<string, number>;
   /** Materi id -> in-progress quiz session snapshot (for resume). */
   quizSessions: Record<string, QuizSession>;
+  /** Last completed quiz result snapshot, used by the results page. */
+  lastQuizResult: QuizResult | null;
 }

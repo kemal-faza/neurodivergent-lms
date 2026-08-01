@@ -48,6 +48,7 @@ export const INITIAL_PROGRESS: ProgressState = {
   materiProgress: {},
   quizProgress: {},
   quizSessions: {},
+  lastQuizResult: null,
 };
 
 /**

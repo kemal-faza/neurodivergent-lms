@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import { useProgressStore } from "./progressStore";
-import type { QuizSession } from "../lib/types";
+import type { QuizResult, QuizSession } from "../lib/types";
 
 beforeEach(() => {
   useProgressStore.getState().reset();
@@ -72,5 +72,35 @@ describe("quiz progress & sessions", () => {
     });
     store.clearQuizSession("m1");
     expect(useProgressStore.getState().quizSessions["m1"]).toBeUndefined();
+  });
+});
+
+describe("quiz result", () => {
+  test("saveQuizResult stores the result", () => {
+    const result: QuizResult = {
+      materiId: "m1",
+      soalIds: ["a", "b"],
+      levels: [1, 2],
+      answers: [{ selected: 0, isCorrect: true }],
+      correct: 1,
+      total: 2,
+      date: "2026-07-31T00:00:00.000Z",
+    };
+    useProgressStore.getState().saveQuizResult(result);
+    expect(useProgressStore.getState().lastQuizResult).toEqual(result);
+  });
+
+  test("reset clears lastQuizResult to null", () => {
+    useProgressStore.getState().saveQuizResult({
+      materiId: "m1",
+      soalIds: ["a"],
+      levels: [1],
+      answers: [{ selected: 0, isCorrect: true }],
+      correct: 1,
+      total: 1,
+      date: "2026-07-31T00:00:00.000Z",
+    });
+    useProgressStore.getState().reset();
+    expect(useProgressStore.getState().lastQuizResult).toBeNull();
   });
 });
