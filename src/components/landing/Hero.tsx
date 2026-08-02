@@ -20,7 +20,6 @@ export function Hero() {
   const bionic = useAccessibilityStore((s) => s.bionic);
   const focusMode = useAccessibilityStore((s) => s.focusMode);
   const setSetting = useAccessibilityStore((s) => s.setSetting);
-  const applyProfile = useAccessibilityStore((s) => s.applyProfile);
 
   const [activeDemoIndex, setActiveDemoIndex] = useState(0);
 
@@ -114,10 +113,7 @@ export function Hero() {
         <div className="flex flex-wrap items-center justify-center gap-3 mt-1 w-full sm:w-auto">
           <button
             type="button"
-            onClick={() => {
-              applyProfile("disleksia");
-              router.push("/belajar");
-            }}
+            onClick={() => router.push("/belajar")}
             className="w-full sm:w-auto px-6 py-3.5 text-sm font-sans font-semibold bg-fg text-bg rounded-xl hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-95 cursor-pointer min-h-[44px]"
           >
             Mulai Belajar Sekarang
