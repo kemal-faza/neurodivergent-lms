@@ -34,6 +34,13 @@ describe("progressStore", () => {
     useProgressStore.getState().completeMateri("m1");
     expect(useProgressStore.getState().completedMateri).toEqual(["m1"]);
   });
+
+  test("ignores non-finite materi progress values", () => {
+    useProgressStore.getState().setMateriProgress("m1", 60);
+    useProgressStore.getState().setMateriProgress("m1", Number.NaN);
+    useProgressStore.getState().setMateriProgress("m1", Number.POSITIVE_INFINITY);
+    expect(useProgressStore.getState().materiProgress["m1"]).toBe(60);
+  });
 });
 
 describe("quiz progress & sessions", () => {
