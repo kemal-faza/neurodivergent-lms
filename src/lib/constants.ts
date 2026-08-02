@@ -12,6 +12,7 @@ export const DEFAULT_SETTINGS: AccessibilitySettings = {
   bionic: false,
   ttsEnabled: false,
   lineGuide: false,
+  pomodoroEnabled: false,
   focusMode: false,
 };
 
@@ -40,6 +41,7 @@ export const PROFILE_PRESETS: Record<Profile, Partial<AccessibilitySettings>> = 
     wordSpacing: 2,
     contrast: "normal",
     bionic: true,
+    pomodoroEnabled: true,
     focusMode: true,
     ttsEnabled: false,
     lineGuide: false,
