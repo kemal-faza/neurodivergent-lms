@@ -1,0 +1,42 @@
+url: http://localhost:3000/dashboard
+name: "Dashboard progress and material accordion"
+tags:
+  - dashboard
+  - regression
+---
+- launchApp:
+    clearState: true
+
+- extendedWaitUntil:
+    visible: "Halo, Pelajar LevelUp! Tetap Semangat Belajar!"
+    timeout: 10000
+
+- extendedWaitUntil:
+    visible: "Total Poin"
+    timeout: 10000
+
+- assertVisible: "120 pts"
+- assertVisible: "Streak Saat Ini"
+- assertVisible: "Badge Diraih"
+- assertVisible: "Level Adaptif"
+- assertVisible: "Sedang"
+
+- assertVisible: "Top Pelajar"
+- assertVisible: "Eka"
+- assertVisible: "Dewi"
+- assertVisible: "Budi"
+- assertVisible: "Kamu"
+- assertVisible: "Ani"
+- assertVisible: ".*Export PDF"
+
+- tapOn: "Ilmu Pengetahuan Alam"
+- assertVisible: "Fotosintesis"
+- assertVisible: "Sistem Tata Surya"
+- assertVisible: "Siklus Air"
+
+- tapOn:
+    text: "Mulai.*"
+    index: 0
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Pengertian & Fungsi Utama"

@@ -1,0 +1,32 @@
+url: http://localhost:3000/kuis
+name: "Quiz navigation"
+tags:
+  - navigation
+  - quiz
+---
+- launchApp:
+    clearState: true
+
+- extendedWaitUntil:
+    visible: "Pilih Mata Pelajaran"
+    timeout: 10000
+
+- assertVisible: "Ilmu Pengetahuan Alam"
+- assertVisible: "2 Kuis"
+
+- tapOn: "Ilmu Pengetahuan Alam"
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Fotosintesis"
+- assertVisible: "Sistem Tata Surya"
+- assertVisible: "Belum Dikerjakan"
+
+- tapOn:
+    text: "Mulai Kuis.*"
+    index: 0
+- waitForAnimationToEnd:
+    timeout: 3000
+
+- assertVisible: "Soal 1/15"
+- assertVisible: "Zat apa yang menyerap cahaya pada daun\\?"

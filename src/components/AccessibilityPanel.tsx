@@ -89,6 +89,7 @@ export function AccessibilityPanel() {
               </div>
             </div>
             <button
+              id="close-accessibility-panel-button"
               type="button"
               onClick={closeWithAnimation}
               className="p-1.5 text-muted hover:text-fg rounded-lg hover:bg-muted/10 min-h-[36px] min-w-[36px] flex items-center justify-center"

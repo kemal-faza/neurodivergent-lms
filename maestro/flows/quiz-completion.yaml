@@ -1,0 +1,237 @@
+url: http://localhost:3000/kuis/ipa/fotosintesis
+name: "Complete adaptive Fotosintesis quiz"
+tags:
+  - quiz
+  - regression
+---
+- launchApp:
+    clearState: true
+
+- extendedWaitUntil:
+    visible: "Soal 1/15"
+    timeout: 10000
+
+- assertVisible: "Zat apa yang menyerap cahaya pada daun\\?"
+
+- tapOn: "Klorofil"
+- scrollUntilVisible:
+    element: "Submit Jawaban"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Submit Jawaban"
+- assertVisible: "Jawaban Benar.*"
+- scrollUntilVisible:
+    element: "Soal Berikutnya.*"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Soal Berikutnya.*"
+- assertVisible: "Mengapa daun tampak hijau\\?"
+
+- tapOn: "Klorofil memantulkan cahaya hijau"
+- scrollUntilVisible:
+    element: "Submit Jawaban"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Submit Jawaban"
+- assertVisible: "Jawaban Benar.*"
+- scrollUntilVisible:
+    element: "Soal Berikutnya.*"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Soal Berikutnya.*"
+- assertVisible: "Apa yang digunakan reaksi gelap dari reaksi terang untuk membentuk glukosa\\?"
+
+- tapOn: "ATP"
+- scrollUntilVisible:
+    element: "Submit Jawaban"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Submit Jawaban"
+- assertVisible: "Jawaban Benar.*"
+- scrollUntilVisible:
+    element: "Soal Berikutnya.*"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Soal Berikutnya.*"
+- assertVisible: "Apa fungsi utama klorofil dalam reaksi fotosintesis\\?"
+
+- tapOn: "Menangkap energi cahaya"
+- scrollUntilVisible:
+    element: "Submit Jawaban"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Submit Jawaban"
+- assertVisible: "Jawaban Benar.*"
+- scrollUntilVisible:
+    element: "Soal Berikutnya.*"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Soal Berikutnya.*"
+- assertVisible: "Mengapa tanpa fotosintesis rantai makanan di Bumi tidak akan berjalan\\?"
+
+- tapOn: "Tumbuhan adalah produsen yang mengubah energi matahari menjadi makanan"
+- scrollUntilVisible:
+    element: "Submit Jawaban"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Submit Jawaban"
+- assertVisible: "Jawaban Benar.*"
+- scrollUntilVisible:
+    element: "Soal Berikutnya.*"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Soal Berikutnya.*"
+- assertVisible: "Apa yang dipecah oleh reaksi terang sehingga menghasilkan oksigen\\?"
+
+- tapOn: "Molekul air"
+- scrollUntilVisible:
+    element: "Submit Jawaban"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Submit Jawaban"
+- assertVisible: "Jawaban Benar.*"
+- scrollUntilVisible:
+    element: "Soal Berikutnya.*"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Soal Berikutnya.*"
+- assertVisible: "Di bagian tumbuhan mana fotosintesis terutama terjadi\\?"
+
+- tapOn: "Daun"
+- scrollUntilVisible:
+    element: "Submit Jawaban"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Submit Jawaban"
+- assertVisible: "Jawaban Benar.*"
+- scrollUntilVisible:
+    element: "Soal Berikutnya.*"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Soal Berikutnya.*"
+- assertVisible: "Kapan fotosintesis paling aktif terjadi pada tumbuhan\\?"
+
+- tapOn: "Saat ada cahaya matahari"
+- scrollUntilVisible:
+    element: "Submit Jawaban"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Submit Jawaban"
+- assertVisible: "Jawaban Benar.*"
+- scrollUntilVisible:
+    element: "Soal Berikutnya.*"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Soal Berikutnya.*"
+- assertVisible: "Di mana reaksi gelap \\(Siklus Calvin\\) terjadi di dalam kloroplas\\?"
+
+- tapOn: "Stroma"
+- scrollUntilVisible:
+    element: "Submit Jawaban"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Submit Jawaban"
+- assertVisible: "Jawaban Benar.*"
+- scrollUntilVisible:
+    element: "Soal Berikutnya.*"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Soal Berikutnya.*"
+- assertVisible: "Organel sel apa yang menjadi tempat berlangsungnya fotosintesis\\?"
+
+- tapOn: "Kloroplas"
+- scrollUntilVisible:
+    element: "Submit Jawaban"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Submit Jawaban"
+- assertVisible: "Jawaban Benar.*"
+- scrollUntilVisible:
+    element: "Soal Berikutnya.*"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Soal Berikutnya.*"
+- assertVisible: "Apa warna yang dipantulkan daun\\?"
+
+- tapOn: "Hijau"
+- scrollUntilVisible:
+    element: "Submit Jawaban"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Submit Jawaban"
+- assertVisible: "Jawaban Benar.*"
+- scrollUntilVisible:
+    element: "Soal Berikutnya.*"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Soal Berikutnya.*"
+- assertVisible: "Apa produk sampingan fotosintesis yang kita hirup\\?"
+
+- tapOn: "Oksigen"
+- scrollUntilVisible:
+    element: "Submit Jawaban"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Submit Jawaban"
+- assertVisible: "Jawaban Benar.*"
+- scrollUntilVisible:
+    element: "Soal Berikutnya.*"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Soal Berikutnya.*"
+- assertVisible: "Apa sumber energi utama untuk fotosintesis\\?"
+
+- tapOn: "Cahaya matahari"
+- scrollUntilVisible:
+    element: "Submit Jawaban"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Submit Jawaban"
+- assertVisible: "Jawaban Benar.*"
+- scrollUntilVisible:
+    element: "Soal Berikutnya.*"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Soal Berikutnya.*"
+- assertVisible: "Gas apa yang dibutuhkan tumbuhan untuk fotosintesis\\?"
+
+- tapOn: "Karbon dioksida"
+- scrollUntilVisible:
+    element: "Submit Jawaban"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Submit Jawaban"
+- assertVisible: "Jawaban Benar.*"
+- scrollUntilVisible:
+    element: "Soal Berikutnya.*"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Soal Berikutnya.*"
+- assertVisible: "Apa hasil utama fotosintesis selain oksigen\\?"
+
+- tapOn: 'Gula \(glukosa\)'
+- scrollUntilVisible:
+    element: "Submit Jawaban"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Submit Jawaban"
+- assertVisible: "Jawaban Benar.*"
+- scrollUntilVisible:
+    element: "Lihat Hasil.*"
+    direction: DOWN
+    timeout: 5000
+- tapOn:
+    text: "Lihat Hasil.*"
+
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "Hasil Kuis"
+- assertVisible: "15/15"
+- assertVisible: "170 pts"
+- assertVisible: "Selesai"
+
+- openLink: "http://localhost:3000/dashboard"
+- extendedWaitUntil:
+    visible: "290 pts"
+    timeout: 10000
+- assertVisible: "290 pts"
