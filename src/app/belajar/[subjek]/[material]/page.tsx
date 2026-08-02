@@ -13,6 +13,7 @@ import { useProgressStore } from "@/stores/progressStore";
 import { toBionic } from "@/lib/bionic";
 import { pauseSpeaking, resumeSpeaking, speak, stopSpeaking, isTTSAvailable } from "@/lib/tts";
 import { calculateReadingProgress } from "@/lib/reading-progress";
+import { PomodoroWidget } from "@/components/PomodoroWidget";
 
 export default function MateriPage() {
   const params = useParams<{ subjek: string; material: string }>();
@@ -261,6 +262,8 @@ export default function MateriPage() {
           </span>
         )}
       </div>
+
+      <PomodoroWidget />
     </div>
   );
 }
