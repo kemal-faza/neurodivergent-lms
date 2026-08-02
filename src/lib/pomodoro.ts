@@ -6,17 +6,32 @@ export interface PomodoroSnapshot {
   running: boolean;
   completedCycles: number;
   updatedAt: string;
+  /** Absolute timestamp when the current phase ends. Optional for legacy snapshots. */
+  endAt?: number | null;
 }
 
 export const FOCUS_SECONDS = 25 * 60;
 export const BREAK_SECONDS = 5 * 60;
 export const POMODORO_STORAGE_KEY = "levelup-pomodoro";
+export const POMODORO_PERSIST_INTERVAL_MS = 30_000;
+
+export type PomodoroPersistReason = "action" | "checkpoint";
+
+export function shouldPersistPomodoro(
+  reason: PomodoroPersistReason,
+  now: number,
+  lastPersistAt: number | null,
+): boolean {
+  if (reason === "action") return true;
+  return lastPersistAt === null || now - lastPersistAt >= POMODORO_PERSIST_INTERVAL_MS;
+}
 
 export interface PomodoroState {
   remainingSec: number;
   mode: PomodoroMode;
   completedCycles: number;
   transitioned: boolean;
+  endAt: number | null;
 }
 
 export function computeRemaining(
@@ -29,31 +44,37 @@ export function computeRemaining(
       mode: snapshot.mode,
       completedCycles: snapshot.completedCycles,
       transitioned: false,
+      endAt: snapshot.endAt ?? null,
     };
   }
-  const elapsed = Math.floor((now - new Date(snapshot.updatedAt).getTime()) / 1000);
-  const remaining = Math.max(0, snapshot.remainingSec - elapsed);
-  if (remaining > 0) {
-    return {
-      remainingSec: remaining,
-      mode: snapshot.mode,
-      completedCycles: snapshot.completedCycles,
-      transitioned: false,
-    };
+
+  // Use a stable deadline so delayed callbacks cannot make the timer run slow.
+  let endAt =
+    snapshot.endAt ??
+    new Date(snapshot.updatedAt).getTime() + Math.max(0, snapshot.remainingSec) * 1000;
+  let mode = snapshot.mode;
+  let completedCycles = snapshot.completedCycles;
+  let transitioned = false;
+
+  while (now >= endAt) {
+    transitioned = true;
+
+    if (mode === "focus") {
+      mode = "break";
+      endAt += BREAK_SECONDS * 1000;
+      completedCycles += 1;
+    } else {
+      mode = "focus";
+      endAt += FOCUS_SECONDS * 1000;
+    }
   }
-  if (snapshot.mode === "focus") {
-    return {
-      remainingSec: BREAK_SECONDS,
-      mode: "break",
-      completedCycles: snapshot.completedCycles + 1,
-      transitioned: true,
-    };
-  }
+
   return {
-    remainingSec: FOCUS_SECONDS,
-    mode: "focus",
-    completedCycles: snapshot.completedCycles,
-    transitioned: true,
+    remainingSec: Math.max(0, Math.ceil((endAt - now) / 1000)),
+    mode,
+    completedCycles,
+    transitioned,
+    endAt,
   };
 }
 
@@ -65,6 +86,7 @@ export function toggleRunning(
     ...snapshot,
     running: !snapshot.running,
     updatedAt: new Date(now).toISOString(),
+    endAt: snapshot.running ? null : now + snapshot.remainingSec * 1000,
   };
 }
 
@@ -76,6 +98,7 @@ export function initialSnapshot(now: number): PomodoroSnapshot {
     running: false,
     completedCycles: 0,
     updatedAt: new Date(now).toISOString(),
+    endAt: null,
   };
 }
 
@@ -90,6 +113,7 @@ export function resetPomodoro(
     running: false,
     completedCycles: snapshot.completedCycles,
     updatedAt: new Date(now).toISOString(),
+    endAt: null,
   };
 }
 
@@ -105,5 +129,6 @@ export function skipPomodoro(
     completedCycles:
       snapshot.mode === "focus" ? snapshot.completedCycles + 1 : snapshot.completedCycles,
     updatedAt: new Date(now).toISOString(),
+    endAt: null,
   };
 }
