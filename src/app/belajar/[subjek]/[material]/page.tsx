@@ -12,6 +12,7 @@ import { useProgressStore } from "@/stores/progressStore";
 
 import { toBionic } from "@/lib/bionic";
 import { pauseSpeaking, resumeSpeaking, speak, stopSpeaking, isTTSAvailable } from "@/lib/tts";
+import { calculateReadingProgress } from "@/lib/reading-progress";
 
 export default function MateriPage() {
   const params = useParams<{ subjek: string; material: string }>();
@@ -45,8 +46,7 @@ export default function MateriPage() {
       if (!el) return;
       const existing = useProgressStore.getState().materiProgress[materi.id] ?? 0;
       const { scrollTop, scrollHeight, clientHeight } = el;
-      const ratio = Math.min(1, scrollTop / (scrollHeight - clientHeight));
-      const pct = Math.round(20 + ratio * 80);
+      const pct = calculateReadingProgress(scrollTop, scrollHeight, clientHeight);
       const next = Math.max(existing, pct);
       setMateriProgress(materi.id, next);
       if (next >= 100) {

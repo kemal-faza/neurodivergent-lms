@@ -93,9 +93,15 @@ export const useProgressStore = create<ProgressStore>()(
       addBadge: (id) =>
         set((s) => (s.badge.includes(id) ? s : { badge: [...s.badge, id] })),
       setMateriProgress: (id, progress) =>
-        set((s) => ({
-          materiProgress: { ...s.materiProgress, [id]: Math.min(100, Math.max(0, progress)) },
-        })),
+        set((s) => {
+          if (!Number.isFinite(progress)) return s;
+          return {
+            materiProgress: {
+              ...s.materiProgress,
+              [id]: Math.min(100, Math.max(0, progress)),
+            },
+          };
+        }),
       setQuizProgress: (id, progress) =>
         set((s) => ({
           quizProgress: {
