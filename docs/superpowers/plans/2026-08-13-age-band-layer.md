@@ -58,15 +58,31 @@ In the `AccessibilitySettings` interface, right after the `profile: Profile | nu
   ageBand: AgeBand | null;
 ```
 
-- [ ] **Step 3: Verify types compile**
+- [ ] **Step 3: Add `ageBand: null` to `DEFAULT_SETTINGS` (keep tsc green)**
+
+Adding the **required** `ageBand` field to `AccessibilitySettings` immediately makes `constants.ts:4` (`DEFAULT_SETTINGS: AccessibilitySettings`) fail type-check, because it lacks `ageBand`. So update `DEFAULT_SETTINGS` **now**, in the same step, so the project stays compiling after this task.
+
+Open `src/lib/constants.ts`. In `DEFAULT_SETTINGS` (line 4-17), right after the `profile: null,` line (line 5), add:
+
+```ts
+export const DEFAULT_SETTINGS: AccessibilitySettings = {
+  profile: null,
+  ageBand: null,
+  /* ...rest unchanged... */
+};
+```
+
+This also guarantees `reset()` (store line 49 spreads `DEFAULT_SETTINGS`) restores `ageBand: null`. (Task 4 later wires `ageBand` into `SETTING_KEYS`/`partialize`/`applyProfile`; no need to re-touch `DEFAULT_SETTINGS` there.)
+
+- [ ] **Step 4: Verify types compile**
 
 Run: `npx tsc --noEmit`
-Expected: PASS (no type errors). `ageBand` is not yet consumed anywhere, so no errors expected.
+Expected: PASS. `ageBand` is now defined everywhere it's required; nothing consumes it yet, so no other errors.
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 5: Commit**
 
 ```bash
-git add src/lib/types.ts
+git add src/lib/types.ts src/lib/constants.ts
 git commit -m "feat(types): tambah AgeBand dan field ageBand"
 ```
 
@@ -248,8 +264,9 @@ git commit -m "feat(age-bands): tambah applyBandOverlay murni + test"
 
 **Files:**
 - Modify: `src/stores/accessibilityStore.ts:18` (interface signature), `:47` (impl), `:25-38` (SETTING_KEYS), `:56-70` (partialize)
-- Modify: `src/lib/constants.ts:4` (`DEFAULT_SETTINGS` — add `ageBand: null`)
 - Test: `src/stores/accessibilityStore.test.ts`
+
+> Note: `DEFAULT_SETTINGS` (`constants.ts:4`) already gained `ageBand: null` in Task 1 Step 3. Do **not** re-add it here.
 
 **Interfaces:**
 - Consumes: `applyBandOverlay` from `src/lib/age-bands.ts`; `AgeBand` from `src/lib/types.ts`.
@@ -323,19 +340,9 @@ const SETTING_KEYS: (keyof Settings)[] = [
 ];
 ```
 
-- [ ] **Step 4: Add `ageBand` to DEFAULT_SETTINGS**
+- [ ] **Step 4: `DEFAULT_SETTINGS` already updated in Task 1**
 
-In `src/lib/constants.ts`, `DEFAULT_SETTINGS` (line 4-17). After the `profile: null,` line (line 5), add:
-
-```ts
-export const DEFAULT_SETTINGS: AccessibilitySettings = {
-  profile: null,
-  ageBand: null,
-  ...
-};
-```
-
-This ensures `reset()` (which spreads `DEFAULT_SETTINGS`) restores `ageBand: null`.
+No action — `DEFAULT_SETTINGS` gained `ageBand: null` in Task 1 Step 3. `reset()` already spreads it, so nothing to do here.
 
 - [ ] **Step 5: Add `ageBand` to partialize**
 
@@ -421,13 +428,17 @@ git commit -m "feat(store): applyProfile terima ageBand opsional + persist"
 
 Open `src/app/page.tsx`. Add a `"use client"` already present (line 1). Add a state hook:
 
-**Important:** `page.tsx` is the landing; add `useState` import from React. The current file imports `"use client";` and no React hooks. Add:
+**Important:** `page.tsx` is the landing; add `useState` import from React. `Profile` is **already imported** at line 9 (`import type { Profile } from "@/lib/types";`) — do not re-import it. Add `AgeBand` to that existing import and add the two new imports:
 
 ```tsx
 import { useState } from "react";
-import type { Profile } from "@/lib/types";
-import type { AgeBand } from "@/lib/types";
 import { AGE_BAND_LABELS } from "@/lib/constants";
+```
+
+And update the existing type import at line 9:
+
+```tsx
+import type { AgeBand, Profile } from "@/lib/types";
 ```
 
 Add inside the `LandingPage` component, before the return:
