@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { idbStorage } from "./storage";
+import { idbStorage, markHydrated } from "./storage";
 import type { ProgressState, QuizResult, QuizSession } from "../lib/types";
 import { INITIAL_PROGRESS, nextAdaptiveLevel, scoreToRatio, quizPoints } from "../lib/adaptive";
 
@@ -171,6 +171,7 @@ export const useProgressStore = create<ProgressStore>()(
         lastQuizResult: state.lastQuizResult,
       }),
       onRehydrateStorage: () => (state) => {
+        markHydrated();
         state?.migrateQuizProgress();
         state?.setHasHydrated(true);
       },

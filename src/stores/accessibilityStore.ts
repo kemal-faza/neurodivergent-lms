@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { idbStorage } from "./storage";
+import { idbStorage, markHydrated } from "./storage";
 import type { AccessibilitySettings, Profile, AgeBand } from "../lib/types";
 import { DEFAULT_SETTINGS, PROFILE_PRESETS } from "../lib/constants";
 import { applyBandOverlay } from "../lib/age-bands";
@@ -76,7 +76,10 @@ export const useAccessibilityStore = create<AccessibilityStore>()(
           pomodoroEnabled: state.pomodoroEnabled,
           focusMode: state.focusMode,
         }) as Partial<AccessibilityStore>,
-      onRehydrateStorage: () => (state) => state?.setHasHydrated(true),
+      onRehydrateStorage: () => (state) => {
+        markHydrated();
+        state?.setHasHydrated(true);
+      },
     },
   ),
 );
