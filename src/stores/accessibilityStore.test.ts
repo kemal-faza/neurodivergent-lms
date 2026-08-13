@@ -45,8 +45,17 @@ describe("accessibilityStore", () => {
     useAccessibilityStore.getState().applyProfile("disleksia");
     useAccessibilityStore.getState().reset();
     const s = useAccessibilityStore.getState();
-    expect(s.profile).toBeNull();
+    // default profil = "umum", bukan null
+    expect(s.profile).toBe("umum");
     expect(s.fontFamily).toBe("default");
+    expect(s.ageBand).toBeNull();
+  });
+
+  test("default state on fresh load uses 'umum' profile", () => {
+    useAccessibilityStore.getState().reset();
+    const s = useAccessibilityStore.getState();
+    // SESUDAH reset/perubahan DEFAULT_SETTINGS, profil default "umum"
+    expect(s.profile).toBe("umum");
   });
 
   test("applyProfile with anak applies profile preset + age overlay", () => {
@@ -71,7 +80,7 @@ describe("accessibilityStore", () => {
     useAccessibilityStore.getState().applyProfile("disleksia", "anak");
     useAccessibilityStore.getState().reset();
     const s = useAccessibilityStore.getState();
-    expect(s.profile).toBeNull();
+    expect(s.profile).toBe("umum");
     expect(s.ageBand).toBeNull();
   });
 

@@ -1,8 +1,8 @@
 import type { AccessibilitySettings, Contrast, FontFamily, Profile, AgeBand } from "./types";
 
-/** Baseline settings before any profile is chosen. */
+/** Baseline settings: default profil "umum" saat fresh load; overridden by persisted preferences on rehydrate. */
 export const DEFAULT_SETTINGS: AccessibilitySettings = {
-  profile: null,
+  profile: "umum",
   ageBand: null,
   fontFamily: "default",
   fontSize: 18,
