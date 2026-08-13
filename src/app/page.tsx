@@ -6,7 +6,9 @@ import { ProfileCard } from "@/components/landing/ProfileCard";
 import { FeatureCard } from "@/components/landing/FeatureCard";
 import { FlowStep } from "@/components/landing/FlowStep";
 import { ObserverCTA } from "@/components/landing/ObserverCTA";
-import type { Profile } from "@/lib/types";
+import { useState } from "react";
+import { AGE_BAND_LABELS } from "@/lib/constants";
+import type { AgeBand, Profile } from "@/lib/types";
 import type { LucideIcon } from "lucide-react";
 
 const profiles: Array<{
@@ -91,6 +93,7 @@ const flowSteps = [
 ];
 
 export default function LandingPage() {
+  const [ageBand, setAgeBand] = useState<AgeBand>("dewasa");
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 font-sans">
       {/* Hero */}
@@ -120,8 +123,34 @@ export default function LandingPage() {
                 iconBgClass={p.iconBgClass}
                 iconClass={p.iconClass}
                 Icon={p.Icon}
+                ageBand={ageBand}
               />
             ))}
+          </div>
+
+          <div className="mt-6">
+            <h3 className="text-sm font-bold font-lexend text-fg mb-2">
+              Rentang Usia
+            </h3>
+            <p className="text-xs text-muted mb-3 font-sans">
+              Pengaturan visual disesuaikan dengan rentang usiamu. Bisa kamu ubah kapan saja.
+            </p>
+            <div className="grid grid-cols-3 gap-2 max-w-md">
+              {(["anak", "remaja", "dewasa"] as AgeBand[]).map((band) => (
+                <button
+                  key={band}
+                  type="button"
+                  onClick={() => setAgeBand(band)}
+                  className={`text-xs px-3 py-2.5 border-2 rounded-xl font-sans font-semibold min-h-[44px] transition-colors ${
+                    ageBand === band
+                      ? "border-fg bg-fg text-bg"
+                      : "border-border bg-card text-fg hover:bg-muted/10"
+                  }`}
+                >
+                  {AGE_BAND_LABELS[band]}
+                </button>
+              ))}
+            </div>
           </div>
         </section>
 

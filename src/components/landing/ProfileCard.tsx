@@ -5,7 +5,7 @@ import { ChevronRight, Check } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
-import type { Profile } from "@/lib/types";
+import type { Profile, AgeBand } from "@/lib/types";
 import { cn } from "@/lib/cn";
 
 interface ProfileCardProps {
@@ -20,11 +20,13 @@ interface ProfileCardProps {
   borderClass: string;
   iconBgClass: string;
   Icon: React.ComponentType<{ size?: number; className?: string; "aria-hidden"?: boolean }>;
+  ageBand: AgeBand;
 }
 
 export function ProfileCard({
   profile,
   Icon,
+  ageBand,
 }: ProfileCardProps) {
   const router = useRouter();
   const applyProfile = useAccessibilityStore((s) => s.applyProfile);
@@ -33,7 +35,7 @@ export function ProfileCard({
   const isActive = currentProfile === profile.id;
 
   const handleSelect = () => {
-    applyProfile(profile.id);
+    applyProfile(profile.id, ageBand);
     router.push("/belajar");
   };
 
