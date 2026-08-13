@@ -20,7 +20,7 @@ interface ProfileCardProps {
   borderClass: string;
   iconBgClass: string;
   Icon: React.ComponentType<{ size?: number; className?: string; "aria-hidden"?: boolean }>;
-  ageBand: AgeBand;
+  ageBand: AgeBand | null;
 }
 
 export function ProfileCard({
@@ -35,7 +35,7 @@ export function ProfileCard({
   const isActive = currentProfile === profile.id;
 
   const handleSelect = () => {
-    applyProfile(profile.id, ageBand);
+    applyProfile(profile.id, ageBand ?? "dewasa");
     router.push("/belajar");
   };
 

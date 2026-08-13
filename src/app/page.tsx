@@ -6,7 +6,7 @@ import { ProfileCard } from "@/components/landing/ProfileCard";
 import { FeatureCard } from "@/components/landing/FeatureCard";
 import { FlowStep } from "@/components/landing/FlowStep";
 import { ObserverCTA } from "@/components/landing/ObserverCTA";
-import { useState } from "react";
+import { useAccessibilityStore } from "@/stores/accessibilityStore";
 import { AGE_BAND_LABELS } from "@/lib/constants";
 import type { AgeBand, Profile } from "@/lib/types";
 import type { LucideIcon } from "lucide-react";
@@ -93,7 +93,9 @@ const flowSteps = [
 ];
 
 export default function LandingPage() {
-  const [ageBand, setAgeBand] = useState<AgeBand>("dewasa");
+  const profile = useAccessibilityStore((s) => s.profile);
+  const ageBand = useAccessibilityStore((s) => s.ageBand);
+  const applyProfile = useAccessibilityStore((s) => s.applyProfile);
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 font-sans">
       {/* Hero */}
@@ -140,7 +142,7 @@ export default function LandingPage() {
                 <button
                   key={band}
                   type="button"
-                  onClick={() => setAgeBand(band)}
+                  onClick={() => applyProfile(profile ?? "umum", band)}
                   className={`text-xs px-3 py-2.5 border-2 rounded-xl font-sans font-semibold min-h-[44px] transition-colors ${
                     ageBand === band
                       ? "border-fg bg-fg text-bg"
