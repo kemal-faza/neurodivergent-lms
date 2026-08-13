@@ -203,12 +203,9 @@ describe("applyBandOverlay", () => {
     expect(out.bionic).toBe(false);
   });
 
-  test("re-apply penuh tidak men-stack delta (anak lalu dewasa)", () => {
-    const base = PROFILE_PRESETS.disleksia;
-    const withAnak = applyBandOverlay(base, "anak");
-    const backToBase = applyBandOverlay(withAnak, "dewasa");
-    expect(backToBase).toEqual({ ...base });
-  });
+  // Catatan: fungsi ini TIDAK idempotent — setiap pemanggilan menambah delta ke preset
+  // yang diberikan. Properti "tidak men-stack" dijamin oleh store (applyProfile selalu
+  // menghitung dari PROFILE_PRESETS[profile] sebagai base), diuji di Task 4 store test.
 });
 ```
 
@@ -386,6 +383,15 @@ Add these tests inside the `describe("accessibilityStore", ...)` block (they res
     const s = useAccessibilityStore.getState();
     expect(s.profile).toBeNull();
     expect(s.ageBand).toBeNull();
+  });
+
+  test("re-apply penuh tidak men-stack delta (store recompute from base)", () => {
+    useAccessibilityStore.getState().applyProfile("disleksia", "anak");
+    const first = useAccessibilityStore.getState().fontSize; // 20 base + 2 = 22
+    useAccessibilityStore.getState().applyProfile("disleksia", "anak");
+    const second = useAccessibilityStore.getState().fontSize; // recompute dari base -> tetap 22
+    expect(first).toBe(22);
+    expect(second).toBe(22);
   });
 ```
 
