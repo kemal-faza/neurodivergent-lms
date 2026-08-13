@@ -63,8 +63,10 @@ export const AGE_BAND_LABELS: Record<AgeBand, string> = {
 };
 
 export const AGE_BAND_DELTAS: Record<AgeBand, Partial<AccessibilitySettings>> = {
-  anak: { fontSize: +2, lineHeight: +0.1, letterSpacing: +0.5 },
-  remaja: { fontSize: +1, lineHeight: +0.05, letterSpacing: +0.25 },
+  // `wordSpacing` sengaja ikut di-overlay karena merupakan metrik keterbacaan numerik
+  // yang sama dengan fontSize/lineHeight/letterSpacing (preset disleksia men-set-nya ke 4).
+  anak: { fontSize: +2, lineHeight: +0.1, letterSpacing: +0.5, wordSpacing: +1 },
+  remaja: { fontSize: +1, lineHeight: +0.05, letterSpacing: +0.25, wordSpacing: +0.5 },
   dewasa: {}, // baseline, tidak ada overlay
 };
 ```
@@ -92,6 +94,8 @@ export function applyBandOverlay(
     out.lineHeight = out.lineHeight + deltas.lineHeight;
   if (deltas.letterSpacing !== undefined && out.letterSpacing !== undefined)
     out.letterSpacing = out.letterSpacing + deltas.letterSpacing;
+  if (deltas.wordSpacing !== undefined && out.wordSpacing !== undefined)
+    out.wordSpacing = out.wordSpacing + deltas.wordSpacing;
   return out;
 }
 ```
@@ -140,8 +144,8 @@ Pilih profil → Pilih usia (3 tombol segmen: Anak 6-9 / Remaja 10-15 / Dewasa 1
 - **Tidak hard-lock:** preset disleksia tetap `fontFamily: "opendyslexic"` sebagai default,
   tetapi `FONT_OPTIONS` di `AccessibilityPanel` sudah menyediakan override ke Default/Lexend.
   Biarkan kontrol di panel.
-- **Microcopy kontekstual** di panel saat font aktif `opendyslexic`: teks halus seperti
-  "Terasa berat? Coba Default/Lexend — tiap otak punya preferensi beda."
+- **Microcopy kontekstual** di panel saat font aktif `opendyslexic` (`src/components/AccessibilityPanel.tsx`):
+  teks halus seperti "Terasa berat? Coba Default/Lexend — tiap otak punya preferensi beda."
 - **Narasi presentasi** dalam dokumen keluar digeser dari klaim efektivitas font ke klaim
   adaptivitas & kontrol user. Ini mendukung Mitigasi Risiko PRD §12 (bionic terlihat gimmick)
   dan §11 scoring.
@@ -151,7 +155,7 @@ Pilih profil → Pilih usia (3 tombol segmen: Anak 6-9 / Remaja 10-15 / Dewasa 1
 ### 5.1 `src/lib/age-bands.test.ts` (baru)
 
 - `applyBandOverlay(dyslexiaPreset, "anak")` → `fontSize` naik +2, `letterSpacing` +0.5,
-  `lineHeight` +0.1 dari preset.
+  `lineHeight` +0.1, dan `wordSpacing` +1 dari preset.
 - `applyBandOverlay(dyslexiaPreset, "dewasa")` → preset tak berubah (baseline).
 - `applyBandOverlay(dyslexiaPreset, null)` → preset tak berubah (default).
 - Overlay **tidak menyentuh** field non-numerik (`contrast`, `ttsEnabled`, `bionic` tetap
@@ -184,7 +188,7 @@ Pilih profil → Pilih usia (3 tombol segmen: Anak 6-9 / Remaja 10-15 / Dewasa 1
 4. `accessibilityStore.ts` — modifikasi `applyProfile`, `SETTING_KEYS`, `partialize`,
    `DEFAULT_SETTINGS` + test update.
 5. `ProfileCard.tsx` / landing — selektor usia 3 tombol segmen.
-6. `AccessibilityPanel` — microcopy OpenDyslexic.
+6. `src/components/AccessibilityPanel.tsx` — microcopy OpenDyslexic.
 7. Verifikasi: `npm run build` + `npm test`.
 
 ## 9. Risiko & Mitigasi
