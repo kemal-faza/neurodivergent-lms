@@ -3,6 +3,7 @@ import type { AccessibilitySettings, Contrast, FontFamily, Profile } from "./typ
 /** Baseline settings before any profile is chosen. */
 export const DEFAULT_SETTINGS: AccessibilitySettings = {
   profile: null,
+  ageBand: null,
   fontFamily: "default",
   fontSize: 18,
   lineHeight: 1.7,

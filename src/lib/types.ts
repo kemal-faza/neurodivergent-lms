@@ -4,6 +4,8 @@
 
 export type Profile = "disleksia" | "adhd" | "umum";
 
+export type AgeBand = "anak" | "remaja" | "dewasa";
+
 export type FontFamily = "default" | "lexend" | "opendyslexic";
 
 export type Contrast = "normal" | "high" | "dark";
@@ -12,6 +14,7 @@ import type { LucideIcon } from "lucide-react";
 /** All accessibility settings, persisted in IndexedDB via the accessibility store. */
 export interface AccessibilitySettings {
   profile: Profile | null;
+  ageBand: AgeBand | null;
   fontFamily: FontFamily;
   /** Base font size in px for reading surfaces. */
   fontSize: number;
