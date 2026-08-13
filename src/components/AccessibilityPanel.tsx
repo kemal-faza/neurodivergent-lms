@@ -8,13 +8,19 @@ import {
   Volume2, Eye, Ruler, Focus, Timer, Info,
 } from "lucide-react";
 import { useAccessibilityStore } from "@/stores/accessibilityStore";
-import { CONTRAST_OPTIONS, FONT_OPTIONS } from "@/lib/constants";
-import type { Profile, AccessibilitySettings } from "@/lib/types";
+import { CONTRAST_OPTIONS, FONT_OPTIONS, AGE_BAND_LABELS } from "@/lib/constants";
+import type { Profile, AgeBand, AccessibilitySettings } from "@/lib/types";
 
 const PROFILE_ITEMS: { id: Profile; label: string; icon: typeof BookOpen }[] = [
   { id: "disleksia", label: "Disleksia", icon: BookOpen },
   { id: "adhd", label: "ADHD", icon: Zap },
   { id: "umum", label: "Umum", icon: Settings2 },
+];
+
+const AGE_BANDS: { id: AgeBand; label: string }[] = [
+  { id: "anak", label: AGE_BAND_LABELS.anak },
+  { id: "remaja", label: AGE_BAND_LABELS.remaja },
+  { id: "dewasa", label: AGE_BAND_LABELS.dewasa },
 ];
 
 const TOOLS: {
@@ -109,7 +115,7 @@ export function AccessibilityPanel() {
                 <button
                   key={id}
                   type="button"
-                  onClick={() => s.applyProfile(id)}
+                  onClick={() => s.applyProfile(id, s.ageBand)}
                   className={`flex flex-col items-center gap-1.5 py-3 px-2 border-2 rounded-xl text-center transition-all min-h-[56px] ${
                     s.profile === id
                       ? "border-fg bg-fg text-bg font-semibold shadow-sm"
@@ -120,6 +126,27 @@ export function AccessibilityPanel() {
                   <span className="text-[11px] font-sans font-semibold">{label}</span>
                 </button>
               ))}
+            </div>
+
+            {/* Rentang Usia */}
+            <div className="mt-3">
+              <p className="text-[11px] font-sans text-muted mb-1.5">Rentang Usia</p>
+              <div className="grid grid-cols-3 gap-2">
+                {AGE_BANDS.map(({ id, label }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => s.applyProfile(s.profile ?? "umum", id)}
+                    className={`text-[11px] py-2.5 px-2 border-2 rounded-xl transition-colors font-sans font-semibold ${
+                      s.ageBand === id
+                        ? "border-fg bg-fg text-bg"
+                        : "border-border bg-card text-muted hover:bg-muted/10 hover:text-fg"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
