@@ -148,6 +148,11 @@ export function AccessibilityPanel() {
                   </button>
                 ))}
               </div>
+              {s.fontFamily === "opendyslexic" && (
+                <p className="mt-2 text-[10px] font-sans text-muted leading-relaxed px-1.5">
+                  Terasa berat? Coba Default/Lexend — tiap otak punya preferensi bentuk huruf yang berbeda.
+                </p>
+              )}
             </div>
 
             <div className="mb-3 space-y-3">
