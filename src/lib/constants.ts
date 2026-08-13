@@ -1,4 +1,4 @@
-import type { AccessibilitySettings, Contrast, FontFamily, Profile } from "./types";
+import type { AccessibilitySettings, Contrast, FontFamily, Profile, AgeBand } from "./types";
 
 /** Baseline settings before any profile is chosen. */
 export const DEFAULT_SETTINGS: AccessibilitySettings = {
@@ -77,6 +77,20 @@ export const PROFILE_LABELS: Record<Profile, string> = {
   disleksia: "Disleksia",
   adhd: "ADHD",
   umum: "Umum",
+};
+
+export const AGE_BAND_LABELS: Record<AgeBand, string> = {
+  anak: "Anak (6-9)",
+  remaja: "Remaja (10-15)",
+  dewasa: "Dewasa (16+)",
+};
+
+export const AGE_BAND_DELTAS: Record<AgeBand, Partial<AccessibilitySettings>> = {
+  // Delta DITAMBAHKAN di atas nilai absolut preset profil (bukan pengganti absolut).
+  // wordSpacing di-overlay karena metrik keterbacaan numerik yang sama (preset disleksia men-set 4).
+  anak: { fontSize: +2, lineHeight: +0.1, letterSpacing: +0.5, wordSpacing: +1 },
+  remaja: { fontSize: +1, lineHeight: +0.05, letterSpacing: +0.25, wordSpacing: +0.5 },
+  dewasa: {}, // baseline, tanpa overlay
 };
 
 /** CSS font-family stacks per option. OpenDyslexic font files are hosted in /public/fonts with @font-face in globals.css. */
