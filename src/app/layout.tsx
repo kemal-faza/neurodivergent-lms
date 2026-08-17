@@ -13,9 +13,21 @@ export const metadata: Metadata = {
   title: "LevelUp — Belajar Ramah Neurodivergent",
   description:
     "Platform belajar web yang aksesibilitas-by-design untuk pengidap ADHD dan Disleksia.",
+  icons: {
+    icon: [
+      { url: "/levelup-favicon.ico", sizes: "any" },
+      { url: "/levelup-favicon-32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/levelup-apple-touch-icon-180.png",
+    shortcut: "/levelup-mark-512.png",
+  },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="id" className={lexend.variable}>
       <body className="min-h-screen bg-bg text-fg font-sans pb-16 antialiased">
