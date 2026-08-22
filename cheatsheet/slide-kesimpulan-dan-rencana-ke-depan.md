@@ -29,7 +29,7 @@
 | Lewat satu klik, profil Disleksia atau ADHD        |                                                    |
 | mengaktifkan aksesibilitas multi-sensori           | 2. Fase 2: Algoritma IRT & Profil Baru             |
 | (font, TTS, bionic, ruler). Kuis adaptif           |    • On-Device Item Response Theory (IRT)          |
-| menyesuaikan tingkat kesulitan secara real-time.   |    • Ekspor Analitik PDF & Profil Autisme/Diskalkulia|
+| menyesuaikan tingkat kesulitan secara real-time.   |    • Profil Autisme / Diskalkulia                  |
 | Tanpa server sama sekali, data siswa tersimpan     |                                                    |
 | 100% di perangkat lokal dan sekolah tidak          | 3. Fase 3: PWA Offline-First & Ekosistem           |
 | menanggung biaya operasional.                      |    • Dukungan Akses Offline Daerah 3T              |
@@ -62,8 +62,8 @@
    * *Usability Testing* Komunitas Disleksia & ADHD
 
 2. **Fase 2: Algoritma IRT & Profil Baru** *(Jangka Menengah)*
-   * *On-Device Item Response Theory* (IRT / *Machine Learning*)
-   * Ekspor Analitik PDF & Profil Autisme / Diskalkulia
+   * *On-Device Item Response Theory* (IRT)
+   * Profil Autisme / Diskalkulia
 
 3. **Fase 3: PWA Offline-First & Ekosistem** *(Jangka Panjang)*
    * Dukungan Akses *Offline* untuk Sekolah di Daerah 3T
@@ -74,22 +74,22 @@
 ## 3. Naskah Presentasi (Speaker Notes / Script Presenter)
 
 > **Estimasi Durasi:** 1 – 1.5 Menit  
-> **Prinsip Penyampaian:** Paragraf di sisi kiri menjadi jangkar sintesis (*executive statement*), sementara presenter menyampaikan intisari secara percaya diri dan mengalir.
+> **Prinsip Penyampaian:** Paragraf kiri menjadi jangkar intisari (*executive statement*); presenter menyampaikannya dengan percaya diri dan mengalir.
 
 ### **Panduan Berbicara:**
 
 **[1. Membuka Kesimpulan — Menyampaikan Intisari Proyek]**  
 > *Bapak/Ibu Dewan Juri dan Hadirin yang terhormat, sebagai penutup, **LevelUp membuktikan bahwa pendidikan digital inklusif bisa berjalan nyata tanpa beban infrastruktur yang mahal**.* 
 > 
-> *Hanya lewat satu klik, profil Disleksia maupun ADHD langsung mengaktifkan seluruh modalitas aksesibilitas multi-sensori—mulai dari font khusus, TTS audio, bionic reading, hingga pemandu baris fokus. Di saat yang sama, kuis adaptif kami bekerja secara dinamis menyesuaikan tingkat kesulitan belajar siswa secara real-time.* 
+> *Hanya lewat satu klik, profil Disleksia maupun ADHD langsung mengaktifkan seluruh modalitas aksesibilitas multi-sensori: mulai dari font khusus, TTS audio, bionic reading, hingga pemandu baris fokus. Di saat yang sama, kuis adaptif menyesuaikan tingkat kesulitan belajar siswa secara real-time.* 
 > 
-> *Yang terpenting, seluruh ekosistem ini beroperasi 100% di perangkat lokal siswa tanpa server sama sekali, menjamin keamanan privasi data anak dan membebaskan pihak sekolah dari biaya operasional server.*
+> *Yang terpenting, seluruh sistem ini berjalan 100% di perangkat lokal siswa tanpa server sama sekali. Privasi data anak tetap terjaga, dan sekolah tidak menanggung biaya operasional server.*
 
 **[2. Menyampaikan Roadmap Pengembangan — 3 Fase Masa Depan]**  
-> *Untuk menjamin keberlanjutan dan perluasan dampak, kami menyusun roadmap dalam tiga fase terukur:* 
+> *Kami menyusun roadmap pengembangan dalam tiga fase:* 
 > 
 > 1. *Pada **Fase 1**, kami akan mengintegrasikan modul kurikulum terbuka (OER) dan mengadakan usability testing langsung bersama komunitas disleksia dan ADHD.* 
-> 2. *Pada **Fase 2**, kami meningkatkan kecerdasan adaptif dengan Item Response Theory (on-device ML), menambahkan ekspor analitik untuk guru/orang tua, serta membuka profil Spektrum Autisme dan Diskalkulia.* 
+> 2. *Pada **Fase 2**, kami tingkatkan kecerdasan adaptif dengan Item Response Theory yang berjalan on-device, lalu membuka profil Spektrum Autisme dan Diskalkulia.* 
 > 3. *Pada **Fase 3**, kami menghadirkan dukungan PWA offline-first untuk menjangkau sekolah daerah 3T, sekaligus mendorong LevelUp sebagai blueprint standar LMS inklusif di Indonesia.*
 
 **[3. Kalimat Penutup yang Kuat (Closing Statement)]**  
@@ -102,7 +102,7 @@
 ## 4. Parameter & Keterkaitan Dokumen Resmi
 
 * **Data Rujukan CDC (2025):** 1 dari 6 anak (17%) usia 3–17 tahun teridentifikasi memiliki disabilitas perkembangan/keberagaman neurologis.
-* **Data Rujukan Dapodik Kemendikdasmen (Maret 2026):** 245,3 ribu peserta didik penyandang disabilitas terdaftar di Indonesia (151,7 ribu di jenjang menengah).
+* **Data Rujukan Dapodik Kemendikdasmen (Tahun Ajaran 2025/2026):** 245,3 ribu peserta didik penyandang disabilitas terdaftar di Indonesia (151,7 ribu di jenjang menengah).
 * **Standar Aksesibilitas:** Mengacu pada pedoman *W3C Web Content Accessibility Guidelines (WCAG) 2.1 Level AA*.
 * **Tautan Deployment:** [https://neurodivergent-lms.vercel.app/](https://neurodivergent-lms.vercel.app/)
 * **Repositori Kode:** [https://github.com/kemal-faza/neurodivergent-lms](https://github.com/kemal-faza/neurodivergent-lms)
