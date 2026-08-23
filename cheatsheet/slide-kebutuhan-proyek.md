@@ -81,7 +81,7 @@
 2. **Arsitektur Zero-Backend**
 
    * *Client-side murni* (Next.js 15 & React 19)
-   * Super ringan untuk perangkat sekolah berspesifikasi rendah
+   * Sangat ringan untuk perangkat sekolah berspesifikasi rendah
 3. **Privasi & Persistensi Lokal**
 
    * Penyimpanan lokal via IndexedDB (idb-keyval)
@@ -126,6 +126,6 @@
 ## 4. Parameter Teknis Pendukung (Rujukan Tanya Jawab / Q&A)
 
 * **Engine Kuis Adaptif:** Berbasis *rule-based threshold* di mana skor $\ge 80\%$ menaikkan level kesulitan materi/kuis, dan skor $\le 40\%$ menurunkan tingkat kesulitan secara proporsional.
-* **Standar Aksesibilitas:** Memenuhi kriteria kontras minimal 4.5:1 (teks normal) dan 3:1 (teks besar/elemen UI) sesuai pedoman W3C WCAG 2.1 AA.
+* **Standar Aksesibilitas:** Hasil ukur palet warna mencapai $\ge 13.8:1$, jauh di atas kriteria minimum WCAG 2.1 AA: 4.5:1 (teks normal) dan 3:1 (teks besar/elemen UI) sesuai pedoman W3C.
 * **Storage Layer:** IndexedDB (idb-keyval) dienkapsulasi dalam state management Zustand dengan rehidrasi asinkron.
 * **Testing Coverage:** Logika adaptif (`adaptive.ts`), kalkulasi gamifikasi, dan manipulasi kontras diuji 100% menggunakan Vitest di lingkungan Node.js.

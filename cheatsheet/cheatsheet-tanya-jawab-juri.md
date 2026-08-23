@@ -39,7 +39,7 @@ Gunakan istilah-istilah ilmiah ini untuk menunjukkan kedalaman riset tim Anda:
 
 ### 2. ADHD (Defisit Regulasi Dopamin & Rentang Atensi)
 * **Dopamine Compensation Loop:** Poin, streak harian, dan badge memberikan penguatan positif instan (*instant reinforcement*) yang merangsang pelepasan dopamin, menjaga fungsi eksekutif otak agar tidak cepat jenuh.
-* **Bionic Reading:** Menyorot huruf pertama kata secara tebal sebagai titik fiksasi buatan (*artificial fixation points*), mempercepat proses memindai tanpa kehilangan makna konteks.
+* **Bionic Reading:** Menebalkan separuh pertama setiap kata sebagai titik fiksasi buatan (*artificial fixation points*), mempercepat proses memindai tanpa kehilangan makna konteks.
 * **Focus Mode (Dimming Effect):** Meredupkan paragraf di luar fokus baca untuk meminimalkan distraksi visual lingkungan.
 
 ### 3. Kuis Adaptif & Flow Theory (Mihaly Csikszentmihalyi)

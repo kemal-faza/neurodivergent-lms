@@ -78,10 +78,10 @@
 **[1. Membuka dengan Data Riil Nasional — Urgensi Masalah]**  
 > *Bapak/Ibu Dewan Juri dan Hadirin sekalian, mari kita mulai dari realitas pendidikan di Indonesia saat ini.* 
 > 
-> *Berdasarkan data resmi **Dapodik Kemendikdasmen Tahun Ajaran 2025/2026**, tercatat ada lebih dari **245,3 ribu peserta didik penyandang disabilitas** di seluruh jenjang pendidikan di Indonesia. Sayangnya, gelombang digitalisasi pendidikan melalui Learning Management System (LMS) saat ini belum sepenuhnya inklusif bagi mereka, khususnya bagi anak-anak dengan keberagaman neurologis seperti Disleksia dan ADHD.*
+> *Berdasarkan data resmi **Dapodik Kemendikdasmen Tahun Ajaran 2025/2026**, tercatat ada lebih dari **245,3 ribu peserta didik penyandang disabilitas** di seluruh jenjang pendidikan di Indonesia. Sayangnya, digitalisasi lewat Learning Management System (LMS) saat ini belum sepenuhnya inklusif bagi mereka, khususnya anak-anak dengan keberagaman neurologis seperti Disleksia dan ADHD.*
 
 **[2. Menjelaskan Masalah Disleksia — Hambatan Kognitif & Keterbacaan]**  
-> *LMS konvensional yang umum digunakan di sekolah—seperti Moodle atau Canvas—pada dasarnya **dirancang untuk populasi neurotipikal**. 
+> *LMS konvensional yang umum dipakai di sekolah (Moodle atau Canvas) pada dasarnya **dirancang untuk populasi neurotipikal**. 
 > 
 > Bagi siswa dengan **Disleksia**, tampilan materi yang dipenuhi blok teks padat, jenis font standar, serta spasi yang rapat dapat memicu **Cognitive Overload** dan kelelahan visual yang parah, sehingga mereka kesulitan mencerna materi pembelajaran secara mandiri.*
 
@@ -89,7 +89,7 @@
 > *Sementara bagi siswa dengan **ADHD**, LMS konvensional terasa sangat pasif dan membosankan. Ketiadaan sistem **gamifikasi dan dopamine feedback loop** membuat rentang atensi mereka cepat memudar, yang berujung pada rasa frustrasi dan demotivasi belajar.*
 
 **[4. Kalimat Penutup Latar Belakang / Transisi Solusi]**  
-> *Kesenjangan inilah yang melatarbelakangi lahirnya **LevelUp**—sebuah platform pembelajaran berbasis web yang dirancang khusus untuk memecahkan hambatan aksesibilitas visual dan menjaga atensi belajar siswa neurodivergen secara adaptif.*
+> *Kesenjangan inilah yang melatarbelakangi lahirnya **LevelUp**: platform pembelajaran berbasis web yang dirancang khusus untuk memecahkan hambatan aksesibilitas visual dan menjaga atensi belajar siswa neurodivergen secara adaptif.*
 
 ---
 

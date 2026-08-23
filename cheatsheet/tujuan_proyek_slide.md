@@ -45,19 +45,19 @@
 
 ### **Rincian 4 Tujuan Utama (Grid 2x2):**
 
-1. **1. Antarmuka Customizable**
+1. **Antarmuka Customizable**
    * Panel aksesibilitas multi-sensori (*font*, kontras, TTS, *reading ruler*)
    * Mitigasi *cognitive overload* & kelelahan visual bagi pembaca disleksia
 
-2. **2. Kuis Adaptif**
+2. **Kuis Adaptif**
    * Penyesuaian tingkat kesulitan otomatis (*dynamic difficulty adjustment*)
    * Menjaga *flow state* agar materi tidak terlalu mudah atau terlalu sulit
 
-3. **3. Gamifikasi & Atensi**
+3. **Gamifikasi & Atensi**
    * *Reward loop* instan (poin, *streak*, *badge*, *leaderboard* lokal)
    * Menstimulasi dopamin & menjaga rentang atensi *learner* ADHD
 
-4. **4. Inklusi Web CITECH**
+4. **Inklusi Web CITECH**
    * Bukti nyata aplikasi *frontend* inklusif, cepat, dan *accessible*
    * Solusi konkret subtema *Education* untuk *Smart Living & Sustainable Future*
 
@@ -71,17 +71,17 @@
 ### **Panduan Berbicara:**
 
 **[1. Pengantar / Problem Anchor — Menghubungkan Latar Belakang ke Tujuan]**  
-> *Bapak/Ibu Dewan Juri dan Hadirin sekalian, berangkat dari tantangan nyata yang dihadapi peserta didik neurodivergen pada LMS konvensional, kami merumuskan **empat tujuan strategis** yang menjadi fondasi pengembangan platform LevelUp.*
+> *Bapak/Ibu Dewan Juri dan Hadirin sekalian, berangkat dari tantangan nyata peserta didik neurodivergen di LMS konvensional, kami merumuskan **empat tujuan utama** yang menjadi fondasi pengembangan LevelUp.*
 
 **[2. Tujuan 1 & 2 — Aksesibilitas Visual & Kuis Adaptif]**  
-> *Pertama, **Mewujudkan Antarmuka yang Dapat Dipersonalisasi**. Melalui panel aksesibilitas terpadu—seperti font OpenDyslexic, pengatur kontras, text-to-speech, hingga reading ruler—kami bertujuan memitigasi cognitive overload dan hambatan membaca bagi penyandang disleksia.* 
+> *Pertama, **Mewujudkan Antarmuka yang Dapat Dipersonalisasi**. Lewat panel aksesibilitas terpadu (font OpenDyslexic, pengatur kontras, text-to-speech, hingga reading ruler), kami ingin mengurangi cognitive overload dan hambatan membaca bagi penyandang disleksia.* 
 > 
 > *Kedua, **Menghadirkan Kuis yang Adaptif**. Sistem secara otomatis menyesuaikan tingkat kesulitan soal dengan kemampuan siswa secara real-time. Tujuannya adalah menjaga 'flow state' belajar, sehingga siswa tidak merasa frustrasi saat kesulitan dan tidak merasa bosan saat materi terlalu mudah.*
 
 **[3. Tujuan 3 & 4 — Gamifikasi ADHD & Relevansi Tema CITECH 2026]**  
 > *Ketiga, **Membangun Sistem Gamifikasi untuk Menjaga Atensi**. Dengan loop umpan balik instan berupa poin, streak harian, dan badge, kami membantu peserta didik ADHD mempertahankan fokus dan motivasi belajar secara berkelanjutan.* 
 > 
-> *Keempat, **Membuktikan Inklusivitas Web untuk Ekosistem Pendidikan**. LevelUp membuktikan bahwa teknologi web modern yang ringan, bebas biaya server, dan tanpa registrasi rumit dapat menjadi standar baru pembelajaran inklusif di Indonesia, selaras dengan subtema Education pada CITECH 2026.*
+> *Keempat, **Membuktikan Inklusivitas Web untuk Pendidikan**. LevelUp membuktikan bahwa teknologi web modern yang ringan, bebas biaya server, dan tanpa registrasi rumit dapat menjadi standar baru pembelajaran inklusif di Indonesia, selaras dengan subtema Education pada CITECH 2026.*
 
 **[4. Kalimat Transisi ke Slide Berikutnya]**  
 > *Keempat tujuan inilah yang kami terjemahkan secara konkret ke dalam kebutuhan sistem dan arsitektur teknis yang akan kami paparkan selanjutnya.*
